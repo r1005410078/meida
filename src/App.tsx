@@ -13,13 +13,12 @@ import useFanyFrom from "./components/FanyFrom";
 const { Header, Sider, Content } = Layout;
 
 const App: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const { openDialog, fanyFromNode } = useFanyFrom();
-  const [keyword, setKeyword] = useState("%");
 
   return (
     <Layout hasSider>
@@ -44,7 +43,7 @@ const App: React.FC = () => {
             {
               key: "1",
               icon: <BankOutlined />,
-              label: "房源管理",
+              label: "房源",
             },
           ]}
         />
@@ -62,13 +61,6 @@ const App: React.FC = () => {
                 height: 64,
               }}
             />
-            <div style={{ width: 250, height: 34 }}>
-              <Input.Search
-                placeholder="搜索房源"
-                allowClear
-                onSearch={(value) => setKeyword(`%${value}%`)}
-              />
-            </div>
             <div style={{ marginRight: 16 }}>
               <Button
                 size="large"
@@ -91,7 +83,7 @@ const App: React.FC = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <FanyList keyword={keyword} />
+          <FanyList />
           {fanyFromNode}
         </Content>
       </Layout>

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FieldTimeOutlined } from "@ant-design/icons";
-import { Avatar, List, Space, Tooltip } from "antd";
+import { ArrowUpOutlined } from "@ant-design/icons";
+import { Avatar, Card, List, Segmented, Space, Tabs, Tooltip } from "antd";
 import useImagePhoto from "./ImagePhoto";
 import useFanyFrom from "./FanyFrom";
 import { useQuery } from "react-query";
 import { query_fangy } from "../api/fangy";
+import { FilterSecondHandHousing } from "./FilterSecondHandHousing";
+import "./FanyList.less";
 
 // const data = Array.from({ length: 23 }).map((_, i) => ({
 //   href: "https://ant.design",
@@ -23,99 +25,68 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
   </Space>
 );
 
-interface FanyListProps {
-  keyword: string;
-}
+interface FanyListProps {}
 
-const FanyList: React.FC<FanyListProps> = ({ keyword }) => {
+const FanyList: React.FC<FanyListProps> = () => {
   const { openPhotoView, imagePhotoNode } = useImagePhoto();
   const { openDialog, fanyFromNode } = useFanyFrom();
   const [page, setPage] = useState(1);
   const [pageSize] = useState(5);
-  const { data: result } = useQuery(
-    ["query_fangy", keyword, page, pageSize],
-    () =>
-      query_fangy({ page_index: `${page}`, page_size: `${pageSize}`, keyword })
+  const { data: result } = useQuery(["query_fangy", page, pageSize], () =>
+    query_fangy({ page_index: `${page}`, page_size: `${pageSize}` })
   );
-
-  useEffect(() => {
-    setPage(0);
-  }, [keyword]);
 
   return (
     <>
-      <List
-        itemLayout="vertical"
-        size="large"
-        pagination={{
-          total: result?.total,
-          onChange: (page) => {
-            setPage(page);
+      <div
+        style={{
+          display: "flex",
+          margin: "16px 0",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Segmented size="large" options={["二手房", "租房", "新房"]} />
+      </div>
+      <Card>
+        <FilterSecondHandHousing />
+      </Card>
+      <Tabs
+        className="tangy-list-tabs"
+        tabBarExtraContent={{
+          left: (
+            <div style={{ width: "100%" }}>
+              共找到 <strong style={{ color: "red" }}>16305</strong>{" "}
+              套二手房房源
+            </div>
+          ),
+        }}
+        defaultActiveKey="2"
+        items={[
+          {
+            label: "总价",
+            key: "1",
+            icon: <ArrowUpOutlined />,
+            children: <div>111</div>,
           },
-          pageSize,
-        }}
-        dataSource={result?.data}
-        footer={
-          <div>
-            <b>美大</b> 房源管理
-          </div>
-        }
-        renderItem={(item) => {
-          const images = item.image_url.split(",");
-          const image = images[0];
-
-          if (image) {
-            console.log(image);
-          }
-
-          return (
-            <List.Item
-              key={item.name}
-              actions={[
-                <Tooltip title="最后更新时间">
-                  <IconText
-                    icon={FieldTimeOutlined}
-                    text={item.updated_at}
-                    key="list-vertical-star-o"
-                  />
-                </Tooltip>,
-              ]}
-              extra={
-                <img
-                  width={272}
-                  alt="logo"
-                  onClick={() => openPhotoView(images)}
-                  src={
-                    image ||
-                    "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                  }
-                />
-              }
-            >
-              <List.Item.Meta
-                avatar={
-                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-                }
-                title={
-                  <a
-                    onClick={() => {
-                      openDialog(item);
-                    }}
-                  >
-                    {item.name}
-                  </a>
-                }
-                description={
-                  <div>
-                    <span>{item.phone}</span>
-                  </div>
-                }
-              />
-              <p>房屋地址：{item.address}</p>
-              <p>备注： {item.comment}</p>
-            </List.Item>
-          );
-        }}
+          {
+            label: "单价",
+            key: "3",
+            icon: <ArrowUpOutlined />,
+            children: <div>333</div>,
+          },
+          {
+            label: "面积",
+            key: "2",
+            icon: <ArrowUpOutlined />,
+            children: <div>222</div>,
+          },
+          {
+            label: "最新发布事件",
+            key: "4",
+            icon: <ArrowUpOutlined />,
+            children: <div>444</div>,
+          },
+        ]}
       />
       {imagePhotoNode}
       {fanyFromNode}

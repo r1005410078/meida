@@ -33,13 +33,28 @@ pub fn init_fangy_db() -> anyhow::Result<()> {
     let conn = Connection::open(path)?;
 
     conn.execute(
-        "CREATE TABLE IF NOT EXISTS fangy (
-          id          INTEGER PRIMARY KEY,
-          name        TEXT NOT NULL,
-          phone       TEXT NOT NULL,
-          address     TEXT NOT NULL,
-          comment     TEXT NOT NULL,
-          image_url   TEXT NOT NULL,
+        "CREATE TABLE IF NOT EXISTS second_hand_housing (
+          id            INTEGER PRIMARY KEY , --  '主键'
+          name          TEXT NOT NULL       , --  '名字'       
+          phone         TEXT NOT NULL       , --  '电话'
+          address       TEXT NOT NULL       , --  '地址'
+          region        TEXT NOT NULL       , --  '区域'     
+          price         INTEGER NOT NULL    , --  '售价'    
+          room          TEXT NOT NULL       , --  '房型'      
+          area          TEXT NOT NULL       , --  '面积'        
+          floor         TEXT NOT NULL       , --  '楼层'           
+          property      TEXT NOT NULL       , --  '产权'         
+          decoration    TEXT NOT NULL       , --  '装修'      
+          age           TEXT NOT NULL       , --  '房龄'             
+          elevator      TEXT NOT NULL       , --  '电梯'        
+          parking       TEXT NOT NULL       , --  '停车位'         
+          direction     TEXT NOT NULL       , --  '朝向'     
+          property_type TEXT NOT NULL       , --  '物业类型'
+          comment       TEXT NOT NULL       , --  '备注'
+          image_url     TEXT NOT NULL       , --  '图片地址'
+          cover_image_url   TEXT NOT NULL   , --  '封面图片地址'
+          tag           TEXT NOT NULL       , --  '标签'
+          broker        TEXT NOT NULL       , --  '录入经纪人'
           deleted     BOOLEAN NOT NULL DEFAULT 0,
           created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
           updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
