@@ -5,7 +5,7 @@ import {
   PlusOutlined,
   BankOutlined,
 } from "@ant-design/icons";
-import { Button, Flex, Input, Layout, Menu, theme } from "antd";
+import { Button, Flex, Layout, Menu, theme } from "antd";
 import "./App.css";
 import FanyList from "./components/FanyList";
 import useFanyFrom from "./components/FanyFrom";
@@ -13,7 +13,7 @@ import useFanyFrom from "./components/FanyFrom";
 const { Header, Sider, Content } = Layout;
 
 const App: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();

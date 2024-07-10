@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Drawer, Form, Input, Space } from "antd";
+import { Button, Drawer, Form, Input, InputNumber, Space } from "antd";
 import UploadFany from "./UploadFany";
 import { useMutation, useQueryClient } from "react-query";
 import {
@@ -10,6 +10,16 @@ import {
   update_fangy,
   UpdateFangy,
 } from "../api/fangy";
+import {
+  AgeFormItem,
+  DecorationFormItem,
+  FloorFormItem,
+  PropertyFormItem,
+  PropertyTypeFormItem,
+  RegionFormItem,
+  TagsFormItem,
+  TowardFormItem,
+} from "./FangyFromItems";
 
 const useFanyFrom = () => {
   const [open, setOpen] = useState(false);
@@ -107,36 +117,44 @@ const useFanyFrom = () => {
           }}
         >
           <Form.Item name="id" hidden />
-          <Form.Item
-            name="name"
-            label="姓名"
-            rules={[{ required: true, message: "请输入姓名" }]}
-          >
-            <Input placeholder="请输入姓名" />
-          </Form.Item>
-          <Form.Item
-            name="phone"
-            label="电话号码"
-            rules={[{ required: true, message: "请输入电话号码" }]}
-          >
-            <Input placeholder="请输入电话号码" />
-          </Form.Item>
-          <Form.Item
-            name="address"
-            label="地址"
-            rules={[{ required: true, message: "请输入地址" }]}
-          >
-            <Input placeholder="请输入地址" />
-          </Form.Item>
-          <Form.Item name="image_data" label="照片">
+          <Form.Item name="image_url" label="房源图片">
             <UploadFany />
           </Form.Item>
-          <Form.Item
-            name="comment"
-            label="备注"
-            rules={[{ message: "请输入备注" }]}
-          >
-            <Input.TextArea placeholder="请输入备注" rows={4}></Input.TextArea>
+          <Form.Item label="户主姓名" name="name">
+            <Input placeholder="户主姓名" />
+          </Form.Item>
+          <Form.Item label="位置" name="location">
+            <Input placeholder="位置" />
+          </Form.Item>
+          <RegionFormItem />
+          <Form.Item label="联系方式" name="phone">
+            <Input placeholder="联系方式" />
+          </Form.Item>
+          <Form.Item label="报价 (单位 万元)" name="price">
+            <InputNumber placeholder="售价" style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item label="低价 (单位 万元)" name="low_price">
+            <InputNumber placeholder="低价" style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item label="房型" name="room">
+            <Space>
+              <Input placeholder="室" />
+              <Input placeholder="厅" />
+              <Input placeholder="卫" />
+            </Space>
+          </Form.Item>
+          <Form.Item label="面积 (单位 m²)" name="area">
+            <Input placeholder="面积" />
+          </Form.Item>
+          <TowardFormItem />
+          <FloorFormItem />
+          <PropertyFormItem />
+          <DecorationFormItem />
+          <AgeFormItem />
+          <PropertyTypeFormItem />
+          <TagsFormItem />
+          <Form.Item label="备注" name="comment">
+            <Input.TextArea placeholder="备注" />
           </Form.Item>
         </Form>
       </Drawer>

@@ -14,11 +14,10 @@ import {
   TagsFormItem,
   TowardFormItem,
 } from "./FangyFromItems";
-import { useFangyFilter } from "../hooks/useFilterExpand";
 
-export function FilterSecondHandHousing() {
+export function FilterRenting() {
   const [form] = useForm();
-  const { expand, setExpand } = useFangyFilter();
+  const [more, setMore] = useState(false);
 
   const onFormLayoutChange = () => {};
 
@@ -48,14 +47,14 @@ export function FilterSecondHandHousing() {
                 type="link"
                 size="small"
                 style={{ marginTop: 32 }}
-                onClick={() => setExpand(!expand)}
+                onClick={() => setMore(!more)}
               >
-                {expand ? "收起" : "展开"}
+                {more ? "收起" : "展开"}
               </Button>
             </Space>
           </Form.Item>
         </Flex>
-        {expand ? (
+        {more ? (
           <Flex wrap gap="large">
             <AreaFormItem />
             <TowardFormItem />
