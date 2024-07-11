@@ -1,8 +1,21 @@
-import { Divider, Space, Table, TableProps, Tag, Typography } from "antd";
+import {
+  Divider,
+  Dropdown,
+  Space,
+  Table,
+  TableProps,
+  Tag,
+  Typography,
+} from "antd";
 import useImagePhoto from "./ImagePhoto";
 import { ImageIcon } from "./icons";
 import useFanyFrom from "./FanyFrom";
 import { useFangyFilter } from "../hooks/useFilterExpand";
+import {
+  DownOutlined,
+  DeleteOutlined,
+  WalletOutlined,
+} from "@ant-design/icons";
 
 interface DataType {
   // 房源图片
@@ -164,14 +177,34 @@ export function SecondHandHousingTable() {
       title: "操作",
       dataIndex: "action",
       key: "action",
-      width: 200,
+      width: 160,
       render: () => {
         return (
           <Space split={<Divider type="vertical" />}>
             <Typography.Link onClick={() => openDialog()}>编辑</Typography.Link>
-            <Typography.Link>
-              <span style={{ color: "#000000e0" }}>删除</span>
-            </Typography.Link>
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    key: "1",
+                    label: <span>卖出</span>,
+                    icon: <WalletOutlined />,
+                  },
+                  {
+                    key: "2",
+                    label: <span>删除</span>,
+                    icon: <DeleteOutlined />,
+                  },
+                ],
+              }}
+            >
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  更多
+                  <DownOutlined />
+                </Space>
+              </a>
+            </Dropdown>
           </Space>
         );
       },
