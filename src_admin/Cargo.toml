@@ -1,0 +1,17 @@
+[package]
+name = "src_admin"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.86"
+dotenv = "0.15.0"
+sqlx = { version = "0.7", features = ["mysql", "runtime-tokio-native-tls"] }
+structopt = "0.3.26"
+tokio = { version = "1.38.0", features = ["rt", "macros"] }
+actix-web = "4"
+serde = { version = "1.0", features = ["derive"] }
+env_logger = "0.11.3"
+actix-files = "0.6.6"
