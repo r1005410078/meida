@@ -1,0 +1,16 @@
+[package]
+name = "repository"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sqlx = {  workspace = true }
+structopt = {  workspace = true }
+tokio = {  workspace = true }
+serde = {  workspace = true }
+anyhow ={  workspace = true }
+dotenv = {  workspace = true }
+model = {  path = "../model" }
+
+[examples]
+name = "sqlx"
