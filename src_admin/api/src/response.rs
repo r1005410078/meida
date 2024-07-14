@@ -10,15 +10,6 @@ use derive_more::Display;
 
 #[derive(Debug, Display)]
 pub enum ApiError {
-    #[display(fmt = "internal error")]
-    InternalError,
-
-    #[display(fmt = "bad request")]
-    BadClientData,
-
-    #[display(fmt = "timeout")]
-    Timeout,
-
     #[display(fmt = "{}", _0)]
     ErrMsg(String),
 }
@@ -37,9 +28,6 @@ impl error::ResponseError for ApiError {
 
     fn status_code(&self) -> StatusCode {
         match *self {
-            ApiError::InternalError => StatusCode::INTERNAL_SERVER_ERROR,
-            ApiError::BadClientData => StatusCode::BAD_REQUEST,
-            ApiError::Timeout => StatusCode::GATEWAY_TIMEOUT,
             ApiError::ErrMsg(_) => StatusCode::OK,
         }
     }

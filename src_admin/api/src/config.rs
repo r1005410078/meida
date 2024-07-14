@@ -1,6 +1,6 @@
-use crate::headers::todos::list;
+use crate::headers::second_hand_housing;
 use actix_web::web;
 
 pub fn config(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::scope("/todos").service(list));
+    second_hand_housing::config(cfg);
 }

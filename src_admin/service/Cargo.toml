@@ -1,0 +1,11 @@
+[package]
+name = "service"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+dto = { path = "../dto" }
+model = { path = "../model" }
+repository = { path = "../repository" }
+anyhow = { workspace = true }
+sqlx ={ workspace = true }

@@ -10,7 +10,11 @@ tokio = {  workspace = true }
 serde = {  workspace = true }
 anyhow ={  workspace = true }
 dotenv = {  workspace = true }
-model = {  path = "../model" }
+bigdecimal = { workspace = true }
+dto = { workspace = true  }
+model = { workspace = true }
 
-[examples]
-name = "sqlx"
+[dev-dependencies]
+fake = { version = "2.9.2" }
+
+

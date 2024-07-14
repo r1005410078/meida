@@ -4,3 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+serde = { workspace = true }
+time = { workspace = true }
+sqlx = { workspace = true }
+bigdecimal = { workspace = true }
+serde_with = { workspace = true }
