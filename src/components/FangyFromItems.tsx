@@ -245,9 +245,9 @@ export function AreaFormItem() {
   );
 }
 
-export function TowardFormItem() {
+export function DirectionFormItem() {
   return (
-    <Form.Item label="朝向" name="toward">
+    <Form.Item label="朝向" name="direction">
       <Select
         placeholder="朝向"
         defaultValue={[]}
@@ -481,7 +481,7 @@ export function PropertyTypeFormItem() {
 
 export function TagsFormItem() {
   return (
-    <Form.Item label="标签" name="tags">
+    <Form.Item label="标签" name="tag">
       <Select
         placeholder="标签"
         defaultValue={[]}

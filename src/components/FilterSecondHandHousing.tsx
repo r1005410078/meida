@@ -11,19 +11,19 @@ import {
   RegionFormItem,
   RoomFormItem,
   TagsFormItem,
-  TowardFormItem,
+  DirectionFormItem,
 } from "./FangyFromItems";
 import { useFangyFilter } from "../hooks/useFilterExpand";
+import { useQuerySecondHandHousing } from "../hooks/useQuerySecondHandHousing";
 
 export function FilterSecondHandHousing() {
   const [form] = useForm();
   const { expand, setExpand } = useFangyFilter();
-
-  const onFormLayoutChange = () => {};
+  const { setQuery } = useQuerySecondHandHousing();
 
   return (
     <div>
-      <Form layout={"vertical"} form={form} onValuesChange={onFormLayoutChange}>
+      <Form layout={"vertical"} form={form}>
         <Flex wrap gap="large">
           <Form.Item label="位置" name="location">
             <Input placeholder="房子名称或地址" style={{ width: 425 }} />
@@ -57,7 +57,7 @@ export function FilterSecondHandHousing() {
         {expand ? (
           <Flex wrap gap="large">
             <AreaFormItem />
-            <TowardFormItem />
+            <DirectionFormItem />
             <FloorFormItem />
             <PropertyFormItem />
             <DecorationFormItem />

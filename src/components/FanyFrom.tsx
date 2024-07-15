@@ -1,51 +1,31 @@
 import { useState } from "react";
-import { Button, Drawer, Form, Input, InputNumber, Space } from "antd";
+import { Button, Drawer, Form, Input, InputNumber, Radio, Space } from "antd";
 import UploadFany from "./UploadFany";
 import { useMutation, useQueryClient } from "react-query";
 import {
-  delete_fangy,
-  Fangy,
-  FangyPrimaryKey,
-  insert_fangy,
-  update_fangy,
-  UpdateFangy,
-} from "../api/fangy";
-import {
-  AgeFormItem,
   DecorationFormItem,
-  FloorFormItem,
   PropertyFormItem,
   PropertyTypeFormItem,
   RegionFormItem,
   TagsFormItem,
-  TowardFormItem,
+  DirectionFormItem,
 } from "./FangyFromItems";
+import { save } from "../api/SecondHandHousing";
+import { SecondHandHousing } from "../model/SecondHandHousing";
 
 const useFanyFrom = () => {
   const [open, setOpen] = useState(false);
-  const [form] = Form.useForm<UpdateFangy>();
+  const [form] = Form.useForm<SecondHandHousing>();
   const [isUpdated, setIsUpdated] = useState(false);
   const client = useQueryClient();
 
   const { mutate, isLoading } = useMutation(
-    ["update_fangy", isUpdated],
-    (data: UpdateFangy) => {
+    ["SaveSecondHandHousing", isUpdated],
+    (data: SecondHandHousing) => {
       if (isUpdated) {
-        return update_fangy(data);
+        return save({ Update: data as any });
       }
-      return insert_fangy(data);
-    },
-    {
-      onSuccess: () => {
-        onClose();
-      },
-    }
-  );
-
-  const { mutate: deleteMutate, isLoading: deleteIsLoading } = useMutation(
-    ["delete_fangy", isUpdated],
-    (data: FangyPrimaryKey) => {
-      return delete_fangy(data);
+      return save({ Insert: data });
     },
     {
       onSuccess: () => {
@@ -55,12 +35,12 @@ const useFanyFrom = () => {
   );
 
   const onClose = () => {
-    client.invalidateQueries(["query_fangy"]);
+    client.invalidateQueries(["QuerySecondHandHousing"]);
     form.resetFields();
     setOpen(false);
   };
 
-  const openDialog = (data?: Fangy) => {
+  const openDialog = (data?: SecondHandHousing) => {
     if (data) {
       form.setFieldsValue(data as any);
     }
@@ -83,18 +63,6 @@ const useFanyFrom = () => {
         }}
         extra={
           <Space>
-            {isUpdated ? (
-              <Button
-                type="primary"
-                danger
-                loading={deleteIsLoading}
-                onClick={() => {
-                  deleteMutate({ id: form.getFieldValue("id") });
-                }}
-              >
-                删除
-              </Button>
-            ) : null}
             <Button onClick={onClose}>取消</Button>
             <Button
               loading={isLoading}
@@ -109,22 +77,23 @@ const useFanyFrom = () => {
         <Form
           layout="vertical"
           form={form}
-          onFinish={(value) => {
-            if (!value.image_data) {
-              value.image_data = [];
-            }
-            mutate({ ...value });
+          onFinish={(value: any) => {
+            value.image_data = value.image_data?.toString();
+            value.region = value.region?.toString();
+            value.tag = value.tag?.toString();
+            mutate(value);
           }}
         >
           <Form.Item name="id" hidden />
-          <Form.Item name="image_url" label="房源图片">
+          <Form.Item name="broker" hidden initialValue="admin" />
+          <Form.Item name="image_data" label="房源图片">
             <UploadFany />
           </Form.Item>
           <Form.Item label="户主姓名" name="name">
             <Input placeholder="户主姓名" />
           </Form.Item>
-          <Form.Item label="位置" name="location">
-            <Input placeholder="位置" />
+          <Form.Item label="地址" name="address">
+            <Input placeholder="地址" />
           </Form.Item>
           <RegionFormItem />
           <Form.Item label="联系方式" name="phone">
@@ -136,22 +105,44 @@ const useFanyFrom = () => {
           <Form.Item label="低价 (单位 万元)" name="low_price">
             <InputNumber placeholder="低价" style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item label="房型" name="room">
+          <Form.Item label="房型">
             <Space>
-              <Input placeholder="室" />
-              <Input placeholder="厅" />
-              <Input placeholder="卫" />
+              <Form.Item label="室" name="room" noStyle>
+                <InputNumber placeholder="几室" />
+              </Form.Item>
+              <Form.Item label="卫" name="bath" noStyle>
+                <InputNumber placeholder="几卫" />
+              </Form.Item>
+              <Form.Item label="厅" name="hall" noStyle>
+                <InputNumber placeholder="几卫" />
+              </Form.Item>
             </Space>
           </Form.Item>
           <Form.Item label="面积 (单位 m²)" name="area">
-            <Input placeholder="面积" />
+            <InputNumber placeholder="面积" />
           </Form.Item>
-          <TowardFormItem />
-          <FloorFormItem />
+          <DirectionFormItem />
+          <Form.Item label="楼层" name="floor">
+            <InputNumber placeholder="楼层" />
+          </Form.Item>
           <PropertyFormItem />
           <DecorationFormItem />
-          <AgeFormItem />
+          <Form.Item label="房龄" name="age">
+            <Input placeholder="房龄" />
+          </Form.Item>
           <PropertyTypeFormItem />
+          <Form.Item label="电梯" name="elevator">
+            <Radio.Group>
+              <Radio value={true}>有</Radio>
+              <Radio value={false}>无</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item label="停车位" name="parking">
+            <Radio.Group>
+              <Radio value={true}>有</Radio>
+              <Radio value={false}>无</Radio>
+            </Radio.Group>
+          </Form.Item>
           <TagsFormItem />
           <Form.Item label="备注" name="comment">
             <Input.TextArea placeholder="备注" />

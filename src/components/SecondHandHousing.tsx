@@ -3,8 +3,10 @@ import { Card, Checkbox, Popover, Tabs } from "antd";
 import { FilterSecondHandHousing } from "./FilterSecondHandHousing";
 import "./FanyList.less";
 import { SecondHandHousingTable } from "./SecondHandHousingTable";
+import { useQuerySecondHandHousing } from "../hooks/useQuerySecondHandHousing";
 
 export function SecondHandHousing() {
+  const { result } = useQuerySecondHandHousing();
   const options = [
     { label: "房源图片", value: "image_url", style: { width: 110 } },
     { label: "位置", value: "location", style: { width: 110 } },
@@ -35,7 +37,7 @@ export function SecondHandHousing() {
         tabBarExtraContent={{
           left: (
             <div style={{ width: "100%" }}>
-              共找到 <strong style={{ color: "red" }}>16305</strong>{" "}
+              共找到 <strong style={{ color: "red" }}>{result?.total}</strong>{" "}
               套二手房房源
             </div>
           ),

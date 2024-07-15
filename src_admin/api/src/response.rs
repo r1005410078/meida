@@ -20,6 +20,7 @@ impl error::ResponseError for ApiError {
             code: 1,
             message: Some(self.to_string()),
             data: (),
+            total: None,
         };
         HttpResponse::build(self.status_code())
             .insert_header(ContentType::json())
@@ -38,6 +39,7 @@ pub struct Response<T: Serialize> {
     pub code: u32,
     pub message: Option<String>,
     pub data: T,
+    pub total: Option<i32>,
 }
 
 impl<T: Serialize> Response<T> {
@@ -46,6 +48,16 @@ impl<T: Serialize> Response<T> {
             code: 0,
             message: None,
             data,
+            total: None,
+        }
+    }
+
+    pub fn ok_total(data: T, total: i32) -> Self {
+        Self {
+            code: 0,
+            message: None,
+            data,
+            total: Some(total),
         }
     }
 }

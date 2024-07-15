@@ -6,6 +6,7 @@ import {
   TableProps,
   Tag,
   Typography,
+  Modal,
 } from "antd";
 import useImagePhoto from "./ImagePhoto";
 import { ImageIcon } from "./icons";
@@ -15,7 +16,12 @@ import {
   DownOutlined,
   DeleteOutlined,
   WalletOutlined,
+  ExclamationCircleFilled,
 } from "@ant-design/icons";
+import { useMutation, useQueryClient } from "react-query";
+import { deleteSecondHandHousing } from "../api/SecondHandHousing";
+import { SecondHandHousing } from "../model/SecondHandHousing";
+import { useQuerySecondHandHousing } from "../hooks/useQuerySecondHandHousing";
 
 interface DataType {
   // 房源图片
@@ -60,7 +66,21 @@ interface DataType {
 export function SecondHandHousingTable() {
   const { openDialog, fanyFromNode } = useFanyFrom();
   const { openPhotoView, imagePhotoNode } = useImagePhoto();
-  const columns: TableProps<DataType>["columns"] = [
+  const { result } = useQuerySecondHandHousing();
+
+  const client = useQueryClient();
+
+  const { isLoading: deleteLoading, mutate: deleteMutate } = useMutation(
+    ["DeleteSecondHandHousing"],
+    (id: number) => deleteSecondHandHousing(id),
+    {
+      onSuccess: () => {
+        client.invalidateQueries(["QuerySecondHandHousing"]);
+      },
+    }
+  );
+
+  const columns: TableProps<SecondHandHousing>["columns"] = [
     {
       title: "图片",
       dataIndex: "image_url",
@@ -88,8 +108,8 @@ export function SecondHandHousingTable() {
     },
     {
       title: "位置",
-      dataIndex: "location",
-      key: "location",
+      dataIndex: "address",
+      key: "address",
     },
     {
       title: "区域",
@@ -117,8 +137,8 @@ export function SecondHandHousingTable() {
     },
     {
       title: "朝向",
-      dataIndex: "toward",
-      key: "toward",
+      dataIndex: "direction",
+      key: "direction",
     },
     {
       title: "楼层",
@@ -145,15 +165,14 @@ export function SecondHandHousingTable() {
       dataIndex: "property_type",
       key: "property_type",
     },
-
     {
       title: "标签",
-      dataIndex: "tags",
-      key: "tags",
-      render: (tags) => {
+      dataIndex: "tag",
+      key: "tag",
+      render: (tag) => {
         return (
           <div>
-            {tags.split(",").map((tag: string) => (
+            {tag?.split(",").map((tag: string) => (
               <Tag color="green" key={tag}>
                 {tag}
               </Tag>
@@ -178,10 +197,12 @@ export function SecondHandHousingTable() {
       dataIndex: "action",
       key: "action",
       width: 160,
-      render: () => {
+      render: (_, item) => {
         return (
           <Space split={<Divider type="vertical" />}>
-            <Typography.Link onClick={() => openDialog()}>编辑</Typography.Link>
+            <Typography.Link onClick={() => openDialog(item)}>
+              编辑
+            </Typography.Link>
             <Dropdown
               menu={{
                 items: [
@@ -192,7 +213,26 @@ export function SecondHandHousingTable() {
                   },
                   {
                     key: "2",
-                    label: <span>删除</span>,
+                    label: (
+                      <span
+                        onClick={() => {
+                          Modal.confirm({
+                            title: "是否要删除房源?",
+                            icon: <ExclamationCircleFilled />,
+                            content: "删除后不可恢复",
+                            okText: "删除",
+                            okType: "danger",
+                            cancelText: "取消",
+                            okButtonProps: { loading: deleteLoading },
+                            onOk() {
+                              deleteMutate(item.id);
+                            },
+                          });
+                        }}
+                      >
+                        删除
+                      </span>
+                    ),
                     icon: <DeleteOutlined />,
                   },
                 ],
@@ -211,30 +251,7 @@ export function SecondHandHousingTable() {
     },
   ];
 
-  const data = new Array(100).fill({
-    image_url: [
-      "https://image2a.5i5j.com/scm/HOUSE_CUSTOMER/3d59a520f7e54fe7a66a9f31f92df0ef.jpg_P5.jpg",
-      "https://image2a.5i5j.com/scm/HOUSE_CUSTOMER/ca88d267121f4e25b625b400f008afbc.jpg_P5.jpg",
-    ],
-    name: "罗玉美",
-    location: "K1842四季花城",
-    region: "朝阳区",
-    price: "123万",
-    low_price: "121万",
-    room: "二室一厅",
-    area: "100",
-    toward: "南",
-    floor: "5",
-    property: "商品房",
-    decoration: "毛坯",
-    age: "5年",
-    property_type: "住宅",
-    tags: "绿化好",
-    phone: "12345678901",
-    updated_at: "2021-10-10 10:10:10",
-    comment: "这个房子很好",
-  });
-
+  const dataSource = result?.data;
   const { expand } = useFangyFilter();
 
   return (
@@ -245,7 +262,7 @@ export function SecondHandHousingTable() {
         columns={columns}
         pagination={{
           defaultCurrent: 1,
-          total: 100,
+          total: result?.total,
           pageSize: 20,
           size: "default",
           onChange: (page) => {
@@ -253,7 +270,7 @@ export function SecondHandHousingTable() {
           },
         }}
         scroll={{ y: window.innerHeight - (expand ? 618 : 532) }}
-        dataSource={data}
+        dataSource={dataSource}
       />
       {fanyFromNode}
     </div>

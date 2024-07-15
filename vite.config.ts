@@ -12,6 +12,9 @@ export default defineConfig(async () => ({
   // 2. tauri expects a fixed port, fail if that port is not available
   server: {
     port: 1420,
+    proxy: {
+      "/api": "http://127.0.0.1:8081",
+    },
     strictPort: true,
     watch: {
       // 3. tell vite to ignore watching `src-tauri`

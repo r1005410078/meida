@@ -14,11 +14,11 @@ async fn list(
     pool: web::Data<MySqlPool>,
     query: web::Query<SecondHandHousingQueryDto>,
 ) -> Result<impl Responder> {
-    let result = second_hand_housing::query(pool.as_ref(), query.into_inner())
+    let (data, total) = second_hand_housing::query(pool.as_ref(), query.into_inner())
         .await
         .map_err(|err| ApiError::ErrMsg(err.to_string()))?;
 
-    Ok(Response::ok(result))
+    Ok(Response::ok_total(data, total))
 }
 
 #[post("/save")]

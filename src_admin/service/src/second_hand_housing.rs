@@ -22,6 +22,6 @@ pub async fn delete(pool: &MySqlPool, id: i64) -> anyhow::Result<bool> {
 pub async fn query(
     pool: &MySqlPool,
     query: SecondHandHousingQueryDto,
-) -> anyhow::Result<Vec<SecondHandHousing>> {
-    Ok(query.query(pool).await?)
+) -> anyhow::Result<(Vec<SecondHandHousing>, i32)> {
+    Ok((query.query(pool).await?, query.get_total(pool).await?))
 }

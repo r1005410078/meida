@@ -3,7 +3,7 @@ use dto::second_hand_housing::{
     SecondHandHousingInsertDto, SecondHandHousingQueryDto, SecondHandHousingUpdateDto,
 };
 use model::second_hand_housing::SecondHandHousing;
-use sqlx::{MySql, MySqlPool, QueryBuilder};
+use sqlx::{query_as, MySql, MySqlPool, QueryBuilder};
 use std::future::Future;
 
 pub trait SecondHandHousingQuery {
@@ -11,6 +11,8 @@ pub trait SecondHandHousingQuery {
         &self,
         pool: &MySqlPool,
     ) -> impl Future<Output = anyhow::Result<Vec<SecondHandHousing>>>;
+
+    fn get_total(&self, pool: &MySqlPool) -> impl Future<Output = anyhow::Result<i32>>;
 }
 
 pub trait SecondHousingInsert {
@@ -144,6 +146,15 @@ impl SecondHandHousingQuery for SecondHandHousingQueryDto {
         let data = query.build_query_as().fetch_all(pool).await?;
 
         Ok(data)
+    }
+
+    async fn get_total(&self, pool: &MySqlPool) -> anyhow::Result<i32> {
+        let (count,): (i32,) =
+            query_as("SELECT COUNT(1) FROM second_hand_housing WHERE deleted = 0")
+                .fetch_one(pool)
+                .await?;
+
+        Ok(count)
     }
 }
 
