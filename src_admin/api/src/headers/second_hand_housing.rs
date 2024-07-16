@@ -4,7 +4,7 @@ use actix_web::{
     Responder, Result,
 };
 use dto::second_hand_housing::{SecondHandHousingQueryDto, SecondHandHousingSaveDto};
-use service::second_hand_housing;
+use service::{qiliu, second_hand_housing};
 use sqlx::MySqlPool;
 
 use crate::response::{ApiError, Response};
@@ -42,11 +42,18 @@ async fn delete(pool: web::Data<MySqlPool>, id: web::Path<i64>) -> Result<impl R
     Ok(Response::ok(true))
 }
 
+#[get("/get_qiniu_token/{file_name}")]
+async fn get_qiniu_token(file_name: web::Path<String>) -> Result<impl Responder> {
+    let token = qiliu::get_upload_token(&file_name);
+    Ok(Response::ok(token))
+}
+
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/second_hand_housing")
             .service(list)
             .service(save)
-            .service(delete),
+            .service(delete)
+            .service(get_qiniu_token),
     );
 }

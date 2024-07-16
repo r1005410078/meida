@@ -1,6 +1,15 @@
 import { useState } from "react";
-import { Button, Drawer, Form, Input, InputNumber, Radio, Space } from "antd";
-import UploadFany from "./UploadFany";
+import {
+  Button,
+  Drawer,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Space,
+  UploadFile,
+} from "antd";
+import UploadFany, { fangImagesUpload, qiniuUpload } from "./UploadFany";
 import { useMutation, useQueryClient } from "react-query";
 import {
   DecorationFormItem,
@@ -11,11 +20,14 @@ import {
   DirectionFormItem,
 } from "./FangyFromItems";
 import { save } from "../api/SecondHandHousing";
-import { SecondHandHousing } from "../model/SecondHandHousing";
+import {
+  SecondHandHousing,
+  SecondHandHousingFrom,
+} from "../model/SecondHandHousing";
 
 const useFanyFrom = () => {
   const [open, setOpen] = useState(false);
-  const [form] = Form.useForm<SecondHandHousing>();
+  const [form] = Form.useForm<SecondHandHousingFrom>();
   const [isUpdated, setIsUpdated] = useState(false);
   const client = useQueryClient();
 
@@ -77,11 +89,20 @@ const useFanyFrom = () => {
         <Form
           layout="vertical"
           form={form}
-          onFinish={(value: any) => {
-            value.image_data = value.image_data?.toString();
+          onFinish={async (value) => {
+            const image_data = value.image_data;
+            if (image_data) {
+              const data = await fangImagesUpload(form, image_data);
+              data?.map(
+                (item: any) =>
+                  `sgpubjz98.hd-bkt.clouddn.com/${JSON.parse(item.result).key}`
+              );
+            }
+
             value.region = value.region?.toString();
             value.tag = value.tag?.toString();
-            mutate(value);
+
+            mutate(value as any);
           }}
         >
           <Form.Item name="id" hidden />
@@ -89,7 +110,12 @@ const useFanyFrom = () => {
           <Form.Item name="image_data" label="房源图片">
             <UploadFany />
           </Form.Item>
-          <Form.Item label="户主姓名" name="name">
+          <Form.Item
+            label="户主姓名"
+            name="name"
+            required
+            rules={[{ required: true }]}
+          >
             <Input placeholder="户主姓名" />
           </Form.Item>
           <Form.Item label="地址" name="address">
