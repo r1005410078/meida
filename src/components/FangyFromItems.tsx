@@ -66,7 +66,7 @@ export function RegionFormItem() {
         multiple
         options={options}
         placeholder="区域"
-        style={{ width: 310 }}
+        style={{ width: 260 }}
       />
     </Form.Item>
   );
