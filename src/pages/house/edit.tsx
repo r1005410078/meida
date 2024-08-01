@@ -17,9 +17,11 @@ import { HouseFrom } from "../../model/House";
 import { useEffect } from "react";
 import { useCreateHouse, useHouseById, useUpdateHouse } from "../../api/house";
 import { useCommunityList } from "../../api/community";
+import UploadHouse, { fangImagesUpload } from "../../components/UploadHouse";
+import axios from "axios";
 
 export function Edit() {
-  const [from] = useForm<HouseFrom>();
+  const [form] = useForm<HouseFrom>();
   const { houseId } = useParams<{ houseId: string }>();
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -33,7 +35,7 @@ export function Edit() {
 
   useEffect(() => {
     if (formData) {
-      from.setFieldsValue(formData as any);
+      form.setFieldsValue(formData as any);
     }
   }, [formData]);
 
@@ -64,7 +66,7 @@ export function Edit() {
               shape="round"
               type="primary"
               loading={create.isLoading || update.isLoading}
-              onClick={() => from.submit()}
+              onClick={() => form.submit()}
             >
               保存
             </Button>
@@ -81,9 +83,28 @@ export function Edit() {
         }}
       >
         <Form
-          form={from}
+          form={form}
           layout={"vertical"}
           onFinish={async (value) => {
+            const house_image = value.house_image;
+            if (house_image) {
+              const data = await fangImagesUpload(form, house_image);
+
+              let urls = await Promise.all(
+                data!.map((item: any) =>
+                  axios
+                    .get(
+                      `/api/v1/qiniu/get_upload_url/${
+                        JSON.parse(item.result).key
+                      }`
+                    )
+                    .then((res) => res.data.data)
+                )
+              );
+
+              value.house_image = urls.join(",") as any;
+            }
+
             let newValue = {
               house_id: houseId,
               ...value,
@@ -95,7 +116,7 @@ export function Edit() {
               await create.mutateAsync(newValue);
             }
 
-            from.resetFields();
+            form.resetFields();
 
             if (houseId) {
               navigate("/house", { replace: true });
@@ -235,7 +256,7 @@ export function Edit() {
             name="house_image"
             rules={[{ required: true }]}
           >
-            <Input />
+            <UploadHouse />
           </Form.Item>
           <Form.Item
             label="户主姓名"

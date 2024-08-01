@@ -1,3 +1,5 @@
+import { UploadFile } from "antd";
+
 export interface House {
   house_id: string;
   community_name: string;
@@ -30,7 +32,7 @@ export interface HouseFrom {
   orientation: string;
   decoration_status: string;
   status: string;
-  house_image: string;
+  house_image?: UploadFile[];
   owner_name: string;
   owner_phone: string;
   house_description?: string;

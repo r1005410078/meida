@@ -9,7 +9,7 @@ import {
   Space,
   UploadFile,
 } from "antd";
-import UploadFany, { fangImagesUpload, qiniuUpload } from "./UploadFany";
+import UploadFany, { fangImagesUpload, qiniuUpload } from "./UploadHouse";
 import { useMutation, useQueryClient } from "react-query";
 import {
   DecorationFormItem,

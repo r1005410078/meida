@@ -1,22 +1,36 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Upload } from "antd";
 import { createMultipartUploadV2Task, FileData } from "qiniu-js";
 import { v4 } from "uuid";
 import axios from "axios";
 import type { FormInstance, UploadFile } from "antd";
-import { SecondHandHousingFrom } from "../model/SecondHandHousing";
+import { HouseFrom } from "../model/House";
 
-interface UploadFanyProps {
+interface UploadHouseProps {
   onChange?: (value: UploadFile<any>[]) => void;
   value?: UploadFile<any>[];
 }
 
-const UploadFany: React.FC<UploadFanyProps> = ({ onChange, value }) => {
+const UploadHouse: React.FC<UploadHouseProps> = ({ onChange, value }) => {
+  const fileList = useMemo(() => {
+    if (typeof value === "string") {
+      return (value as string).split(",").map((url) => {
+        return {
+          uid: v4(),
+          name: "image.png",
+          status: "done",
+          url,
+        };
+      });
+    }
+    return value;
+  }, [value]);
+
   return (
     <>
       <Upload
         listType="picture-card"
-        fileList={value}
+        fileList={fileList as any}
         multiple
         onChange={({ fileList }) => {
           onChange?.(fileList.map((item) => ({ ...item, status: "done" })));
@@ -29,20 +43,20 @@ const UploadFany: React.FC<UploadFanyProps> = ({ onChange, value }) => {
 };
 
 export function fangImagesUpload(
-  form: FormInstance<SecondHandHousingFrom>,
-  image_data: UploadFile[]
+  form: FormInstance<HouseFrom>,
+  house_image: UploadFile[]
 ) {
-  if (image_data) {
-    const will_upload_image_data = image_data.map((uploadFile) => {
+  if (house_image) {
+    const will_upload_house_image = house_image.map((uploadFile) => {
       const uploadTask = qiniuUpload(uploadFile.originFileObj!);
       // 设置进度回调函数
       uploadTask.onProgress((progress) => {
         // 处理进度回调
-        const old_image_data: UploadFile[] = form.getFieldValue("image_data");
+        const old_house_image: UploadFile[] = form.getFieldValue("house_image");
 
         form.setFieldValue(
-          "image_data",
-          old_image_data.map((item) => {
+          "house_image",
+          old_house_image.map((item) => {
             if (item.uid === uploadFile.uid) {
               return {
                 ...item,
@@ -60,8 +74,8 @@ export function fangImagesUpload(
         // 处理完成回调
         // 处理进度回调
         form.setFieldValue(
-          "image_data",
-          image_data.map((item) => {
+          "house_image",
+          house_image.map((item) => {
             if (item.uid === uploadFile.uid) {
               return {
                 ...item,
@@ -77,8 +91,8 @@ export function fangImagesUpload(
       uploadTask.onError((error) => {
         // 处理错误回调
         form.setFieldValue(
-          "image_data",
-          image_data.map((item) => {
+          "house_image",
+          house_image.map((item) => {
             if (item.uid === uploadFile.uid) {
               return {
                 ...item,
@@ -95,7 +109,7 @@ export function fangImagesUpload(
     });
 
     // 等待所有图片上传完成
-    return Promise.all(will_upload_image_data);
+    return Promise.all(will_upload_house_image);
   }
 }
 
@@ -111,7 +125,7 @@ export function qiniuUpload(file: File) {
     /** 上传 token 提供器；SDK 通过该接口获取上传 Token */
     tokenProvider: async () => {
       return axios
-        .get(`/api/second_hand_housing/get_qiniu_token/${fileName}`)
+        .get(`/api/v1/qiniu/get_token/${fileName}`)
         .then((res) => res.data.data);
     },
   });
@@ -119,4 +133,4 @@ export function qiniuUpload(file: File) {
   return uploadTask;
 }
 
-export default UploadFany;
+export default UploadHouse;
