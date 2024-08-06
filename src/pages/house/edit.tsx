@@ -87,7 +87,7 @@ export function Edit() {
           layout={"vertical"}
           onFinish={async (value) => {
             const house_image = value.house_image;
-            if (house_image) {
+            if (Array.isArray(house_image)) {
               const data = await fangImagesUpload(form, house_image);
 
               let urls = await Promise.all(

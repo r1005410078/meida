@@ -17,6 +17,15 @@ import { List as CommunityList } from "./pages/community/list";
 import { Edit as CommunityEdit } from "./pages/community/edit";
 import { List as HouseList } from "./pages/house/list";
 import { Edit as HouseEdit } from "./pages/house/edit";
+import { List as SecondHandHouseList } from "./pages/SecondHandHouse/list";
+import { Edit as SecondHandHouseEdit } from "./pages/SecondHandHouse/edit";
+import { List as SoldSecondHandHouseList } from "./pages/sold/list";
+import { List as RentalHouseList } from "./pages/rental_house/list";
+import { Edit as RentalHouseEdit } from "./pages/rental_house/edit";
+import { RentalPage } from "./pages/rental_house";
+
+import { SecondHandHousePage } from "./pages/SecondHandHouse";
+import { SoldPage } from "./pages/sold";
 const { Sider } = Layout;
 
 const App: React.FC = () => {
@@ -51,14 +60,29 @@ const App: React.FC = () => {
                 }}
                 items={[
                   {
+                    key: "second-hand-house",
+                    icon: <BankOutlined />,
+                    label: "二手房管理",
+                  },
+                  {
+                    key: "rental-house",
+                    icon: <BankOutlined />,
+                    label: "租房管理",
+                  },
+                  {
                     key: "house",
                     icon: <MediumOutlined />,
-                    label: "房源",
+                    label: "房源管理",
                   },
                   {
                     key: "residential",
                     icon: <BankOutlined />,
                     label: "小区管理",
+                  },
+                  {
+                    key: "sold",
+                    icon: <BankOutlined />,
+                    label: "售出房源管理",
                   },
                 ]}
               />
@@ -77,6 +101,16 @@ const App: React.FC = () => {
           </Layout>
         }
       >
+        <Route path="/rental-house" element={<RentalPage />}>
+          <Route index element={<RentalHouseList />} />
+          <Route path="edit/:houseId" element={<RentalHouseEdit />} />
+          <Route path="new" element={<RentalHouseEdit />} />
+        </Route>
+        <Route path="/second-hand-house" element={<SecondHandHousePage />}>
+          <Route index element={<SecondHandHouseList />} />
+          <Route path="edit/:houseId" element={<SecondHandHouseEdit />} />
+          <Route path="new" element={<SecondHandHouseEdit />} />
+        </Route>
         <Route path="/house" element={<HousePage />}>
           <Route index element={<HouseList />} />
           <Route path="edit/:houseId" element={<HouseEdit />} />
@@ -86,6 +120,9 @@ const App: React.FC = () => {
           <Route index element={<CommunityList />} />
           <Route path="edit/:communityName" element={<CommunityEdit />} />
           <Route path="new" element={<CommunityEdit />} />
+        </Route>
+        <Route path="/sold" element={<SoldPage />}>
+          <Route index element={<SoldSecondHandHouseList />} />
         </Route>
         <Route path="*" element={<NoMatch />} />
       </Route>

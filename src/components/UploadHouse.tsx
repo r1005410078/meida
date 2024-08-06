@@ -46,7 +46,7 @@ export function fangImagesUpload(
   form: FormInstance<HouseFrom>,
   house_image: UploadFile[]
 ) {
-  if (house_image) {
+  if (Array.isArray(house_image)) {
     const will_upload_house_image = house_image.map((uploadFile) => {
       const uploadTask = qiniuUpload(uploadFile.originFileObj!);
       // 设置进度回调函数

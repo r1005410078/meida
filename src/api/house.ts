@@ -64,3 +64,18 @@ export function useUpdateHouse() {
     }
   );
 }
+
+// 根据户主名称查询
+export function useHouseListByOwnerName(ownerName?: string) {
+  return useQuery(
+    ["houseListByOwnerName", ownerName],
+    () => {
+      return axios.get<House[]>(
+        `/api/v1/house/list_by_owner_name/${ownerName}`
+      );
+    },
+    {
+      enabled: !!ownerName,
+    }
+  );
+}

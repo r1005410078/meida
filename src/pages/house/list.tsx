@@ -1,6 +1,7 @@
 import {
   Button,
   Divider,
+  Dropdown,
   Flex,
   Modal,
   Space,
@@ -8,7 +9,12 @@ import {
   theme,
   Typography,
 } from "antd";
-import { PlusOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  ExclamationCircleFilled,
+  DeleteOutlined,
+  DownOutlined,
+} from "@ant-design/icons";
 import { Content, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
 import { useDeleteHouse, useHouseList } from "../../api/house";
@@ -67,16 +73,20 @@ export function List() {
           size="small"
           dataSource={data?.data}
           rowKey={(record) => record.community_name}
+          scroll={{ x: 2000 }}
           columns={[
             {
               title: "小区名称",
               dataIndex: "community_name",
               key: "community_name",
+              width: 120,
+              fixed: "left",
             },
             {
               title: "房屋地址",
               dataIndex: "house_address",
               key: "house_address",
+              width: 120,
             },
             {
               title: "房屋类型",
@@ -127,6 +137,7 @@ export function List() {
               title: "房屋图片",
               dataIndex: "house_image",
               key: "house_image",
+              width: 200,
             },
             {
               title: "房屋朝向",
@@ -151,37 +162,68 @@ export function List() {
             {
               title: "操作",
               dataIndex: "action",
+              width: 130,
+              fixed: "right",
               key: "action",
-              render: (_, record) => {
-                return (
-                  <Space split={<Divider type="vertical" />}>
-                    <Typography.Link
-                      onClick={() => {
-                        navigate(`/house/edit/${record.house_id}`);
-                      }}
-                    >
-                      编辑
-                    </Typography.Link>
-                    <Typography.Link
-                      onClick={() => {
-                        Modal.confirm({
-                          title: "确定删除小区吗?",
-                          icon: <ExclamationCircleFilled />,
-                          content: "删除后不可恢复!!",
-                          okText: "确定",
-                          okType: "danger",
-                          cancelText: "取消",
-                          onOk() {
-                            deleteCommunity.mutate(record.house_id);
+              render: (_, record) => (
+                <Space split={<Divider type="vertical" />}>
+                  <Typography.Link
+                    onClick={() => {
+                      navigate(`/house/edit/${record.house_id}`);
+                    }}
+                  >
+                    编辑
+                  </Typography.Link>
+                  <Dropdown
+                    trigger={["click"]}
+                    menu={{
+                      items: [
+                        {
+                          key: "2",
+                          label: "登记成二手房",
+                          icon: <PlusOutlined />,
+                          onClick: () => {
+                            console.log(111);
                           },
-                        });
-                      }}
-                    >
-                      删除
+                        },
+                        {
+                          key: "3",
+                          label: "登记成租房",
+                          icon: <PlusOutlined />,
+                          onClick: () => {
+                            console.log(333);
+                          },
+                        },
+                        {
+                          key: "1",
+                          label: "删除房源",
+                          icon: <DeleteOutlined />,
+                          onClick: () => {
+                            Modal.confirm({
+                              title: "确定删除房源吗?",
+                              icon: <ExclamationCircleFilled />,
+                              content: "删除后不可恢复!!",
+                              okText: "确定",
+                              okType: "danger",
+                              cancelText: "取消",
+                              onOk() {
+                                deleteCommunity.mutate(record.house_id);
+                              },
+                            });
+                          },
+                        },
+                      ],
+                    }}
+                  >
+                    <Typography.Link>
+                      <Space>
+                        更多
+                        <DownOutlined />
+                      </Space>
                     </Typography.Link>
-                  </Space>
-                );
-              },
+                  </Dropdown>
+                </Space>
+              ),
             },
           ]}
         />

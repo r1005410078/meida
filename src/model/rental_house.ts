@@ -1,8 +1,8 @@
-export interface SecondHandHousing {
+export interface SecondRentalHouse {
   // 二手房信息
   house_id: string;
-  pice: string;
-  low_price?: string;
+  rent_pice: string;
+  rent_low_price?: string;
   listed?: number;
   listed_time?: number;
   unlisted_time?: number;
@@ -34,7 +34,7 @@ export interface SecondHandHousing {
   description: string;
 }
 
-export interface SecondHandHousingResponse {
+export interface SecondRentalHouseResponse {
   house: {
     house_id: string;
     community_name: string;
@@ -69,27 +69,23 @@ export interface SecondHandHousingResponse {
     created_at: string;
     updated_at: string;
   };
-  house_second_hand: {
+  rental_house: {
     house_id: string;
-    community_name: string;
-    pice: string;
-    low_pice?: string;
-    listed: number;
-    listed_time: string;
-    unlisted_time: string;
-    created_at: string;
-    updated_at: string;
+    rent_pice: string;
+    rent_low_price?: string;
+    listed?: number;
+    listed_time?: number;
+    unlisted_time?: number;
   };
 }
 
-export interface SecondHandHousingFrom {
+export interface SecondRentalHouseFrom {
   house_id: string;
-  pice: string;
-  low_price?: string;
-  listed?: number;
+  rent_pice: string;
+  rent_low_price?: string;
 }
 
-export interface SoldSecondHandHousingResponse {
+export interface SoldSecondRentalHouseResponse {
   house: {
     house_id: string;
     community_name: string;
@@ -127,9 +123,9 @@ export interface SoldSecondHandHousingResponse {
   house_second_hand: {
     house_id: string;
     community_name: string;
-    days_to_sell: number;
-    sold_price: string;
-    sold_time: string;
+    rent_pice: string;
+    rent_start_time: string;
+    rent_end_time: string;
     created_at: string;
     updated_at: string;
   };
