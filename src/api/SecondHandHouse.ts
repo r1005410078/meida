@@ -82,7 +82,7 @@ export function useSold() {
 }
 
 // 卖出列表
-export function useListSold() {
+export function useSecondHandHouseListSold() {
   return useQuery(["list_sold"], async () => {
     const res = await axios.get<SoldSecondHandHousingResponse[]>(
       "/api/v1/second_hand_house/list_sold"

@@ -50,6 +50,8 @@ export function Edit() {
     }
   }, [formData]);
 
+  console.log("formData", formData);
+
   return (
     <>
       <Header style={{ padding: 0, background: colorBgContainer }}>
@@ -168,7 +170,7 @@ export function Edit() {
                 form.resetFields();
 
                 if (houseId) {
-                  navigate("/second-hand-house", { replace: true });
+                  navigate("/rental-house", { replace: true });
                 } else {
                   Modal.confirm({
                     title: "房源保存成功",
@@ -176,12 +178,12 @@ export function Edit() {
                     okText: "继续添加房源",
                     cancelText: "返回列表",
                     onOk() {
-                      navigate("/second-hand-house/new", {
+                      navigate("/rental-house/new", {
                         replace: true,
                       });
                     },
                     onCancel() {
-                      navigate("/second-hand-house", {
+                      navigate("/rental-house", {
                         replace: true,
                       });
                     },

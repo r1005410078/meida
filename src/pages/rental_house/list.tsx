@@ -18,7 +18,6 @@ import {
 } from "@ant-design/icons";
 import { Content, Header } from "antd/es/layout/layout";
 import { useNavigate } from "react-router";
-import { useState } from "react";
 import {
   useGetRentalHouseList,
   useListed,
@@ -37,11 +36,6 @@ export function List() {
   // 下架
   const unListed = useUnListed();
   // 卖出
-
-  const [listParams, setListParams] = useState({
-    page_index: 1,
-    page_size: 20,
-  });
 
   const items: MenuProps["items"] = [
     {
@@ -84,7 +78,7 @@ export function List() {
               shape="round"
               type="primary"
               onClick={() => {
-                navigate("/second-hand-house/new");
+                navigate("/rental-house/new");
               }}
               icon={<PlusOutlined />}
             >
@@ -189,7 +183,7 @@ export function List() {
                 <Space split={<Divider type="vertical" />}>
                   <Typography.Link
                     onClick={() => {
-                      navigate(`/second-hand-house/edit/${record.house_id}`);
+                      navigate(`/rental-house/edit/${record.house_id}`);
                     }}
                   >
                     编辑

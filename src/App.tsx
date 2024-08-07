@@ -19,7 +19,9 @@ import { List as HouseList } from "./pages/house/list";
 import { Edit as HouseEdit } from "./pages/house/edit";
 import { List as SecondHandHouseList } from "./pages/SecondHandHouse/list";
 import { Edit as SecondHandHouseEdit } from "./pages/SecondHandHouse/edit";
-import { List as SoldSecondHandHouseList } from "./pages/sold/list";
+import { SoldSecondHandHouseList } from "./pages/sold/second_hand_house";
+import { SoldRentalHouseList } from "./pages/sold/rental_house";
+
 import { List as RentalHouseList } from "./pages/rental_house/list";
 import { Edit as RentalHouseEdit } from "./pages/rental_house/edit";
 import { RentalPage } from "./pages/rental_house";
@@ -56,6 +58,10 @@ const App: React.FC = () => {
                 mode="inline"
                 selectedKeys={[pathname.split("/")[1]]}
                 onSelect={(item) => {
+                  if (item.key === "sold") {
+                    navigate(`/${item.key}/second-hand-house`);
+                    return;
+                  }
                   navigate(`/${item.key}`);
                 }}
                 items={[
@@ -122,7 +128,12 @@ const App: React.FC = () => {
           <Route path="new" element={<CommunityEdit />} />
         </Route>
         <Route path="/sold" element={<SoldPage />}>
-          <Route index element={<SoldSecondHandHouseList />} />
+          <Route
+            index
+            path="second-hand-house"
+            element={<SoldSecondHandHouseList />}
+          />
+          <Route path="rental-house" element={<SoldRentalHouseList />} />
         </Route>
         <Route path="*" element={<NoMatch />} />
       </Route>
