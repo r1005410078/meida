@@ -95,8 +95,7 @@ export function List() {
       </Header>
       <Content
         style={{
-          margin: "0",
-          padding: "0 24px 24px",
+          margin: "24px",
           minHeight: 280,
           background: colorBgContainer,
           borderRadius: borderRadiusLG,
