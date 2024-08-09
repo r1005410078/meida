@@ -12,7 +12,7 @@ export default () => (
       path="/"
       element={
         <ProLayout
-          title="美大房源管理系统"
+          title=""
           logo="/meida.png"
           fixSiderbar
           fixedHeader
