@@ -17,9 +17,6 @@ export default () => (
           fixSiderbar
           fixedHeader
           breakpoint={false}
-          pageTitleRender={(props) => {
-            return "ddd";
-          }}
           menuDataRender={() => [
             {
               path: "/house",
