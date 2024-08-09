@@ -1,4 +1,4 @@
-import { MediumOutlined } from "@ant-design/icons";
+import { CodepenCircleOutlined } from "@ant-design/icons";
 import { ProLayout } from "@ant-design/pro-components";
 import { Button, Result } from "antd";
 import { Outlet, Route, Routes } from "react-router-dom";
@@ -13,6 +13,7 @@ export default () => (
       element={
         <ProLayout
           title="美大房源管理系统"
+          logo="/meida.png"
           fixSiderbar
           fixedHeader
           breakpoint={false}
@@ -22,7 +23,7 @@ export default () => (
           menuDataRender={() => [
             {
               path: "/house",
-              icon: <MediumOutlined />,
+              icon: <CodepenCircleOutlined />,
               name: "房源管理",
               children: [
                 {
