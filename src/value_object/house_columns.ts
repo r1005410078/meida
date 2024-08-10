@@ -1,5 +1,6 @@
 import { ProColumns } from "@ant-design/pro-components";
-import { TableListItem } from "../pages/SecondHandHouse/list";
+import { Community } from "../model/Community";
+import { House } from "../model/House";
 
 // 区域
 export const region = [
@@ -357,28 +358,51 @@ export const tag = [
   },
 ];
 
+export function useCommunityColumns(): ProColumns<Community>[] {
+  return [
+    {
+      title: "区域",
+      dataIndex: "region",
+      valueType: "select",
+      fieldProps: {
+        options: region,
+      },
+    },
+    {
+      title: "小区名称",
+      dataIndex: "community_name",
+      valueType: "select",
+    },
+    {
+      title: "建成年份",
+      dataIndex: "year_built",
+      valueType: "select",
+      fieldProps: {
+        options: year_built,
+      },
+    },
+    {
+      title: "物业类型",
+      dataIndex: "property_type",
+      valueType: "select",
+      fieldProps: {
+        options: property_type,
+      },
+    },
+    {
+      title: "小区描述",
+      dataIndex: "description",
+      hideInSearch: true,
+    },
+  ];
+}
+
 export function useHouseColumns() {
-  const columns: ProColumns<TableListItem>[] = [
+  const community = useCommunityColumns();
+  const columns: ProColumns<House>[] = [
     {
       title: "姓名",
       dataIndex: "owner_name",
-    },
-    {
-      title: "价格",
-      dataIndex: "price",
-      valueType: "select",
-      fieldProps: {
-        options: price,
-      },
-    },
-    {
-      title: "最低价格",
-      dataIndex: "low_price",
-      valueType: "select",
-      hideInSearch: true,
-      fieldProps: {
-        options: price,
-      },
     },
     {
       title: "联系方式",
@@ -399,21 +423,6 @@ export function useHouseColumns() {
       },
     },
     {
-      title: "区域",
-      dataIndex: "region",
-      hideInTable: true,
-      valueType: "select",
-      fieldProps: {
-        options: region,
-      },
-    },
-    {
-      title: "小区名称",
-      dataIndex: "community_name",
-      hideInTable: true,
-      valueType: "select",
-    },
-    {
       title: "面积  m²",
       dataIndex: "area",
       valueType: "select",
@@ -427,14 +436,6 @@ export function useHouseColumns() {
       valueType: "select",
       fieldProps: {
         options: house_type,
-      },
-    },
-    {
-      title: "建成年份",
-      dataIndex: "year_built",
-      valueType: "select",
-      fieldProps: {
-        options: year_built,
       },
     },
     {
@@ -453,13 +454,31 @@ export function useHouseColumns() {
         options: floor,
       },
     },
+  ];
+
+  return columns.concat(community as any);
+}
+
+export function useSecondHandHouseColumns() {
+  const community = useCommunityColumns();
+  const house = useHouseColumns();
+  const columns: ProColumns<any>[] = [
     {
-      title: "物业类型",
-      dataIndex: "property_type",
+      title: "姓名",
+      dataIndex: "owner_name",
+    },
+    {
+      title: "价格",
+      dataIndex: "price",
       valueType: "select",
       fieldProps: {
-        options: property_type,
+        options: price,
       },
+    },
+    {
+      title: "最低价格",
+      dataIndex: "low_price",
+      hideInSearch: true,
     },
     {
       title: "标签",
@@ -469,11 +488,41 @@ export function useHouseColumns() {
         options: tag,
       },
     },
+  ];
+
+  return columns.concat(house).concat(community);
+}
+
+export function useRentalHouseColumns() {
+  const community = useCommunityColumns();
+  const house = useHouseColumns();
+  const columns: ProColumns<any>[] = [
     {
-      title: "备注",
-      dataIndex: "remark",
+      title: "姓名",
+      dataIndex: "owner_name",
+    },
+    {
+      title: "价格",
+      dataIndex: "rent_pice",
+      valueType: "select",
+      fieldProps: {
+        options: price,
+      },
+    },
+    {
+      title: "最低价格",
+      dataIndex: "low_rent_price",
+      hideInSearch: true,
+    },
+    {
+      title: "标签",
+      dataIndex: "tag",
+      valueType: "select",
+      fieldProps: {
+        options: tag,
+      },
     },
   ];
 
-  return columns;
+  return columns.concat(house).concat(community);
 }

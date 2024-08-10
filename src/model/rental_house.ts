@@ -124,7 +124,7 @@ export interface SoldRentalHouseResponse {
   };
 }
 
-export interface SecondRentalHouseFrom {
+export interface RentalHouseFrom {
   house_id: string;
   rent_pice: string;
   rent_low_pice?: string;

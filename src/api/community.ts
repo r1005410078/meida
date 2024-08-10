@@ -8,6 +8,18 @@ export function useCommunityList() {
   });
 }
 
+export function useGetCommunityNames() {
+  return useQuery(
+    ["GetCommunityNames"],
+    () => {
+      return axios.get<String[]>("/api/v1/residential/get_community_names");
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
+}
+
 export function useDeleteCommunity() {
   const client = useQueryClient();
   return useMutation(

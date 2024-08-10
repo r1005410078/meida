@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
+  SecondHandHousing,
   SecondHandHousingFrom,
   SecondHandHousingResponse,
   SoldSecondHandHouse,
@@ -14,10 +15,10 @@ export function useSecondHandHouseCreate() {
   });
 }
 
-// 更新二手房
-export function useSecondHandHouseUpdate() {
+// 保存二手房
+export function useSecondHandHouseSave() {
   return useMutation((data: SecondHandHousingFrom) => {
-    return axios.post("/api/v1/second_hand_house/update", data);
+    return axios.post("/api/v1/second_hand_house/save", data);
   });
 }
 
@@ -38,11 +39,18 @@ export function useListed() {
   );
 }
 
+export interface GetListListedParams {
+  listed?: 0 | 1;
+}
+
 // 上架/下架 列表
-export function useGetListListed() {
-  return useQuery(["listListed"], async () => {
+export function useGetListListed(params: GetListListedParams) {
+  return useQuery(["listListed", params], async () => {
     const res = await axios.get<SecondHandHousingResponse[]>(
-      "/api/v1/second_hand_house/list_listed"
+      "/api/v1/second_hand_house/list_listed",
+      {
+        params,
+      }
     );
 
     return res.data.map(convertToSecondHandHousing);
@@ -178,5 +186,5 @@ function convertToSecondHandHousing(item: SecondHandHousingResponse) {
     community_type: item.residential.community_type,
     property_management_company: item.residential.property_management_company,
     description: item.residential.description,
-  };
+  } as any as SecondHandHousing;
 }

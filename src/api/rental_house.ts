@@ -1,18 +1,25 @@
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
-  SecondRentalHouseFrom,
+  RentalHouseFrom,
   SecondRentalHouseResponse,
   SoldRentalHouseBody,
   SoldRentalHouseResponse,
 } from "../model/rental_house";
 
-export function useGetRentalHouseList() {
+export interface GetListListedParams {
+  listed?: 0 | 1;
+}
+
+export function useGetRentalHouseList(params: GetListListedParams) {
   return useQuery(
-    ["RentalHouseList"],
+    ["RentalHouseList", params],
     async () => {
       let res = await axios.get<SecondRentalHouseResponse[]>(
-        "/api/v1/rental_house/list"
+        "/api/v1/rental_house/list",
+        {
+          params,
+        }
       );
       return res.data.map(convertToSecondRentalHouse);
     },
@@ -92,7 +99,7 @@ export function useGetRentalHouseByHouseId(house_id?: string) {
 export function useRentalHouseSave() {
   const client = useQueryClient();
   return useMutation(
-    (data: SecondRentalHouseFrom) => {
+    (data: RentalHouseFrom) => {
       return axios.post("/api/v1/rental_house/save", data);
     },
     {
@@ -112,7 +119,9 @@ export function useSold() {
     },
     {
       onSuccess: () => {
-        client.refetchQueries(["RentalHouseList"]);
+        setTimeout(() => {
+          client.refetchQueries(["RentalHouseList"]);
+        }, 300);
       },
     }
   );

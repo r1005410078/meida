@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { House, HouseFrom } from "../model/House";
+import { useDebounceFn } from "@ant-design/pro-components";
 
 export interface HouseParams {
   page_index: number;
@@ -46,7 +47,7 @@ export function useHouseById(id?: string) {
 export function useCreateHouse() {
   return useMutation(
     (data: Omit<HouseFrom, "id">) => {
-      return axios.post("/api/v1/house/create", data);
+      return axios.post<{ house_id: string }>("/api/v1/house/create", data);
     },
     {
       onSuccess: () => {},
@@ -57,7 +58,7 @@ export function useCreateHouse() {
 export function useUpdateHouse() {
   return useMutation(
     (data: Omit<HouseFrom, "id">) => {
-      return axios.post("/api/v1/house/update", data);
+      return axios.post<{ house_id: string }>("/api/v1/house/update", data);
     },
     {
       onSuccess: () => {},
@@ -67,13 +68,13 @@ export function useUpdateHouse() {
 
 // 根据户主名称查询
 export function useHouseListByOwnerName(ownerName?: string) {
-  return useQuery(
+  let { run } = useDebounceFn(() => {
+    return axios.get<House[]>(`/api/v1/house/list_by_owner_name/${ownerName}`);
+  }, 300);
+
+  return useQuery<AxiosResponse<House[]>>(
     ["houseListByOwnerName", ownerName],
-    () => {
-      return axios.get<House[]>(
-        `/api/v1/house/list_by_owner_name/${ownerName}`
-      );
-    },
+    run,
     {
       enabled: !!ownerName,
     }

@@ -1,214 +1,150 @@
 import {
   Button,
   Card,
+  Col,
+  Divider,
   Flex,
   Form,
+  Input,
   InputNumber,
-  Modal,
-  Select,
-  theme,
+  message,
+  Row,
 } from "antd";
-import { Content, Header } from "antd/es/layout/layout";
-import { ArrowLeftOutlined, CheckCircleFilled } from "@ant-design/icons";
+
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "antd/es/form/Form";
-import { HouseFrom } from "../../model/House";
 import { useEffect } from "react";
 
+import { RentalHouseFrom } from "../../model/rental_house";
 import {
   useGetRentalHouseByHouseId,
   useRentalHouseSave,
 } from "../../api/rental_house";
-import { useHouseList } from "../../api/house";
-import { SecondRentalHouseFrom } from "../../model/rental_house";
+
+import { PageContainer } from "@ant-design/pro-components";
+import { useCommunity } from "../../components/Community";
+import { useHouse } from "../../components/House";
+
+const labelCol = { span: 6 };
 
 export function Edit() {
-  const [form] = useForm<SecondRentalHouseFrom>();
-  const { houseId } = useParams<{ houseId: string }>();
-  const { data: formData } = useGetRentalHouseByHouseId(houseId);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
-  const [houseForm] = useForm<HouseFrom>();
   const navigate = useNavigate();
+  const [rentalHouseFrom] = useForm<RentalHouseFrom>();
+  const { houseId: paramsHouseId } = useParams<{ houseId: string }>();
+  const { data: formData } = useGetRentalHouseByHouseId(paramsHouseId);
+  const { houseNode, houseForm, houseSubmit, house } = useHouse();
+  const { communityNode, communitySubmit, communityForm } = useCommunity(
+    paramsHouseId ? formData?.community_name : house?.community_name
+  );
 
   // 更新
   const save = useRentalHouseSave();
-  const ownerName = Form.useWatch("owner_name", houseForm);
-  const { data: houseResult } = useHouseList({
-    page_index: 1,
-    page_size: 10000,
-  });
-  const houseList = houseResult?.data ?? [];
-  const houseData = houseList.filter((item) => item.owner_name === ownerName);
 
   useEffect(() => {
     if (formData) {
-      form.setFieldsValue(formData as any);
+      rentalHouseFrom.setFieldsValue(formData as any);
       houseForm.setFieldsValue(formData as any);
     }
   }, [formData]);
 
-  console.log("formData", formData);
-
   return (
-    <>
-      <Header style={{ padding: 0, background: colorBgContainer }}>
-        <Flex justify="space-between" align="center">
-          <Button
-            type="link"
-            size="small"
-            icon={<ArrowLeftOutlined />}
-            onClick={() => {
-              navigate("/house");
-            }}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-              marginLeft: 30,
-              color: "#000",
-            }}
-          >
-            房源{houseId ? `编辑` : "新建房源"}
-          </Button>
-          <div style={{ marginRight: 16 }}>
-            <Button
-              size="large"
-              shape="round"
-              type="primary"
-              loading={save.isLoading}
-              onClick={() => form.submit()}
-            >
-              保存
-            </Button>
-          </div>
-        </Flex>
-      </Header>
-      <Content
-        style={{
-          padding: 24,
-          minHeight: 280,
-          background: colorBgContainer,
-          borderRadius: borderRadiusLG,
-          overflow: "auto",
-        }}
-      >
-        <Flex vertical gap="large">
-          <Card title="房屋信息">
-            <Form form={houseForm}>
-              <Form.Item
-                label="户主姓名"
-                name="owner_name"
-                rules={[{ required: true }]}
-              >
-                <Select showSearch>
-                  {houseList?.map((item) => (
-                    <Select.Option
-                      value={item.owner_name}
-                      key={item.owner_name}
-                    >
-                      {item.owner_name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-              <Form.Item
-                label="小区名称"
-                name="community_name"
-                rules={[{ required: true }]}
-              >
-                <Select showSearch>
-                  {houseData?.map((item) => (
-                    <Select.Option
-                      value={item.community_name}
-                      key={item.community_name}
-                    >
-                      {item.community_name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-              <Form.Item
-                label="房屋地址"
-                name="house_address"
-                rules={[{ required: true }]}
-              >
-                <Select showSearch>
-                  {houseData?.map((item) => (
-                    <Select.Option
-                      value={item.house_address}
-                      key={item.house_address}
-                    >
-                      {item.house_address}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Form>
-          </Card>
-          <Card title="出租房">
-            <Form
-              form={form}
-              onFinish={async (value) => {
-                const houseValues = houseForm.getFieldsValue();
-                const house_id = houseList.find(
-                  (item) =>
-                    item.owner_name === ownerName &&
-                    item.house_address === houseValues.house_address &&
-                    item.community_name === houseValues.community_name
-                )?.house_id!;
+    <PageContainer
+      title={paramsHouseId ? "编辑出租房" : "新增出租房"}
+      content="庭院深深深几许，杨柳堆烟，帘幕无重数。"
+      footer={[
+        <Button
+          key="rest"
+          onClick={() => {
+            communityForm.resetFields();
+            houseForm.resetFields();
+            rentalHouseFrom.resetFields();
+          }}
+        >
+          重置
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          onClick={async () => {
+            const { community_name } = await communitySubmit();
+            const { house_id } = await houseSubmit(
+              community_name,
+              paramsHouseId
+            );
 
-                let newValue = {
-                  ...value,
-                  house_id,
-                };
-
-                await save.mutateAsync(newValue);
-
-                form.resetFields();
-
-                if (houseId) {
-                  navigate("/rental-house", { replace: true });
-                } else {
-                  Modal.confirm({
-                    title: "房源保存成功",
-                    icon: <CheckCircleFilled color="green" />,
-                    okText: "继续添加房源",
-                    cancelText: "返回列表",
-                    onOk() {
-                      navigate("/rental-house/new", {
-                        replace: true,
-                      });
-                    },
-                    onCancel() {
-                      navigate("/rental-house", {
-                        replace: true,
-                      });
-                    },
-                  });
-                }
-              }}
-            >
-              <Form.Item
-                label="报价"
-                name="rent_pice"
-                rules={[{ required: true }]}
-              >
-                <InputNumber />
-              </Form.Item>
-              <Form.Item
-                label="低价"
-                name="rent_low_pice"
-                rules={[{ required: true }]}
-              >
-                <InputNumber />
-              </Form.Item>
-            </Form>
-          </Card>
-        </Flex>
-      </Content>
-    </>
+            await formSubmit(house_id!);
+          }}
+        >
+          提交
+        </Button>,
+      ]}
+    >
+      <Flex vertical gap={8}>
+        <Card title="房源信息">
+          {houseNode}
+          <Divider plain />
+        </Card>
+        <Card title="小区信息">
+          {communityNode}
+          <Divider plain />
+        </Card>
+        <Card title="出租房信息" key="3">
+          <Form form={rentalHouseFrom} labelCol={labelCol} layout="horizontal">
+            <Row>
+              <Col span={8}>
+                <Form.Item
+                  label="报价"
+                  name="rent_pice"
+                  rules={[{ required: true }]}
+                >
+                  <InputNumber style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item
+                  label="低价"
+                  name="rent_low_pice"
+                  rules={[{ required: true }]}
+                >
+                  <InputNumber style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8}>
+                <Form.Item
+                  label="备注"
+                  name="comment"
+                  rules={[{ required: true }]}
+                >
+                  <Input.TextArea rows={3} />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Card>
+      </Flex>
+    </PageContainer>
   );
+
+  async function formSubmit(house_id: string) {
+    const houseValues = rentalHouseFrom.getFieldsValue();
+
+    let newValue = {
+      ...houseValues,
+      house_id,
+    };
+
+    await save.mutateAsync(newValue);
+
+    rentalHouseFrom.resetFields();
+
+    message.success("保存成功");
+
+    if (paramsHouseId) {
+      navigate("/house/rental-house", {
+        replace: true,
+      });
+    }
+  }
 }

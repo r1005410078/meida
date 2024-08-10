@@ -1,13 +1,12 @@
-import { Table } from "antd";
 import { useSecondHandHouseListSold } from "../../api/SecondHandHouse";
+import { ProTable } from "@ant-design/pro-components";
 
 export function SoldSecondHandHouseList() {
   const { data: list } = useSecondHandHouseListSold();
 
   return (
     <>
-      <Table
-        size="small"
+      <ProTable
         dataSource={list}
         columns={[
           {
@@ -16,9 +15,10 @@ export function SoldSecondHandHouseList() {
             key: "owner_name",
           },
           {
-            title: "户主联系方式",
+            title: "联系方式",
             dataIndex: "owner_phone",
             key: "owner_phone",
+            hideInSearch: true,
           },
           {
             title: "小区名称",
