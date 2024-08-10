@@ -57,8 +57,8 @@ export default () => {
                       name: "出租房",
                     },
                     {
-                      path: "sold/second-hand-house",
-                      name: "已租售",
+                      path: "sold",
+                      name: "已售出",
                     },
                   ],
                 },
