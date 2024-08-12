@@ -1,13 +1,35 @@
-import { useSecondHandHouseListSold } from "../../api/SecondHandHouse";
+import { useState } from "react";
+import {
+  GetSecondHandHouseSoldParams,
+  useSecondHandHouseListSold,
+} from "../../api/SecondHandHouse";
 import { ProTable } from "@ant-design/pro-components";
 
 export function SoldSecondHandHouseList() {
-  const { data: list } = useSecondHandHouseListSold();
+  const [params, setParams] = useState<GetSecondHandHouseSoldParams>({
+    page_index: 1,
+    page_size: 10,
+  });
+  const { data: result } = useSecondHandHouseListSold(params);
 
   return (
     <>
       <ProTable
-        dataSource={list}
+        dataSource={result?.data}
+        rowKey="sold_id"
+        pagination={{
+          total: result?.total,
+          showTotal: (total) => `共 ${total} 条`,
+          pageSize: params.page_size,
+          current: params.page_index,
+          onChange: (page, pageSize) => {
+            setParams({
+              ...params,
+              page_index: page,
+              page_size: pageSize,
+            });
+          },
+        }}
         columns={[
           {
             title: "户主姓名",

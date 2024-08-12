@@ -11,9 +11,8 @@ import {
   TableDropdown,
 } from "@ant-design/pro-components";
 import { SecondRentalHouse } from "../../model/rental_house";
-
 import { useState } from "react";
-import { useHouseColumns } from "../../value_object/house_columns";
+import { useRentalHouseColumns } from "../../value_object/house_columns";
 import {
   GetListListedParams,
   useGetRentalHouseList,
@@ -23,12 +22,12 @@ import {
 import { useNavigate } from "react-router";
 import { useSoldModal } from "./SoldModal";
 
-export type TableListItem = SecondRentalHouse;
-
 export function List() {
   const navigator = useNavigate();
   const [listedParams, setListedParams] = useState<GetListListedParams>({
     listed: 1,
+    page_index: 1,
+    page_size: 10,
   });
 
   const [columnsStateMap, setColumnsStateMap] = useState<
@@ -48,7 +47,7 @@ export function List() {
     },
   });
 
-  const columns = useHouseColumns();
+  const columns = useRentalHouseColumns();
   const { data, isLoading } = useGetRentalHouseList(listedParams);
   const listed = useListed();
   const unlisted = useUnListed();
@@ -85,7 +84,7 @@ export function List() {
         ],
       }}
     >
-      <ProTable<TableListItem>
+      <ProTable<SecondRentalHouse>
         columns={columns.concat([
           {
             title: "操作",
@@ -130,14 +129,24 @@ export function List() {
             ],
           },
         ])}
-        dataSource={data}
+        dataSource={data?.data}
         columnsState={{
           value: columnsStateMap,
           onChange: setColumnsStateMap,
         }}
         rowKey="house_id"
         pagination={{
-          showQuickJumper: true,
+          total: data?.total,
+          showTotal: (total) => `共 ${total} 条`,
+          pageSize: listedParams.page_size,
+          current: listedParams.page_index,
+          onChange: (page, pageSize) => {
+            setListedParams({
+              ...listedParams,
+              page_index: page,
+              page_size: pageSize,
+            });
+          },
         }}
         search={{
           layout: "horizontal",
@@ -150,7 +159,10 @@ export function List() {
               value={listedParams.listed ? "上架" : "下架"}
               options={["上架", "下架"]}
               onChange={(v) =>
-                setListedParams({ listed: v === "上架" ? 1 : 0 })
+                setListedParams({
+                  ...listedParams,
+                  listed: v === "上架" ? 1 : 0,
+                })
               }
             />
           ),

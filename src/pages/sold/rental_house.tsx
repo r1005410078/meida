@@ -1,13 +1,35 @@
-import { useGetRentalHouseListSold } from "../../api/rental_house";
+import { useState } from "react";
+import {
+  GetRentalHouseSoldParams,
+  useGetRentalHouseListSold,
+} from "../../api/rental_house";
 import { ProTable } from "@ant-design/pro-components";
 
 export function SoldRentalHouseList() {
-  const { data: list } = useGetRentalHouseListSold();
+  const [params, setParams] = useState<GetRentalHouseSoldParams>({
+    page_index: 1,
+    page_size: 10,
+  });
+  const { data: result } = useGetRentalHouseListSold(params);
 
   return (
     <>
       <ProTable
-        dataSource={list}
+        dataSource={result?.data}
+        rowKey="sold_id"
+        pagination={{
+          total: result?.total,
+          showTotal: (total) => `共 ${total} 条`,
+          pageSize: params.page_size,
+          current: params.page_index,
+          onChange: (page, pageSize) => {
+            setParams({
+              ...params,
+              page_index: page,
+              page_size: pageSize,
+            });
+          },
+        }}
         columns={[
           {
             title: "户主姓名",

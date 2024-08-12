@@ -12,7 +12,7 @@ import {
 } from "@ant-design/pro-components";
 import { SecondHandHousing } from "../../model/SecondHandHousing";
 import { useState } from "react";
-import { useHouseColumns } from "../../value_object/house_columns";
+import { useSecondHandHouseColumns } from "../../value_object/house_columns";
 import {
   GetListListedParams,
   useGetListListed,
@@ -21,8 +21,6 @@ import {
 } from "../../api/SecondHandHouse";
 import { useNavigate } from "react-router";
 import { useSoldModal } from "./SoldModal";
-
-export type TableListItem = SecondHandHousing;
 
 export function List() {
   const navigator = useNavigate();
@@ -49,7 +47,7 @@ export function List() {
     },
   });
 
-  const columns = useHouseColumns();
+  const columns = useSecondHandHouseColumns();
   const { data, isLoading } = useGetListListed(listedParams);
   const listed = useListed();
   const unlisted = useUnListed();
@@ -86,7 +84,7 @@ export function List() {
         ],
       }}
     >
-      <ProTable<TableListItem>
+      <ProTable<SecondHandHousing>
         columns={columns.concat([
           {
             title: "操作",

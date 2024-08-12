@@ -6,22 +6,28 @@ import {
   SoldRentalHouseBody,
   SoldRentalHouseResponse,
 } from "../model/rental_house";
+import { TableData } from "../value_object/common";
 
 export interface GetListListedParams {
   listed?: 0 | 1;
+  page_index: number;
+  page_size: number;
 }
 
 export function useGetRentalHouseList(params: GetListListedParams) {
   return useQuery(
     ["RentalHouseList", params],
     async () => {
-      let res = await axios.get<SecondRentalHouseResponse[]>(
+      let res = await axios.get<TableData<SecondRentalHouseResponse>>(
         "/api/v1/rental_house/list",
         {
           params,
         }
       );
-      return res.data.map(convertToSecondRentalHouse);
+      return {
+        data: res.data.data.map(convertToSecondRentalHouse),
+        total: res.data.total,
+      };
     },
     {
       onError(err) {
@@ -63,15 +69,26 @@ export function useUnListed() {
   );
 }
 
+export interface GetRentalHouseSoldParams {
+  page_index: number;
+  page_size: number;
+}
+
 // 已经租出的房源
-export function useGetRentalHouseListSold() {
+export function useGetRentalHouseListSold(params: GetRentalHouseSoldParams) {
   return useQuery(
     ["GetRentalHouseSoldList"],
     async () => {
-      let res = await axios.get<SecondRentalHouseResponse[]>(
-        "/api/v1/rental_house/list_sold"
+      let res = await axios.get<TableData<SoldRentalHouseResponse>>(
+        "/api/v1/rental_house/list_sold",
+        {
+          params,
+        }
       );
-      return res.data.map(convertToSecondRentalHouse);
+      return {
+        data: res.data.data.map(convertToSoldSecondRentalHouse),
+        total: res.data.total,
+      };
     },
     {
       onError(err) {
@@ -165,9 +182,46 @@ function convertToSecondRentalHouse(item: SecondRentalHouseResponse) {
   };
 }
 
-function convertToSoldRentalHouse(item: SoldRentalHouseResponse) {
+function convertToSoldSecondRentalHouse(item: SoldRentalHouseResponse) {
   return {
     // 二手房信息
+    house_id: item.rental_house.house_id,
+    rent_pice: item.rental_house.rent_pice,
+    rent_start_time: item.rental_house.rent_start_time,
+    rent_end_time: item.rental_house.rent_end_time,
+    // 房源信息
+    house_address: item.house.house_address,
+    house_type: item.house.house_type,
+    area: item.house.area,
+    bedrooms: item.house.bedrooms,
+    living_rooms: item.house.living_rooms,
+    bathrooms: item.house.bathrooms,
+    orientation: item.house.orientation,
+    decoration_status: item.house.decoration_status,
+    status: item.house.status,
+    house_description: item.house.house_description,
+    house_image: item.house.house_image,
+    owner_name: item.house.owner_name,
+    owner_phone: item.house.owner_phone,
+    created_by: item.house.created_by,
+    updated_by: item.house.updated_by,
+    // 小区信息
+    community_name: item.residential.community_name,
+    region: item.residential.region,
+    city: item.residential.city,
+    state: item.residential.state,
+    postal_code: item.residential.postal_code,
+    year_built: item.residential.year_built,
+    community_type: item.residential.community_type,
+    property_management_company: item.residential.property_management_company,
+    description: item.residential.description,
+  };
+}
+
+function convertToSoldRentalHouse(item: SoldRentalHouseResponse) {
+  return {
+    // 出租房信息
+    sold_id: item.rental_house.sold_id,
     house_id: item.rental_house.house_id,
     rent_pice: item.rental_house.rent_pice,
     rent_start_time: item.rental_house.rent_start_time,

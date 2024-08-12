@@ -125,6 +125,7 @@ export interface SoldSecondHandHousingResponse {
     updated_at: string;
   };
   house_second_hand: {
+    sold_id: number;
     house_id: string;
     community_name: string;
     days_to_sell: number;
