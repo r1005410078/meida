@@ -13,7 +13,7 @@ import {
 
 import { useState } from "react";
 import { useCommunityColumns } from "../../value_object/house_columns";
-import { useCommunityList } from "../../api/community";
+import { QueryCommunityParams, useCommunityList } from "../../api/community";
 import { useNavigate } from "react-router";
 import { Community } from "../../model/Community";
 
@@ -27,9 +27,6 @@ export function List() {
     owner_phone: {
       show: false,
     },
-    year_built: {
-      show: false,
-    },
     floor: {
       show: false,
     },
@@ -38,12 +35,13 @@ export function List() {
     },
   });
 
-  const { data, isLoading } = useCommunityList();
+  const [params, setParams] = useState<QueryCommunityParams>({});
+
+  const { data, isLoading } = useCommunityList(params);
   const columns = useCommunityColumns();
 
   return (
     <PageContainer
-      loading={isLoading}
       token={{
         paddingBlockPageContainerContent: 16,
         paddingInlinePageContainerContent: 24,
@@ -73,6 +71,17 @@ export function List() {
       }}
     >
       <ProTable<TableListItem>
+        onSubmit={(params) => {
+          setParams({
+            community_name: params.community_name,
+            region: params.region,
+            year_built: params.year_built,
+            community_type: params.community_type,
+            description: params.description,
+            updated_at: params.updated_at,
+          });
+        }}
+        loading={isLoading}
         columns={columns.concat([
           {
             title: "操作",

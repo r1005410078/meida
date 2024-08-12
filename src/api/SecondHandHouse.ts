@@ -7,6 +7,7 @@ import {
   SoldSecondHandHouse,
   SoldSecondHandHousingResponse,
 } from "../model/SecondHandHousing";
+import { TableData } from "../value_object/common";
 
 // 创建二手房
 export function useSecondHandHouseCreate() {
@@ -41,19 +42,24 @@ export function useListed() {
 
 export interface GetListListedParams {
   listed?: 0 | 1;
+  page_index: number;
+  page_size: number;
 }
 
 // 上架/下架 列表
 export function useGetListListed(params: GetListListedParams) {
   return useQuery(["listListed", params], async () => {
-    const res = await axios.get<SecondHandHousingResponse[]>(
+    const res = await axios.get<TableData<SecondHandHousingResponse>>(
       "/api/v1/second_hand_house/list_listed",
       {
         params,
       }
     );
 
-    return res.data.map(convertToSecondHandHousing);
+    return {
+      data: res.data.data.map(convertToSecondHandHousing),
+      total: res.data.total,
+    };
   });
 }
 

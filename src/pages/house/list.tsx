@@ -40,11 +40,12 @@ export function List() {
 
   const [listedParams, setListedParams] = useState<HouseParams>({
     page_index: 1,
-    page_size: 20,
+    page_size: 10,
   });
 
   const columns = useHouseColumns();
   const { data, isLoading } = useHouseList(listedParams);
+  const result = data?.data;
 
   return (
     <PageContainer
@@ -78,6 +79,19 @@ export function List() {
       }}
     >
       <ProTable<TableListItem>
+        pagination={{
+          total: result?.total,
+          showTotal: (total) => `共 ${total} 条`,
+          pageSize: listedParams.page_size,
+          current: listedParams.page_index,
+          onChange: (page, pageSize) => {
+            setListedParams({
+              ...listedParams,
+              page_index: page,
+              page_size: pageSize,
+            });
+          },
+        }}
         columns={columns.concat([
           {
             title: "操作",
@@ -109,15 +123,12 @@ export function List() {
             ],
           },
         ])}
-        dataSource={data?.data}
+        dataSource={result?.data}
         columnsState={{
           value: columnsStateMap,
           onChange: setColumnsStateMap,
         }}
         rowKey="house_id"
-        pagination={{
-          showQuickJumper: true,
-        }}
         search={{
           layout: "horizontal",
           defaultCollapsed: true,

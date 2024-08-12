@@ -2,9 +2,26 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Community, CommunityFrom } from "../model/Community";
 import axios from "axios";
 
-export function useCommunityList() {
-  return useQuery(["CommunityList"], () => {
-    return axios.get<Community[]>("/api/v1/residential/list");
+export interface QueryCommunityParams {
+  community_name?: string;
+  region?: string;
+  community_type?: string;
+  year_built?: {
+    start: number;
+    end: number;
+  };
+  description?: string;
+  updated_at?: {
+    start: number;
+    end: number;
+  };
+}
+
+export function useCommunityList(params: QueryCommunityParams) {
+  return useQuery(["CommunityList", params], () => {
+    return axios.get<Community[]>("/api/v1/residential/list", {
+      params,
+    });
   });
 }
 

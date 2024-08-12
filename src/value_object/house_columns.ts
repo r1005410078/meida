@@ -1,6 +1,8 @@
 import { ProColumns } from "@ant-design/pro-components";
 import { Community } from "../model/Community";
 import { House } from "../model/House";
+import { useGetCommunityNames } from "../api/community";
+import dayjs from "dayjs";
 
 // 区域
 export const region = [
@@ -131,24 +133,36 @@ export const floor = [
 // 建立年限
 export const year_built = [
   {
-    value: "2",
+    value: {
+      start: dayjs().subtract(2, "year").unix(),
+      end: Date.now(),
+    },
     label: "2年以内",
   },
   {
-    value: "2-5",
+    value: {
+      start: dayjs().subtract(5, "year").unix(),
+      end: dayjs().subtract(2, "year").unix(),
+    },
     label: "2-5年",
   },
   {
     value: "5-10",
     label: "5-10年",
+    start: dayjs().subtract(10, "year").unix(),
+    end: dayjs().subtract(5, "year").unix(),
   },
   {
     value: "10-20",
     label: "10-20年",
+    start: dayjs().subtract(20, "year").unix(),
+    end: dayjs().subtract(10, "year").unix(),
   },
   {
     value: "20以上",
     label: "20年以上",
+    start: dayjs().subtract(100, "year").unix(),
+    end: dayjs().subtract(20, "year").unix(),
   },
 ];
 
@@ -359,6 +373,7 @@ export const tag = [
 ];
 
 export function useCommunityColumns(): ProColumns<Community>[] {
+  let { data } = useGetCommunityNames();
   return [
     {
       title: "区域",
@@ -372,9 +387,17 @@ export function useCommunityColumns(): ProColumns<Community>[] {
       title: "小区名称",
       dataIndex: "community_name",
       valueType: "select",
+      fieldProps: {
+        options: data?.data.map((name) => {
+          return {
+            value: name,
+            label: name,
+          };
+        }),
+      },
     },
     {
-      title: "建成年份",
+      title: "建立年份",
       dataIndex: "year_built",
       valueType: "select",
       fieldProps: {
@@ -383,7 +406,7 @@ export function useCommunityColumns(): ProColumns<Community>[] {
     },
     {
       title: "物业类型",
-      dataIndex: "property_type",
+      dataIndex: "community_type",
       valueType: "select",
       fieldProps: {
         options: property_type,

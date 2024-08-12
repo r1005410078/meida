@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { House, HouseFrom } from "../model/House";
 import { useDebounceFn } from "@ant-design/pro-components";
+import { TableData } from "../value_object/common";
 
 export interface HouseParams {
   page_index: number;
@@ -10,7 +11,7 @@ export interface HouseParams {
 
 export function useHouseList(params: HouseParams) {
   return useQuery(["houseList", params], () => {
-    return axios.get<House[]>("/api/v1/house/list", {
+    return axios.get<TableData<House>>("/api/v1/house/list", {
       params,
     });
   });
