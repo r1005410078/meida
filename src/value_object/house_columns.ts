@@ -230,7 +230,7 @@ export const price = [
 ];
 
 // 户型
-const house_type = [
+const bedrooms = [
   {
     value: "不限",
     label: "不限",
@@ -262,7 +262,7 @@ const house_type = [
 ];
 
 // 装修
-const decoration = [
+export const decoration = [
   {
     value: "毛坯",
     label: "毛坯",
@@ -372,6 +372,33 @@ export const tag = [
   },
 ];
 
+export const house_property = [
+  {
+    value: "商品房住宅",
+    label: "商品房住宅",
+  },
+  {
+    value: "商住两用",
+    label: "商住两用",
+  },
+  {
+    value: "经济适用房",
+    label: "经济适用房",
+  },
+  {
+    value: "公房",
+    label: "公房",
+  },
+  {
+    value: "动迁配套房",
+    label: "动迁配套房",
+  },
+  {
+    value: "其他",
+    label: "其他",
+  },
+];
+
 export function useCommunityColumns(): ProColumns<Community>[] {
   let { data } = useGetCommunityNames();
   return [
@@ -439,26 +466,18 @@ export function useHouseColumns() {
     },
     {
       title: "装修",
-      dataIndex: "decoration",
+      dataIndex: "decoration_status",
       valueType: "select",
       fieldProps: {
         options: decoration,
       },
     },
     {
-      title: "面积  m²",
+      title: "面积 m²",
       dataIndex: "area",
       valueType: "select",
       fieldProps: {
         options: area,
-      },
-    },
-    {
-      title: "户型",
-      dataIndex: "house_type",
-      valueType: "select",
-      fieldProps: {
-        options: house_type,
       },
     },
     {
@@ -470,11 +489,37 @@ export function useHouseColumns() {
       },
     },
     {
+      title: "房间数",
+      dataIndex: "bedrooms",
+      valueType: "select",
+      fieldProps: {
+        options: bedrooms,
+      },
+    },
+    {
       title: "楼层",
       dataIndex: "floor",
       valueType: "select",
       fieldProps: {
         options: floor,
+      },
+    },
+    {
+      title: "产权",
+      dataIndex: "property",
+      valueType: "select",
+      fieldProps: {
+        options: house_property,
+      },
+    },
+    {
+      title: "房龄",
+      dataIndex: "house_age",
+      fieldProps: {
+        options: house_property,
+      },
+      render: (_, record) => {
+        return `${dayjs(record.house_age).year()}年`;
       },
     },
   ];

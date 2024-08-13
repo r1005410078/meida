@@ -7,6 +7,19 @@ import { TableData } from "../value_object/common";
 export interface HouseParams {
   page_index: number;
   page_size: number;
+  community_name?: string;
+  house_address?: string;
+  house_type?: string;
+  area?: number;
+  bedrooms?: number;
+  living_rooms?: number;
+  bathrooms?: number;
+  orientation?: string;
+  decoration_status?: string;
+  status?: string;
+  house_description?: string;
+  owner_name?: string;
+  owner_phone?: string;
 }
 
 export function useHouseList(params: HouseParams) {
@@ -45,21 +58,10 @@ export function useHouseById(id?: string) {
   );
 }
 
-export function useCreateHouse() {
+export function useSaveHouse() {
   return useMutation(
     (data: Omit<HouseFrom, "id">) => {
-      return axios.post<{ house_id: string }>("/api/v1/house/create", data);
-    },
-    {
-      onSuccess: () => {},
-    }
-  );
-}
-
-export function useUpdateHouse() {
-  return useMutation(
-    (data: Omit<HouseFrom, "id">) => {
-      return axios.post<{ house_id: string }>("/api/v1/house/update", data);
+      return axios.post<{ house_id: string }>("/api/v1/house/save", data);
     },
     {
       onSuccess: () => {},

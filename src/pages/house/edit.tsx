@@ -1,10 +1,5 @@
 import { Button, Card, Divider, Flex } from "antd";
-
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
-
-import { useHouseById } from "../../api/house";
-
 import { PageContainer } from "@ant-design/pro-components";
 import { useCommunity } from "../../components/Community";
 import { useHouse } from "../../components/House";
@@ -12,19 +7,10 @@ import { useHouse } from "../../components/House";
 export function Edit() {
   const navigate = useNavigate();
   const { houseId: paramsHouseId } = useParams<{ houseId: string }>();
-  const { data: houseResult } = useHouseById(paramsHouseId);
-  const formData = houseResult?.data;
-
   const { houseNode, houseForm, houseSubmit, house } = useHouse();
   const { communityNode, communitySubmit, communityForm } = useCommunity(
-    paramsHouseId ? formData?.community_name : house?.community_name
+    house?.community_name
   );
-
-  useEffect(() => {
-    if (formData) {
-      houseForm.setFieldsValue(formData as any);
-    }
-  }, [formData]);
 
   return (
     <PageContainer

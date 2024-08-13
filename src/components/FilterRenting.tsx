@@ -12,7 +12,6 @@ import {
   RegionFormItem,
   RoomFormItem,
   TagsFormItem,
-  TowardFormItem,
 } from "./FangyFromItems";
 
 export function FilterRenting() {

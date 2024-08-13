@@ -10,24 +10,30 @@ import {
   Select,
   Space,
   Tooltip,
+  DatePicker,
 } from "antd";
 import { AimOutlined, RollbackOutlined } from "@ant-design/icons";
 import UploadHouse, { fangImagesUpload } from "./UploadHouse";
 import axios from "axios";
 import { House, HouseFrom } from "../model/House";
 import {
-  useCreateHouse,
+  useHouseById,
   useHouseListByOwnerName,
-  useUpdateHouse,
+  useSaveHouse,
 } from "../api/house";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { decoration, house_property } from "../value_object/house_columns";
 
 const labelCol = { span: 6 };
 
 export function useHouse() {
   const [houseForm] = Form.useForm<HouseFrom>();
-  const create = useCreateHouse();
-  const update = useUpdateHouse();
+  const { houseId: paramsHouseId } = useParams<{ houseId: string }>();
+  const { data: result } = useHouseById(paramsHouseId);
+  const initFormData = result?.data;
+
+  const save = useSaveHouse();
   const [ownerName, setOwnerName] = useState<string>();
   const { data: houseResult } = useHouseListByOwnerName(ownerName);
   const [house, setHouse] = useState<House>();
@@ -39,6 +45,12 @@ export function useHouse() {
       houseForm.resetFields();
     }
   }, [house]);
+
+  useEffect(() => {
+    if (initFormData) {
+      setHouse(initFormData);
+    }
+  }, [initFormData]);
 
   const houseNode = (
     <Form form={houseForm} labelCol={labelCol} layout="horizontal">
@@ -108,21 +120,13 @@ export function useHouse() {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item
-            label="房屋类型"
-            name="house_type"
-            rules={[{ required: true }]}
-          >
-            <Input />
+          <Form.Item label="楼层" name="floor" rules={[{ required: true }]}>
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item
-            label="房屋状态"
-            name="status"
-            rules={[{ required: true }]}
-          >
-            <Input />
+          <Form.Item label="产权" name="property" rules={[{ required: true }]}>
+            <Select options={house_property} />
           </Form.Item>
         </Col>
       </Row>
@@ -191,7 +195,16 @@ export function useHouse() {
             name="decoration_status"
             rules={[{ required: true }]}
           >
-            <Input />
+            <Select options={decoration} />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="房龄" name="house_age" rules={[{ required: true }]}>
+            <DatePicker
+              picker="year"
+              style={{ width: "100%" }}
+              placeholder="建立年份"
+            />
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -260,18 +273,14 @@ export function useHouse() {
     let newValue = {
       house_id,
       ...value,
+      house_age: value.house_age.format("YYYY-MM-DDTHH:mm:ss"),
     };
 
-    let result = { house_id };
-    if (house_id) {
-      const res = await update.mutateAsync(newValue);
-      result.house_id = res.data.house_id;
-    } else {
-      const res = await create.mutateAsync(newValue);
-      result.house_id = res.data.house_id;
-    }
-
+    const res = await save.mutateAsync(newValue as any);
     houseForm.resetFields();
-    return result;
+
+    return {
+      house_id: res.data.house_id,
+    };
   }
 }

@@ -38,18 +38,17 @@ export function List() {
     },
   });
 
-  const [listedParams, setListedParams] = useState<HouseParams>({
+  const [params, setParams] = useState<HouseParams>({
     page_index: 1,
     page_size: 10,
   });
 
   const columns = useHouseColumns();
-  const { data, isLoading } = useHouseList(listedParams);
+  const { data, isLoading } = useHouseList(params);
   const result = data?.data;
 
   return (
     <PageContainer
-      loading={isLoading}
       token={{
         paddingBlockPageContainerContent: 16,
         paddingInlinePageContainerContent: 24,
@@ -79,14 +78,33 @@ export function List() {
       }}
     >
       <ProTable<TableListItem>
+        loading={isLoading}
+        onSubmit={(value) => {
+          setParams({
+            ...params,
+            community_name: value.community_name,
+            house_address: value.house_address,
+            house_type: value.house_type,
+            area: value.area,
+            bedrooms: value.bedrooms,
+            living_rooms: value.living_rooms,
+            bathrooms: value.bathrooms,
+            orientation: value.orientation,
+            decoration_status: value.decoration_status,
+            status: value.status,
+            house_description: value.house_description,
+            owner_name: value.owner_name,
+            owner_phone: value.owner_phone,
+          });
+        }}
         pagination={{
           total: result?.total,
           showTotal: (total) => `共 ${total} 条`,
-          pageSize: listedParams.page_size,
-          current: listedParams.page_index,
+          pageSize: params.page_size,
+          current: params.page_index,
           onChange: (page, pageSize) => {
-            setListedParams({
-              ...listedParams,
+            setParams({
+              ...params,
               page_index: page,
               page_size: pageSize,
             });

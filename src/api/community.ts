@@ -67,24 +67,10 @@ export function useCommunityByName(name?: string) {
   );
 }
 
-export function useCreateCommunity() {
+export function useSaveCommunity() {
   return useMutation(
     (data: Omit<CommunityFrom, "id">) => {
-      return axios.post("/api/v1/residential/create", {
-        ...data,
-        region: data.region?.toString(),
-      });
-    },
-    {
-      onSuccess: () => {},
-    }
-  );
-}
-
-export function useUpdateCommunity() {
-  return useMutation(
-    (data: Omit<CommunityFrom, "id">) => {
-      return axios.post("/api/v1/residential/update", {
+      return axios.post("/api/v1/residential/save", {
         ...data,
         region: data.region?.toString(),
       });

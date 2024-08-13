@@ -15,9 +15,8 @@ import { CommunityFrom } from "../model/Community";
 import { region } from "../value_object/house_columns";
 import {
   useCommunityByName,
-  useCreateCommunity,
   useGetCommunityNames,
-  useUpdateCommunity,
+  useSaveCommunity,
 } from "../api/community";
 import { useEffect, useState } from "react";
 
@@ -26,8 +25,7 @@ const labelCol = { span: 6 };
 export function useCommunity(propCommunityName?: string) {
   const [communityName, setCommunityName] = useState<string>();
   const [communityForm] = Form.useForm<CommunityFrom>();
-  const create = useCreateCommunity();
-  const update = useUpdateCommunity();
+  const save = useSaveCommunity();
   const { data } = useGetCommunityNames();
   const { data: communityRes } = useCommunityByName(communityName);
   const community = communityRes?.data;
@@ -172,12 +170,7 @@ export function useCommunity(propCommunityName?: string) {
       ...value,
     };
 
-    if (communityName) {
-      await update.mutateAsync(newValue);
-    } else {
-      await create.mutateAsync(newValue);
-    }
-
+    await save.mutateAsync(newValue);
     communityForm.resetFields();
 
     return value;
