@@ -10,7 +10,7 @@ import {
   ProTable,
   TableDropdown,
 } from "@ant-design/pro-components";
-import { SecondHandHousing } from "../../model/SecondHandHousing";
+import { SecondHandHousing } from "../../model/second_hand_housing";
 import { useState } from "react";
 import { useSecondHandHouseColumns } from "../../value_object/house_columns";
 import {
@@ -18,9 +18,9 @@ import {
   useGetListListed,
   useListed,
   useUnListed,
-} from "../../api/SecondHandHouse";
+} from "../../api/second_hand_house";
 import { useNavigate } from "react-router";
-import { useSoldModal } from "./SoldModal";
+import { useSoldModal } from "./sold_modal";
 
 export function List() {
   const navigator = useNavigate();

@@ -9,9 +9,9 @@ import {
   useNavigate,
   Navigate,
 } from "react-router-dom";
-import { SecondHandHousePage } from "./pages/SecondHandHouse";
-import { List as SecondHandHouseList } from "./pages/SecondHandHouse/list";
-import { Edit as SecondHandHouseEdit } from "./pages/SecondHandHouse/edit";
+import { SecondHandHousePage } from "./pages/second_hand_house";
+import { List as SecondHandHouseList } from "./pages/second_hand_house/list";
+import { Edit as SecondHandHouseEdit } from "./pages/second_hand_house/edit";
 import { List as RentalHouseList } from "./pages/rental_house/list";
 import { Edit as RentalHouseEdit } from "./pages/rental_house/edit";
 import { List as CommunityList } from "./pages/community/list";

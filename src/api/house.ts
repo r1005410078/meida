@@ -1,15 +1,17 @@
 import axios, { AxiosResponse } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { House, HouseFrom } from "../model/House";
+import { House, HouseFrom } from "../model/house";
 import { useDebounceFn } from "@ant-design/pro-components";
 import { TableData } from "../value_object/common";
+import dayjs from "dayjs";
+import omitBy from "lodash/omitBy";
 
 export interface HouseParams {
   page_index: number;
   page_size: number;
   community_name?: string;
   house_address?: string;
-  house_type?: string;
+  property?: string;
   area?: number;
   bedrooms?: number;
   living_rooms?: number;
@@ -25,7 +27,7 @@ export interface HouseParams {
 export function useHouseList(params: HouseParams) {
   return useQuery(["houseList", params], () => {
     return axios.get<TableData<House>>("/api/v1/house/list", {
-      params,
+      params: omitBy(params, (value) => value === ""),
     });
   });
 }
@@ -49,8 +51,11 @@ export function useDeleteHouse() {
 export function useHouseById(id?: string) {
   return useQuery(
     ["getHouse", id],
-    () => {
-      return axios.get<House>(`/api/v1/house/get_house/${id}`);
+    async () => {
+      const result = await axios.get<House>(`/api/v1/house/get_house/${id}`);
+      result.data.house_age = dayjs(result.data.house_age);
+
+      return result;
     },
     {
       enabled: !!id,
@@ -71,8 +76,17 @@ export function useSaveHouse() {
 
 // 根据户主名称查询
 export function useHouseListByOwnerName(ownerName?: string) {
-  let { run } = useDebounceFn(() => {
-    return axios.get<House[]>(`/api/v1/house/list_by_owner_name/${ownerName}`);
+  let { run } = useDebounceFn(async () => {
+    const result = await axios.get<House[]>(
+      `/api/v1/house/list_by_owner_name/${ownerName}`
+    );
+
+    result.data = result.data.map((item) => {
+      item.house_age = dayjs(item.house_age);
+      return item;
+    });
+
+    return result;
   }, 300);
 
   return useQuery<AxiosResponse<House[]>>(

@@ -3,14 +3,24 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PageContainer } from "@ant-design/pro-components";
 import { useCommunity } from "../../components/Community";
 import { useHouse } from "../../components/House";
+import { message } from "antd/lib";
 
 export function Edit() {
   const navigate = useNavigate();
   const { houseId: paramsHouseId } = useParams<{ houseId: string }>();
-  const { houseNode, houseForm, houseSubmit, house } = useHouse();
-  const { communityNode, communitySubmit, communityForm } = useCommunity(
-    house?.community_name
-  );
+  const {
+    houseNode,
+    houseForm,
+    houseSubmit,
+    house,
+    loading: houseLoading,
+  } = useHouse();
+  const {
+    communityNode,
+    communitySubmit,
+    communityForm,
+    loading: communityLoading,
+  } = useCommunity(house?.community_name);
 
   return (
     <PageContainer
@@ -32,7 +42,7 @@ export function Edit() {
           onClick={async () => {
             const { community_name } = await communitySubmit();
             await houseSubmit(community_name, paramsHouseId);
-
+            message.success("保存成功");
             if (paramsHouseId) {
               navigate(`/base-info/house`);
             }
@@ -43,11 +53,11 @@ export function Edit() {
       ]}
     >
       <Flex vertical gap={8}>
-        <Card title="房源信息">
+        <Card title="房源信息" loading={houseLoading}>
           {houseNode}
           <Divider plain />
         </Card>
-        <Card title="小区信息">
+        <Card title="小区信息" loading={communityLoading}>
           {communityNode}
           <Divider plain />
         </Card>

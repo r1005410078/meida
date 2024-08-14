@@ -42,6 +42,7 @@ export interface SecondHandHousingResponse {
     house_type: string;
     area: string;
     bedrooms: number;
+    property: string;
     living_rooms: number;
     bathrooms: number;
     orientation: string;

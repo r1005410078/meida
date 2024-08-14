@@ -1,22 +1,21 @@
-import { Form, InputNumber, Modal } from "antd";
+import { Form, InputNumber, Modal, DatePicker } from "antd";
 import { useState } from "react";
-import { useSold } from "../../api/SecondHandHouse";
+import { useSold } from "../../api/rental_house";
+import { SoldRentalHouseForm } from "../../model/rental_house";
 
-interface SoldForm {
-  sale_price: number;
-}
+const { RangePicker } = DatePicker;
 
 export function useSoldModal() {
   const [open, setOpen] = useState(false);
   const [house_id, setHouseId] = useState<string>();
-  const [form] = Form.useForm<SoldForm>();
+  const [form] = Form.useForm<SoldRentalHouseForm>();
   const sold = useSold();
 
   const soldModalNode = (
     <Modal
       open={open}
-      title="出售房源"
-      okText="卖出"
+      title="租售房源"
+      okText="租出"
       cancelText="取消"
       onCancel={() => {
         form.resetFields();
@@ -24,11 +23,16 @@ export function useSoldModal() {
       }}
       onOk={async () => {
         const values = await form.validateFields();
-        form.resetFields();
+        const [rent_start_time, rent_end_time] = values.date;
+
         await sold.mutateAsync({
-          sale_price: values.sale_price,
           house_id: house_id!,
+          rent_start_time: rent_start_time.format("YYYY-MM-DDTHH:mm:ss"),
+          rent_end_time: rent_end_time.format("YYYY-MM-DDTHH:mm:ss"),
+          rent_pice: values.rent_pice,
         });
+
+        form.resetFields();
         setOpen(false);
       }}
     >
@@ -39,8 +43,8 @@ export function useSoldModal() {
         initialValues={{ modifier: "public" }}
       >
         <Form.Item
-          name="sale_price"
-          label="售价"
+          name="rent_pice"
+          label="租金"
           rules={[
             {
               required: true,
@@ -50,8 +54,20 @@ export function useSoldModal() {
         >
           <InputNumber
             style={{ width: "100%" }}
-            placeholder="输入价格 (单位万元)"
+            placeholder="输入价格 (单位元)"
           />
+        </Form.Item>
+        <Form.Item
+          name="date"
+          label="售价"
+          rules={[
+            {
+              required: true,
+              message: "请输入租期！",
+            },
+          ]}
+        >
+          <RangePicker />
         </Form.Item>
       </Form>
     </Modal>

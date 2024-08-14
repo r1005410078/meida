@@ -224,6 +224,7 @@ function convertToSoldRentalHouse(item: SoldRentalHouseResponse) {
     sold_id: item.rental_house.sold_id,
     house_id: item.rental_house.house_id,
     rent_pice: item.rental_house.rent_pice,
+    rent_low_pice: item.rental_house.rent_low_pice,
     rent_start_time: item.rental_house.rent_start_time,
     rent_end_time: item.rental_house.rent_end_time,
     // 房源信息

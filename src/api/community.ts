@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Community, CommunityFrom } from "../model/Community";
+import { Community, CommunityFrom } from "../model/community";
 import axios from "axios";
 
 export interface QueryCommunityParams {

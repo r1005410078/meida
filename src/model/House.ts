@@ -7,7 +7,7 @@ export interface House {
   house_address: string;
   floor: string;
   property: string;
-  house_age: string;
+  house_age: dayjs.Dayjs;
   area: number;
   bedrooms: number;
   living_rooms: number;

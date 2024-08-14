@@ -23,7 +23,7 @@ import { save } from "../api/SecondHandHousing";
 import {
   SecondHandHousing,
   SecondHandHousingFrom,
-} from "../model/SecondHandHousing";
+} from "../model/second_hand_housing";
 
 const useFanyFrom = () => {
   const [open, setOpen] = useState(false);

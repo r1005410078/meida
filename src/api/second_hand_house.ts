@@ -6,7 +6,7 @@ import {
   SecondHandHousingResponse,
   SoldSecondHandHouse,
   SoldSecondHandHousingResponse,
-} from "../model/SecondHandHousing";
+} from "../model/second_hand_housing";
 import { TableData } from "../value_object/common";
 
 // 创建二手房
@@ -183,6 +183,7 @@ function convertToSecondHandHousing(item: SecondHandHousingResponse) {
     // 房源信息
     house_address: item.house.house_address,
     house_type: item.house.house_type,
+    property: item.house.property,
     area: item.house.area,
     bedrooms: item.house.bedrooms,
     living_rooms: item.house.living_rooms,

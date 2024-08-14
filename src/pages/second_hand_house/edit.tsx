@@ -15,15 +15,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "antd/es/form/Form";
 import { useEffect } from "react";
 
-import { SecondHandHousingFrom } from "../../model/SecondHandHousing";
+import { SecondHandHousingFrom } from "../../model/second_hand_housing";
 import {
   useGetSecondHandByHouseId,
   useSecondHandHouseSave,
-} from "../../api/SecondHandHouse";
+} from "../../api/second_hand_house";
 
 import { PageContainer } from "@ant-design/pro-components";
 import { useCommunity } from "../../components/Community";
 import { useHouse } from "../../components/House";
+import { useGuShi } from "../../api/gushi";
 
 const labelCol = { span: 6 };
 
@@ -36,6 +37,8 @@ export function Edit() {
   const { communityNode, communitySubmit, communityForm } = useCommunity(
     paramsHouseId ? formData?.community_name : house?.community_name
   );
+
+  const { data: guShi } = useGuShi();
 
   // 更新
   const save = useSecondHandHouseSave();
@@ -50,7 +53,7 @@ export function Edit() {
   return (
     <PageContainer
       title={paramsHouseId ? "编辑二手房" : "新增二手房"}
-      content="庭院深深深几许，杨柳堆烟，帘幕无重数。"
+      content={guShi}
       footer={[
         <Button
           key="rest"
@@ -101,7 +104,7 @@ export function Edit() {
                   name="pice"
                   rules={[{ required: true }]}
                 >
-                  <InputNumber style={{ width: "100%" }} />
+                  <InputNumber style={{ width: "100%" }} addonAfter="万元" />
                 </Form.Item>
               </Col>
               <Col span={8}>
@@ -110,7 +113,7 @@ export function Edit() {
                   name="low_pice"
                   rules={[{ required: true }]}
                 >
-                  <InputNumber style={{ width: "100%" }} />
+                  <InputNumber style={{ width: "100%" }} addonAfter="万元" />
                 </Form.Item>
               </Col>
             </Row>

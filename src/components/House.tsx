@@ -15,7 +15,7 @@ import {
 import { AimOutlined, RollbackOutlined } from "@ant-design/icons";
 import UploadHouse, { fangImagesUpload } from "./UploadHouse";
 import axios from "axios";
-import { House, HouseFrom } from "../model/House";
+import { House, HouseFrom } from "../model/house";
 import {
   useHouseById,
   useHouseListByOwnerName,
@@ -210,14 +210,14 @@ export function useHouse() {
         <Col span={8}>
           <Form.Item label="房型">
             <Space>
-              <Form.Item label="室" name="bedrooms" noStyle>
-                <InputNumber placeholder="几室" />
+              <Form.Item name="bedrooms" noStyle>
+                <InputNumber placeholder="几室" addonAfter="室" />
               </Form.Item>
-              <Form.Item label="卫" name="bathrooms" noStyle>
-                <InputNumber placeholder="几卫" />
+              <Form.Item name="living_rooms" noStyle>
+                <InputNumber placeholder="几厅" addonAfter="厅" />
               </Form.Item>
-              <Form.Item label="厅" name="living_rooms" noStyle>
-                <InputNumber placeholder="几厅" />
+              <Form.Item name="bathrooms" noStyle>
+                <InputNumber placeholder="几卫" addonAfter="卫" />
               </Form.Item>
             </Space>
           </Form.Item>
@@ -250,6 +250,7 @@ export function useHouse() {
     houseForm,
     houseSubmit,
     house,
+    loading: save.isLoading,
   };
 
   async function houseSubmit(community_name: string, house_id?: string) {
@@ -271,7 +272,7 @@ export function useHouse() {
 
     value.community_name = community_name;
     let newValue = {
-      house_id,
+      house_id: house_id ?? house?.house_id,
       ...value,
       house_age: value.house_age.format("YYYY-MM-DDTHH:mm:ss"),
     };

@@ -24,6 +24,7 @@ import {
 import { PageContainer } from "@ant-design/pro-components";
 import { useCommunity } from "../../components/Community";
 import { useHouse } from "../../components/House";
+import { useGuShi } from "../../api/gushi";
 
 const labelCol = { span: 6 };
 
@@ -36,6 +37,7 @@ export function Edit() {
   const { communityNode, communitySubmit, communityForm } = useCommunity(
     paramsHouseId ? formData?.community_name : house?.community_name
   );
+  const guShi = useGuShi();
 
   // 更新
   const save = useRentalHouseSave();
@@ -50,7 +52,7 @@ export function Edit() {
   return (
     <PageContainer
       title={paramsHouseId ? "编辑出租房" : "新增出租房"}
-      content="庭院深深深几许，杨柳堆烟，帘幕无重数。"
+      content={guShi.data}
       footer={[
         <Button
           key="rest"
@@ -65,6 +67,7 @@ export function Edit() {
         <Button
           key="submit"
           type="primary"
+          loading={save.isLoading}
           onClick={async () => {
             const { community_name } = await communitySubmit();
             const { house_id } = await houseSubmit(
@@ -80,11 +83,11 @@ export function Edit() {
       ]}
     >
       <Flex vertical gap={8}>
-        <Card title="房源信息">
+        <Card title="房源信息" loading={save.isLoading}>
           {houseNode}
           <Divider plain />
         </Card>
-        <Card title="小区信息">
+        <Card title="小区信息" loading={save.isLoading}>
           {communityNode}
           <Divider plain />
         </Card>
@@ -97,7 +100,7 @@ export function Edit() {
                   name="rent_pice"
                   rules={[{ required: true }]}
                 >
-                  <InputNumber style={{ width: "100%" }} />
+                  <InputNumber style={{ width: "100%" }} addonAfter="元" />
                 </Form.Item>
               </Col>
               <Col span={8}>
@@ -106,7 +109,7 @@ export function Edit() {
                   name="rent_low_pice"
                   rules={[{ required: true }]}
                 >
-                  <InputNumber style={{ width: "100%" }} />
+                  <InputNumber style={{ width: "100%" }} addonAfter="元" />
                 </Form.Item>
               </Col>
             </Row>
@@ -138,6 +141,8 @@ export function Edit() {
     await save.mutateAsync(newValue);
 
     rentalHouseFrom.resetFields();
+    communityForm.resetFields();
+    houseForm.resetFields();
 
     message.success("保存成功");
 

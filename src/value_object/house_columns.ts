@@ -1,6 +1,6 @@
 import { ProColumns } from "@ant-design/pro-components";
-import { Community } from "../model/Community";
-import { House } from "../model/House";
+import { Community } from "../model/community";
+import { House } from "../model/house";
 import { useGetCommunityNames } from "../api/community";
 import dayjs from "dayjs";
 
@@ -133,36 +133,39 @@ export const floor = [
 // 建立年限
 export const year_built = [
   {
-    value: {
+    value: JSON.stringify({
       start: dayjs().subtract(2, "year").unix(),
       end: Date.now(),
-    },
+    }),
     label: "2年以内",
   },
   {
-    value: {
+    value: JSON.stringify({
       start: dayjs().subtract(5, "year").unix(),
       end: dayjs().subtract(2, "year").unix(),
-    },
+    }),
     label: "2-5年",
   },
   {
-    value: "5-10",
+    value: JSON.stringify({
+      start: dayjs().subtract(10, "year").unix(),
+      end: dayjs().subtract(5, "year").unix(),
+    }),
     label: "5-10年",
-    start: dayjs().subtract(10, "year").unix(),
-    end: dayjs().subtract(5, "year").unix(),
   },
   {
-    value: "10-20",
+    value: JSON.stringify({
+      start: dayjs().subtract(20, "year").unix(),
+      end: dayjs().subtract(10, "year").unix(),
+    }),
     label: "10-20年",
-    start: dayjs().subtract(20, "year").unix(),
-    end: dayjs().subtract(10, "year").unix(),
   },
   {
-    value: "20以上",
+    value: JSON.stringify({
+      start: dayjs().subtract(100, "year").unix(),
+      end: dayjs().subtract(20, "year").unix(),
+    }),
     label: "20年以上",
-    start: dayjs().subtract(100, "year").unix(),
-    end: dayjs().subtract(20, "year").unix(),
   },
 ];
 
@@ -448,7 +451,6 @@ export function useCommunityColumns(): ProColumns<Community>[] {
 }
 
 export function useHouseColumns() {
-  const community = useCommunityColumns();
   const columns: ProColumns<House>[] = [
     {
       title: "姓名",
@@ -515,8 +517,9 @@ export function useHouseColumns() {
     {
       title: "房龄",
       dataIndex: "house_age",
+      valueType: "select",
       fieldProps: {
-        options: house_property,
+        options: year_built,
       },
       render: (_, record) => {
         return `${dayjs(record.house_age).year()}年`;
@@ -524,7 +527,7 @@ export function useHouseColumns() {
     },
   ];
 
-  return columns.concat(community as any);
+  return columns;
 }
 
 export function useSecondHandHouseColumns() {
@@ -532,12 +535,8 @@ export function useSecondHandHouseColumns() {
   const house = useHouseColumns();
   const columns: ProColumns<any>[] = [
     {
-      title: "姓名",
-      dataIndex: "owner_name",
-    },
-    {
       title: "价格",
-      dataIndex: "price",
+      dataIndex: "pice",
       valueType: "select",
       fieldProps: {
         options: price,
@@ -545,8 +544,9 @@ export function useSecondHandHouseColumns() {
     },
     {
       title: "最低价格",
-      dataIndex: "low_price",
+      dataIndex: "low_pice",
       hideInSearch: true,
+      hideInTable: true,
     },
     {
       title: "标签",
@@ -566,10 +566,6 @@ export function useRentalHouseColumns() {
   const house = useHouseColumns();
   const columns: ProColumns<any>[] = [
     {
-      title: "姓名",
-      dataIndex: "owner_name",
-    },
-    {
       title: "价格",
       dataIndex: "rent_pice",
       valueType: "select",
@@ -579,7 +575,7 @@ export function useRentalHouseColumns() {
     },
     {
       title: "最低价格",
-      dataIndex: "low_rent_price",
+      dataIndex: "rent_low_pice",
       hideInSearch: true,
     },
     {

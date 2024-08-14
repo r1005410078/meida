@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "antd";
 import { AimOutlined, RollbackOutlined } from "@ant-design/icons";
-import { CommunityFrom } from "../model/Community";
+import { CommunityFrom } from "../model/community";
 import { region } from "../value_object/house_columns";
 import {
   useCommunityByName,
@@ -159,6 +159,7 @@ export function useCommunity(propCommunityName?: string) {
     communityNode,
     communityForm,
     communitySubmit,
+    loading: save.isLoading,
   };
 
   async function communitySubmit() {
@@ -171,8 +172,6 @@ export function useCommunity(propCommunityName?: string) {
     };
 
     await save.mutateAsync(newValue);
-    communityForm.resetFields();
-
     return value;
   }
 }

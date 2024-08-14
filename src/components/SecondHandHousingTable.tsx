@@ -20,7 +20,7 @@ import {
 } from "@ant-design/icons";
 import { useMutation, useQueryClient } from "react-query";
 import { deleteSecondHandHousing } from "../api/SecondHandHousing";
-import { SecondHandHousing } from "../model/SecondHandHousing";
+import { SecondHandHousing } from "../model/second_hand_housing";
 import { useQuerySecondHandHousing } from "../hooks/useQuerySecondHandHousing";
 
 interface DataType {

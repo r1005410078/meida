@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   GetSecondHandHouseSoldParams,
   useSecondHandHouseListSold,
-} from "../../api/SecondHandHouse";
+} from "../../api/second_hand_house";
 import { ProTable } from "@ant-design/pro-components";
 
 export function SoldSecondHandHouseList() {

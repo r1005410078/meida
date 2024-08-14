@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useHouseColumns } from "../../value_object/house_columns";
 import { HouseParams, useHouseList } from "../../api/house";
 import { useNavigate } from "react-router";
-import { House } from "../../model/House";
+import { House } from "../../model/house";
 
 export type TableListItem = House;
 
@@ -84,7 +84,7 @@ export function List() {
             ...params,
             community_name: value.community_name,
             house_address: value.house_address,
-            house_type: value.house_type,
+            property: value.property,
             area: value.area,
             bedrooms: value.bedrooms,
             living_rooms: value.living_rooms,

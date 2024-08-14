@@ -17,8 +17,8 @@ import { List as CommunityList } from "./pages/community/list";
 import { Edit as CommunityEdit } from "./pages/community/edit";
 import { List as HouseList } from "./pages/house/list";
 import { Edit as HouseEdit } from "./pages/house/edit";
-import { List as SecondHandHouseList } from "./pages/SecondHandHouse/list";
-import { Edit as SecondHandHouseEdit } from "./pages/SecondHandHouse/edit";
+import { List as SecondHandHouseList } from "./pages/second_hand_house/list";
+import { Edit as SecondHandHouseEdit } from "./pages/second_hand_house/edit";
 import { SoldSecondHandHouseList } from "./pages/sold/second_hand_house";
 import { SoldRentalHouseList } from "./pages/sold/rental_house";
 
@@ -26,7 +26,7 @@ import { List as RentalHouseList } from "./pages/rental_house/list";
 import { Edit as RentalHouseEdit } from "./pages/rental_house/edit";
 import { RentalPage } from "./pages/rental_house";
 
-import { SecondHandHousePage } from "./pages/SecondHandHouse";
+import { SecondHandHousePage } from "./pages/second_hand_house";
 import { SoldPage } from "./pages/sold";
 const { Sider } = Layout;
 

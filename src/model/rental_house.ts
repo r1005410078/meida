@@ -120,6 +120,7 @@ export interface SoldRentalHouseResponse {
     sold_id: number;
     house_id: string;
     rent_pice: number;
+    rent_low_pice: number;
     rent_start_time: string;
     rent_end_time: string;
   };

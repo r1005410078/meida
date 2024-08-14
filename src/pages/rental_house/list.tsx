@@ -20,7 +20,7 @@ import {
   useUnListed,
 } from "../../api/rental_house";
 import { useNavigate } from "react-router";
-import { useSoldModal } from "./SoldModal";
+import { useSoldModal } from "./sold_modal";
 
 export function List() {
   const navigator = useNavigate();
