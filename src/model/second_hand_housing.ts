@@ -6,6 +6,8 @@ export interface SecondHandHousing {
   listed?: number;
   listed_time?: number;
   unlisted_time?: number;
+  comment: string;
+  tags: string;
   // 房源信息
   house_address: string;
   house_type: string;
@@ -41,6 +43,7 @@ export interface SecondHandHousingResponse {
     house_address: string;
     house_type: string;
     area: string;
+    floor: number;
     bedrooms: number;
     property: string;
     living_rooms: number;
@@ -78,6 +81,8 @@ export interface SecondHandHousingResponse {
     listed: number;
     listed_time: string;
     unlisted_time: string;
+    comment: string;
+    tags: string;
     created_at: string;
     updated_at: string;
   };
@@ -88,6 +93,8 @@ export interface SecondHandHousingFrom {
   pice: string;
   low_price?: string;
   listed?: number;
+  comment: string;
+  tags: string[];
 }
 
 export interface SoldSecondHandHousingResponse {
@@ -97,6 +104,7 @@ export interface SoldSecondHandHousingResponse {
     house_address: string;
     house_type: string;
     area: string;
+    floor: number;
     bedrooms: number;
     living_rooms: number;
     bathrooms: number;

@@ -3,6 +3,7 @@ import { Community } from "../model/community";
 import { House } from "../model/house";
 import { useGetCommunityNames } from "../api/community";
 import dayjs from "dayjs";
+import { Tag } from "antd";
 
 // 区域
 export const region = [
@@ -21,46 +22,79 @@ export const region = [
 // 面积
 export const area = [
   {
-    value: "(70",
+    value: {
+      end: 70,
+    },
     label: "70以下",
   },
   {
-    value: "70-80",
+    value: {
+      start: 70,
+      end: 80,
+    },
     label: "70-80",
   },
   {
-    value: "80-90",
+    value: {
+      start: 80,
+      end: 90,
+    },
     label: "80-90",
   },
   {
-    value: "90-100",
+    value: {
+      start: 90,
+      end: 100,
+    },
     label: "90-100",
   },
   {
-    value: "100-110",
+    value: {
+      start: 100,
+      end: 110,
+    },
     label: "100-110",
   },
   {
-    value: "110-120",
+    value: {
+      start: 110,
+      end: 120,
+    },
     label: "110-120",
   },
   {
-    value: "120-130",
+    value: {
+      start: 120,
+      end: 130,
+    },
     label: "120-130",
   },
   {
-    value: "130-140",
+    value: {
+      start: 130,
+      end: 140,
+    },
     label: "130-140",
   },
   {
-    value: "140-150",
+    value: {
+      start: 140,
+      end: 150,
+    },
     label: "140-150",
   },
   {
-    value: "150以上",
+    value: {
+      start: 150,
+    },
     label: "150以上",
   },
-];
+].map(({ label, value }) => {
+  return {
+    label,
+    value: JSON.stringify(value),
+  };
+});
 
 // 朝向
 export const orientation = [
@@ -109,26 +143,38 @@ export const orientation = [
 // 楼层
 export const floor = [
   {
-    value: "不限",
-    label: "不限",
-  },
-  {
-    value: "1,3",
+    value: {
+      start: 1,
+      end: 3,
+    },
     label: "1-3层",
   },
   {
-    value: "3,5",
+    value: {
+      start: 3,
+      end: 5,
+    },
     label: "3-5层",
   },
   {
-    value: "5,10",
+    value: {
+      start: 5,
+      end: 10,
+    },
     label: "5-10层",
   },
   {
-    value: "10以上",
+    value: {
+      start: 10,
+    },
     label: "10以上",
   },
-];
+].map(({ label, value }) => {
+  return {
+    label,
+    value: JSON.stringify(value),
+  };
+});
 
 // 建立年限
 export const year_built = [
@@ -172,97 +218,240 @@ export const year_built = [
 // 价格
 export const price = [
   {
-    value: "20",
-    label: "20以下",
+    value: {
+      start: 0,
+      end: 20,
+    },
+    label: "20万以下",
   },
   {
-    value: "20,30",
+    value: {
+      start: 20,
+      end: 30,
+    },
     label: "20-30万",
   },
   {
-    value: "30,40",
+    value: {
+      start: 30,
+      end: 40,
+    },
     label: "30-40万",
   },
   {
-    value: "40-50",
+    value: {
+      start: 40,
+      end: 50,
+    },
     label: "40-50万",
   },
   {
-    value: "50-60",
+    value: {
+      start: 50,
+      end: 60,
+    },
     label: "50-60万",
   },
   {
-    value: "60-70",
+    value: {
+      start: 60,
+      end: 70,
+    },
     label: "60-70万",
   },
   {
-    value: "70-80",
+    value: {
+      start: 70,
+      end: 80,
+    },
     label: "70-80万",
   },
   {
-    value: "80-90",
+    value: {
+      start: 80,
+      end: 90,
+    },
     label: "80-90万",
   },
   {
-    value: "90-100",
+    value: {
+      start: 90,
+      end: 100,
+    },
     label: "90-100万",
   },
   {
-    value: "100-110",
+    value: {
+      start: 100,
+      end: 110,
+    },
     label: "100-110万",
   },
   {
-    value: "110-120",
+    value: {
+      start: 110,
+      end: 120,
+    },
     label: "110-120万",
   },
   {
-    value: "120-130",
+    value: {
+      start: 120,
+      end: 130,
+    },
     label: "120-130万",
   },
   {
-    value: "130-140",
+    value: {
+      start: 130,
+      end: 140,
+    },
     label: "130-140万",
   },
   {
-    value: "140-150",
+    value: {
+      start: 140,
+      end: 150,
+    },
     label: "140-150万",
   },
   {
-    value: "150以上",
+    value: {
+      start: 150,
+    },
+    label: "150万以上",
   },
-];
+].map((item) => {
+  return { ...item, value: JSON.stringify(item.value) };
+});
+
+export const rent_pice = [
+  {
+    value: {
+      start: 0,
+      end: 500,
+    },
+    label: "500元以下",
+  },
+  {
+    value: {
+      start: 500,
+      end: 1000,
+    },
+    label: "500-1000元",
+  },
+  {
+    value: {
+      start: 1000,
+      end: 1500,
+    },
+    label: "1000-1500元",
+  },
+  {
+    value: {
+      start: 1500,
+      end: 2000,
+    },
+    label: "1500-2000元",
+  },
+  {
+    value: {
+      start: 2000,
+      end: 2500,
+    },
+    label: "2000-2500元",
+  },
+  {
+    value: {
+      start: 2500,
+      end: 3000,
+    },
+    label: "2500-3000元",
+  },
+  {
+    value: {
+      start: 3000,
+      end: 3500,
+    },
+    label: "3000-3500元",
+  },
+  {
+    value: {
+      start: 3500,
+      end: 4000,
+    },
+    label: "3500-4000元",
+  },
+  {
+    value: {
+      start: 4000,
+      end: 4500,
+    },
+    label: "4000-4500元",
+  },
+  {
+    value: {
+      start: 4500,
+      end: 5000,
+    },
+    label: "4500-5000元",
+  },
+  {
+    value: {
+      end: 5000,
+    },
+    label: "5000以上",
+  },
+].map((item) => {
+  return { ...item, value: JSON.stringify(item.value) };
+});
 
 // 户型
 const bedrooms = [
   {
-    value: "不限",
-    label: "不限",
-  },
-  {
-    value: "一室",
+    value: {
+      start: 1,
+      end: 1,
+    },
     label: "一室",
   },
   {
-    value: "二室",
+    value: {
+      start: 2,
+      end: 2,
+    },
     label: "二室",
   },
   {
-    value: "三室",
+    value: {
+      start: 3,
+      end: 3,
+    },
     label: "三室",
   },
   {
-    value: "四室",
+    value: {
+      start: 4,
+      end: 4,
+    },
     label: "四室",
   },
   {
-    value: "五室",
+    value: {
+      start: 5,
+      end: 5,
+    },
     label: "五室",
   },
   {
-    value: "五室以上",
+    value: {
+      start: 5,
+    },
     label: "五室以上",
   },
-];
+].map((item) => {
+  return { ...item, value: JSON.stringify(item.value) };
+});
 
 // 装修
 export const decoration = [
@@ -312,7 +501,7 @@ const property_type = [
   },
 ];
 
-export const tag = [
+export const house_tags = [
   {
     value: "品质小区",
     label: "品质小区",
@@ -430,6 +619,7 @@ export function useCommunityColumns(): ProColumns<Community>[] {
       title: "建立年份",
       dataIndex: "year_built",
       valueType: "select",
+      hideInSearch: true,
       fieldProps: {
         options: year_built,
       },
@@ -541,6 +731,9 @@ export function useSecondHandHouseColumns() {
       fieldProps: {
         options: price,
       },
+      render: (_, item) => {
+        return `${item.pice} 万元`;
+      },
     },
     {
       title: "最低价格",
@@ -550,10 +743,23 @@ export function useSecondHandHouseColumns() {
     },
     {
       title: "标签",
-      dataIndex: "tag",
+      dataIndex: "tags",
       valueType: "select",
+      // TODO
+      hideInSearch: true,
       fieldProps: {
-        options: tag,
+        options: house_tags,
+      },
+      render: (_, item) => {
+        return (
+          <div>
+            {item.tags?.map((tag: string) => (
+              <Tag color="green" key={tag}>
+                {tag}
+              </Tag>
+            ))}
+          </div>
+        );
       },
     },
   ];
@@ -570,7 +776,7 @@ export function useRentalHouseColumns() {
       dataIndex: "rent_pice",
       valueType: "select",
       fieldProps: {
-        options: price,
+        options: rent_pice,
       },
     },
     {
@@ -580,10 +786,22 @@ export function useRentalHouseColumns() {
     },
     {
       title: "标签",
-      dataIndex: "tag",
+      dataIndex: "tags",
       valueType: "select",
+      hideInSearch: true,
       fieldProps: {
-        options: tag,
+        options: house_tags,
+      },
+      render: (_, item) => {
+        return (
+          <div>
+            {item.tags?.map((tag: string) => (
+              <Tag color="green" key={tag}>
+                {tag}
+              </Tag>
+            ))}
+          </div>
+        );
       },
     },
   ];

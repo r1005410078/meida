@@ -8,6 +8,8 @@ import {
   SoldSecondHandHousingResponse,
 } from "../model/second_hand_housing";
 import { TableData } from "../value_object/common";
+import { HouseParams } from "./house";
+import { QueryCommunityParams } from "./community";
 
 // 创建二手房
 export function useSecondHandHouseCreate() {
@@ -40,20 +42,21 @@ export function useListed() {
   );
 }
 
-export interface GetListListedParams {
+export interface GetListListedParams extends HouseParams, QueryCommunityParams {
   listed?: 0 | 1;
-  page_index: number;
-  page_size: number;
+  tags?: string;
+  pice?: {
+    start?: number;
+    end?: number;
+  };
 }
 
 // 上架/下架 列表
-export function useGetListListed(params: GetListListedParams) {
-  return useQuery(["listListed", params], async () => {
-    const res = await axios.get<TableData<SecondHandHousingResponse>>(
+export function useGetListListed(data: GetListListedParams) {
+  return useQuery(["listListed", data], async () => {
+    const res = await axios.post<TableData<SecondHandHousingResponse>>(
       "/api/v1/second_hand_house/list_listed",
-      {
-        params,
-      }
+      data
     );
 
     return {
@@ -125,6 +128,7 @@ export function useSecondHandHouseListSold(
           house_address: item.house.house_address,
           house_type: item.house.house_type,
           area: item.house.area,
+          floor: item.house.floor,
           bedrooms: item.house.bedrooms,
           living_rooms: item.house.living_rooms,
           bathrooms: item.house.bathrooms,
@@ -180,11 +184,15 @@ function convertToSecondHandHousing(item: SecondHandHousingResponse) {
     listed: item.house_second_hand.listed,
     listed_time: item.house_second_hand.listed_time,
     unlisted_time: item.house_second_hand.unlisted_time,
+    comment: item.house_second_hand.comment,
+    tags: item.house_second_hand.tags.split(","),
+
     // 房源信息
     house_address: item.house.house_address,
     house_type: item.house.house_type,
     property: item.house.property,
     area: item.house.area,
+    floor: item.house.floor,
     bedrooms: item.house.bedrooms,
     living_rooms: item.house.living_rooms,
     bathrooms: item.house.bathrooms,

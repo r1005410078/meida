@@ -125,23 +125,6 @@ export function RentingTable() {
       dataIndex: "property_type",
       key: "property_type",
     },
-
-    {
-      title: "标签",
-      dataIndex: "tags",
-      key: "tags",
-      render: (tags) => {
-        return (
-          <div>
-            {tags.split(",").map((tag: string) => (
-              <Tag color="green" key={tag}>
-                {tag}
-              </Tag>
-            ))}
-          </div>
-        );
-      },
-    },
     {
       title: "更新时间",
       dataIndex: "updated_at",

@@ -9,11 +9,13 @@ import {
   InputNumber,
   message,
   Row,
+  Select,
+  Spin,
 } from "antd";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "antd/es/form/Form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { SecondHandHousingFrom } from "../../model/second_hand_housing";
 import {
@@ -25,6 +27,7 @@ import { PageContainer } from "@ant-design/pro-components";
 import { useCommunity } from "../../components/Community";
 import { useHouse } from "../../components/House";
 import { useGuShi } from "../../api/gushi";
+import { house_tags } from "../../value_object/house_columns";
 
 const labelCol = { span: 6 };
 
@@ -39,6 +42,7 @@ export function Edit() {
   );
 
   const { data: guShi } = useGuShi();
+  const [isLoading, setIsLoading] = useState(false);
 
   // 更新
   const save = useSecondHandHouseSave();
@@ -55,82 +59,99 @@ export function Edit() {
       title={paramsHouseId ? "编辑二手房" : "新增二手房"}
       content={guShi}
       footer={[
-        <Button
-          key="rest"
-          onClick={() => {
-            communityForm.resetFields();
-            houseForm.resetFields();
-            secondHandHouseForm.resetFields();
-          }}
-        >
-          重置
+        <Button key="rest" onClick={() => navigate(`/house/second-hand-house`)}>
+          取消
         </Button>,
         <Button
           key="submit"
           type="primary"
+          loading={isLoading}
           onClick={async () => {
-            const { community_name } = await communitySubmit();
-            const { house_id } = await houseSubmit(
-              community_name,
-              paramsHouseId
-            );
+            setIsLoading(true);
+            try {
+              const { community_name } = await communitySubmit();
+              const { house_id } = await houseSubmit(
+                community_name,
+                paramsHouseId
+              );
 
-            await secondHandHouseFormSubmit(house_id!);
+              await secondHandHouseFormSubmit(house_id!);
+
+              message.success("保存成功!");
+              resetFields();
+            } catch (error) {
+              console.error(error);
+            } finally {
+              setIsLoading(false);
+            }
           }}
         >
           提交
         </Button>,
       ]}
     >
-      <Flex vertical gap={8}>
-        <Card title="房源信息">
-          {houseNode}
-          <Divider plain />
-        </Card>
-        <Card title="小区信息">
-          {communityNode}
-          <Divider plain />
-        </Card>
-        <Card title="二手房信息" key="3">
-          <Form
-            form={secondHandHouseForm}
-            labelCol={labelCol}
-            layout="horizontal"
-          >
-            <Row>
-              <Col span={8}>
-                <Form.Item
-                  label="报价"
-                  name="pice"
-                  rules={[{ required: true }]}
-                >
-                  <InputNumber style={{ width: "100%" }} addonAfter="万元" />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item
-                  label="低价"
-                  name="low_pice"
-                  rules={[{ required: true }]}
-                >
-                  <InputNumber style={{ width: "100%" }} addonAfter="万元" />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8}>
-                <Form.Item
-                  label="备注"
-                  name="comment"
-                  rules={[{ required: true }]}
-                >
-                  <Input.TextArea rows={3} />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        </Card>
-      </Flex>
+      <Spin spinning={isLoading}>
+        <Flex vertical gap={8}>
+          <Card title="房源信息">
+            {houseNode}
+            <Divider plain />
+          </Card>
+          <Card title="小区信息">
+            {communityNode}
+            <Divider plain />
+          </Card>
+          <Card title="二手房信息" key="3">
+            <Form
+              form={secondHandHouseForm}
+              labelCol={labelCol}
+              layout="horizontal"
+            >
+              <Row>
+                <Col span={8}>
+                  <Form.Item
+                    label="报价"
+                    name="pice"
+                    rules={[{ required: true }]}
+                  >
+                    <InputNumber style={{ width: "100%" }} addonAfter="万元" />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item
+                    label="低价"
+                    name="low_pice"
+                    rules={[{ required: true }]}
+                  >
+                    <InputNumber style={{ width: "100%" }} addonAfter="万元" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={8}>
+                  <Form.Item
+                    label="备注"
+                    name="comment"
+                    rules={[{ required: true }]}
+                  >
+                    <Input.TextArea rows={3} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={8}>
+                  <Form.Item
+                    label="标签"
+                    name="tags"
+                    rules={[{ required: true }]}
+                  >
+                    <Select mode="multiple" options={house_tags} />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Card>
+        </Flex>
+      </Spin>
     </PageContainer>
   );
 
@@ -140,9 +161,10 @@ export function Edit() {
     let newValue = {
       ...houseValues,
       house_id,
+      tags: houseValues.tags?.join(",") || "",
     };
 
-    await save.mutateAsync(newValue);
+    await save.mutateAsync(newValue as any);
 
     secondHandHouseForm.resetFields();
 
@@ -151,5 +173,11 @@ export function Edit() {
     if (paramsHouseId) {
       navigate("/house/second-hand-house");
     }
+  }
+
+  function resetFields() {
+    secondHandHouseForm.resetFields();
+    houseForm.resetFields();
+    communityForm.resetFields();
   }
 }

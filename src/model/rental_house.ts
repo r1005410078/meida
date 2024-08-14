@@ -1,13 +1,15 @@
 import { Dayjs } from "dayjs";
 
 export interface SecondRentalHouse {
-  // 二手房信息
+  // 租房信息
   house_id: string;
   rent_pice: string;
   rent_low_price?: string;
   listed?: number;
   listed_time?: number;
   unlisted_time?: number;
+  comment: string;
+  tags: string;
   // 房源信息
   house_address: string;
   house_type: string;
@@ -42,6 +44,7 @@ export interface SecondRentalHouseResponse {
     community_name: string;
     house_address: string;
     house_type: string;
+    floor: number;
     area: string;
     bedrooms: number;
     living_rooms: number;
@@ -78,6 +81,8 @@ export interface SecondRentalHouseResponse {
     listed?: number;
     listed_time?: number;
     unlisted_time?: number;
+    comment: string;
+    tags: string;
   };
 }
 
@@ -130,6 +135,8 @@ export interface RentalHouseFrom {
   house_id: string;
   rent_pice: string;
   rent_low_pice?: string;
+  comment: string;
+  tags: string[];
 }
 
 type RentStartTime = Dayjs;

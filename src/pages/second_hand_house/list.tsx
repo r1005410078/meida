@@ -21,10 +21,11 @@ import {
 } from "../../api/second_hand_house";
 import { useNavigate } from "react-router";
 import { useSoldModal } from "./sold_modal";
+import { processHouseSubmitValue } from "../house/list";
 
 export function List() {
   const navigator = useNavigate();
-  const [listedParams, setListedParams] = useState<GetListListedParams>({
+  const [params, setParams] = useState<GetListListedParams>({
     listed: 1,
     page_index: 1,
     page_size: 10,
@@ -39,23 +40,22 @@ export function List() {
     year_built: {
       show: false,
     },
-    floor: {
+    low_pice: {
       show: false,
     },
-    low_price: {
+    community_type: {
       show: false,
     },
   });
 
   const columns = useSecondHandHouseColumns();
-  const { data, isLoading } = useGetListListed(listedParams);
+  const { data, isFetching } = useGetListListed(params);
   const listed = useListed();
   const unlisted = useUnListed();
   const { openSoldModal, soldModalNode } = useSoldModal();
 
   return (
     <PageContainer
-      loading={isLoading}
       token={{
         paddingBlockPageContainerContent: 16,
         paddingInlinePageContainerContent: 24,
@@ -85,6 +85,15 @@ export function List() {
       }}
     >
       <ProTable<SecondHandHousing>
+        loading={isFetching}
+        onSubmit={(value) => {
+          setParams({
+            ...params,
+            ...processHouseSubmitValue(value),
+            pice: value.pice ? JSON.parse(value.pice) : undefined,
+            community_type: value.community_type,
+          });
+        }}
         columns={columns.concat([
           {
             title: "操作",
@@ -138,11 +147,11 @@ export function List() {
         pagination={{
           total: data?.total,
           showTotal: (total) => `共 ${total} 条`,
-          pageSize: listedParams.page_size,
-          current: listedParams.page_index,
+          pageSize: params.page_size,
+          current: params.page_index,
           onChange: (page, pageSize) => {
-            setListedParams({
-              ...listedParams,
+            setParams({
+              ...params,
               page_index: page,
               page_size: pageSize,
             });
@@ -156,11 +165,11 @@ export function List() {
         toolbar={{
           title: (
             <Segmented
-              value={listedParams.listed ? "上架" : "下架"}
+              value={params.listed ? "上架" : "下架"}
               options={["上架", "下架"]}
               onChange={(v) =>
-                setListedParams({
-                  ...listedParams,
+                setParams({
+                  ...params,
                   listed: v === "上架" ? 1 : 0,
                 })
               }

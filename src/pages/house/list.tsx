@@ -82,19 +82,7 @@ export function List() {
         onSubmit={(value) => {
           setParams({
             ...params,
-            community_name: value.community_name,
-            house_address: value.house_address,
-            property: value.property,
-            area: value.area,
-            bedrooms: value.bedrooms,
-            living_rooms: value.living_rooms,
-            bathrooms: value.bathrooms,
-            orientation: value.orientation,
-            decoration_status: value.decoration_status,
-            status: value.status,
-            house_description: value.house_description,
-            owner_name: value.owner_name,
-            owner_phone: value.owner_phone,
+            ...processHouseSubmitValue(value),
           });
         }}
         pagination={{
@@ -158,4 +146,24 @@ export function List() {
       />
     </PageContainer>
   );
+}
+
+//
+export function processHouseSubmitValue(value: any) {
+  return {
+    community_name: value.community_name,
+    house_address: value.house_address,
+    property: value.property,
+    area: value.area ? JSON.parse(value.area) : undefined,
+    floor: value.floor ? JSON.parse(value.floor) : undefined,
+    bedrooms: value.bedrooms ? JSON.parse(value.bedrooms) : undefined,
+    living_rooms: value.living_rooms,
+    bathrooms: value.bathrooms,
+    orientation: value.orientation,
+    decoration_status: value.decoration_status,
+    status: value.status,
+    house_description: value.house_description,
+    owner_name: value.owner_name,
+    owner_phone: value.owner_phone,
+  };
 }

@@ -14,6 +14,7 @@ export interface HouseParams {
   property?: string;
   area?: number;
   bedrooms?: number;
+  floor?: number;
   living_rooms?: number;
   bathrooms?: number;
   orientation?: string;
@@ -24,11 +25,12 @@ export interface HouseParams {
   owner_phone?: string;
 }
 
-export function useHouseList(params: HouseParams) {
-  return useQuery(["houseList", params], () => {
-    return axios.get<TableData<House>>("/api/v1/house/list", {
-      params: omitBy(params, (value) => value === ""),
-    });
+export function useHouseList(data: HouseParams) {
+  return useQuery(["houseList", data], () => {
+    return axios.post<TableData<House>>(
+      "/api/v1/house/list",
+      omitBy(data, (value) => value === "")
+    );
   });
 }
 
