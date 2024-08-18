@@ -1,4 +1,4 @@
-import axios from "axios";
+import { request } from "./api";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   SecondHandHousing,
@@ -14,14 +14,14 @@ import { QueryCommunityParams } from "./community";
 // 创建二手房
 export function useSecondHandHouseCreate() {
   return useMutation((data: SecondHandHousingFrom) => {
-    return axios.post("/api/v1/second_hand_house/create", data);
+    return request.post("/api/v1/second_hand_house/create", data);
   });
 }
 
 // 保存二手房
 export function useSecondHandHouseSave() {
   return useMutation((data: SecondHandHousingFrom) => {
-    return axios.post("/api/v1/second_hand_house/save", data);
+    return request.post("/api/v1/second_hand_house/save", data);
   });
 }
 
@@ -30,7 +30,7 @@ export function useListed() {
   const client = useQueryClient();
   return useMutation(
     (house_id: string) => {
-      return axios.post("/api/v1/second_hand_house/listed", {
+      return request.post("/api/v1/second_hand_house/listed", {
         house_id,
       });
     },
@@ -54,7 +54,7 @@ export interface GetListListedParams extends HouseParams, QueryCommunityParams {
 // 上架/下架 列表
 export function useGetListListed(data: GetListListedParams) {
   return useQuery(["listListed", data], async () => {
-    const res = await axios.post<TableData<SecondHandHousingResponse>>(
+    const res = await request.post<TableData<SecondHandHousingResponse>>(
       "/api/v1/second_hand_house/list_listed",
       data
     );
@@ -71,7 +71,7 @@ export function useUnListed() {
   const client = useQueryClient();
   return useMutation(
     (house_id: string) => {
-      return axios.post("/api/v1/second_hand_house/unlisted", {
+      return request.post("/api/v1/second_hand_house/unlisted", {
         house_id,
       });
     },
@@ -88,7 +88,7 @@ export function useSold() {
   const client = useQueryClient();
   return useMutation(
     (data: SoldSecondHandHouse) => {
-      return axios.post("/api/v1/second_hand_house/sold", data);
+      return request.post("/api/v1/second_hand_house/sold", data);
     },
     {
       onSuccess: () => {
@@ -108,7 +108,7 @@ export function useSecondHandHouseListSold(
   params: GetSecondHandHouseSoldParams
 ) {
   return useQuery(["list_sold"], async () => {
-    const res = await axios.get<TableData<SoldSecondHandHousingResponse>>(
+    const res = await request.get<TableData<SoldSecondHandHousingResponse>>(
       "/api/v1/second_hand_house/list_sold",
       {
         params,
@@ -163,7 +163,7 @@ export function useGetSecondHandByHouseId(houseId?: string) {
   return useQuery(
     ["getByHouseId", houseId],
     async () => {
-      const res = await axios.get<SecondHandHousingResponse>(
+      const res = await request.get<SecondHandHousingResponse>(
         `/api/v1/second_hand_house/get_by_house_id/${houseId}`
       );
 

@@ -1,4 +1,4 @@
-import axios from "axios";
+import { request } from "./api";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   RentalHouseFrom,
@@ -22,7 +22,7 @@ export function useGetRentalHouseList(data: GetListListedParams) {
   return useQuery(
     ["RentalHouseList", data],
     async () => {
-      let res = await axios.post<TableData<SecondRentalHouseResponse>>(
+      let res = await request.post<TableData<SecondRentalHouseResponse>>(
         "/api/v1/rental_house/list",
         data
       );
@@ -43,7 +43,7 @@ export function useGetRentalHouseByHouseId(house_id?: string) {
   return useQuery(
     ["RentalHouseByHouseId"],
     async () => {
-      let res = await axios.get<SecondRentalHouseResponse>(
+      let res = await request.get<SecondRentalHouseResponse>(
         `/api/v1/rental_house/detail/${house_id}`
       );
       return convertToSecondRentalHouse(res.data);
@@ -58,7 +58,7 @@ export function useListed() {
   const client = useQueryClient();
   return useMutation(
     (house_id: string) => {
-      return axios.post("/api/v1/rental_house/listed", {
+      return request.post("/api/v1/rental_house/listed", {
         house_id,
       });
     },
@@ -74,7 +74,7 @@ export function useUnListed() {
   const client = useQueryClient();
   return useMutation(
     (house_id: string) => {
-      return axios.post("/api/v1/rental_house/unlisted", {
+      return request.post("/api/v1/rental_house/unlisted", {
         house_id,
       });
     },
@@ -96,7 +96,7 @@ export function useGetRentalHouseListSold(params: GetRentalHouseSoldParams) {
   return useQuery(
     ["GetRentalHouseSoldList"],
     async () => {
-      let res = await axios.get<TableData<SoldRentalHouseResponse>>(
+      let res = await request.get<TableData<SoldRentalHouseResponse>>(
         "/api/v1/rental_house/list_sold",
         {
           params,
@@ -119,7 +119,7 @@ export function useRentalHouseSave() {
   const client = useQueryClient();
   return useMutation(
     (data: RentalHouseFrom) => {
-      return axios.post("/api/v1/rental_house/save", data);
+      return request.post("/api/v1/rental_house/save", data);
     },
     {
       onSuccess: () => {
@@ -134,7 +134,7 @@ export function useSold() {
   const client = useQueryClient();
   return useMutation(
     (data: SoldRentalHouseBody) => {
-      return axios.post("/api/v1/rental_house/sold", data);
+      return request.post("/api/v1/rental_house/sold", data);
     },
     {
       onSuccess: () => {

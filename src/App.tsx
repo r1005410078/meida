@@ -21,85 +21,96 @@ import { Edit as HouseEdit } from "./pages/house/edit";
 import { SoldPage } from "./pages/sold";
 import { SoldRentalHouseList } from "./pages/sold/rental_house";
 import { SoldSecondHandHouseList } from "./pages/sold/second_hand_house";
+import { useIsLogin } from "./api/users";
+import LoginPage from "./pages/login";
+import "./App.css";
 
 export default () => {
   const navigator = useNavigate();
   const location = useLocation();
+  const isLogin = useIsLogin();
 
   return (
     <Routes>
       <Route
         path="/"
         element={
-          <ProLayout
-            menu={{
-              autoClose: false,
-              defaultOpenAll: true,
-            }}
-            title=""
-            logo="/meida.png"
-            fixSiderbar
-            fixedHeader
-            route={{
-              path: "/",
-              routes: [
-                {
-                  path: "/house",
-                  name: "租售管理",
-                  icon: <MediumOutlined />,
-                  children: [
-                    {
-                      path: "second-hand-house",
-                      name: "二手房",
-                    },
-                    {
-                      path: "rental-house",
-                      name: "出租房",
-                    },
-                    {
-                      path: "sold",
-                      name: "已售出",
-                    },
-                  ],
-                },
-                {
-                  path: "/base-info",
-                  name: "房屋基础信息",
-                  icon: <ShopOutlined />,
-                  children: [
-                    {
-                      path: "community",
-                      name: "小区",
-                    },
-                    {
-                      path: "house",
-                      name: "房屋信息",
-                    },
-                  ],
-                },
-              ],
-            }}
-            onMenuHeaderClick={(e) => console.log(111, e)}
-            menuItemRender={(item, dom) => (
-              <a
-                onClick={() => {
-                  navigator(item.path!);
-                }}
-              >
-                {dom}
-              </a>
-            )}
-            breakpoint={false}
-            layout="mix"
-            location={{
-              pathname: location.pathname,
-            }}
-          >
-            <Outlet />
-            {location.pathname === "/" ? (
-              <Navigate to="/house/second-hand-house" />
-            ) : null}
-          </ProLayout>
+          isLogin ? (
+            <ProLayout
+              menu={{
+                autoClose: false,
+                defaultOpenAll: true,
+              }}
+              title=""
+              logo="/meida.png"
+              fixSiderbar
+              fixedHeader
+              route={{
+                path: "/",
+                routes: [
+                  {
+                    path: "/house",
+                    name: "租售管理",
+                    icon: <MediumOutlined />,
+                    children: [
+                      {
+                        path: "second-hand-house",
+                        name: "二手房",
+                      },
+                      {
+                        path: "rental-house",
+                        name: "出租房",
+                      },
+                      {
+                        path: "sold",
+                        name: "已售出",
+                      },
+                    ],
+                  },
+                  {
+                    path: "/base-info",
+                    name: "房屋基础信息",
+                    icon: <ShopOutlined />,
+                    children: [
+                      {
+                        path: "community",
+                        name: "小区",
+                      },
+                      {
+                        path: "house",
+                        name: "房屋信息",
+                      },
+                    ],
+                  },
+                ],
+              }}
+              onMenuHeaderClick={(e) => console.log(111, e)}
+              menuItemRender={(item, dom) => (
+                <a
+                  onClick={() => {
+                    navigator(item.path!);
+                  }}
+                >
+                  {dom}
+                </a>
+              )}
+              breakpoint={false}
+              layout="mix"
+              location={{
+                pathname: location.pathname,
+              }}
+            >
+              <Outlet />
+              {location.pathname === "/" || location.pathname === "/login" ? (
+                <Navigate to="/house/second-hand-house" />
+              ) : null}
+            </ProLayout>
+          ) : (
+            <>
+              <Navigate to="/login" />
+              <Outlet />
+            </>
+          )
         }
       >
         <Route path="house" element={<SecondHandHousePage />}>
@@ -136,7 +147,10 @@ export default () => {
 
         <Route path="base-info" element={<SecondHandHousePage />}>
           <Route index path="community" element={<CommunityList />} />
-          <Route path="community/edit/:houseId" element={<CommunityEdit />} />
+          <Route
+            path="community/edit/:community_name"
+            element={<CommunityEdit />}
+          />
           <Route path="community/new" element={<CommunityEdit />} />
         </Route>
 
@@ -145,6 +159,8 @@ export default () => {
           <Route path="house/edit/:houseId" element={<HouseEdit />} />
           <Route path="house/new" element={<HouseEdit />} />
         </Route>
+
+        <Route path="login" element={<LoginPage />} />
 
         <Route
           path="*"

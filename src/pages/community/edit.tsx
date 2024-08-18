@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Flex } from "antd";
+import { Button, Card, Divider, Flex, message } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { PageContainer } from "@ant-design/pro-components";
 import { useCommunity } from "../../components/Community";
@@ -30,6 +30,12 @@ export function Edit() {
           type="primary"
           onClick={async () => {
             await communitySubmit();
+            communityForm.resetFields();
+
+            message.success("提交成功");
+            if (community_name) {
+              navigate(`/base-info/community`);
+            }
           }}
         >
           提交

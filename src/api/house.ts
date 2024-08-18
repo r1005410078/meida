@@ -5,6 +5,7 @@ import { useDebounceFn } from "@ant-design/pro-components";
 import { TableData } from "../value_object/common";
 import dayjs from "dayjs";
 import omitBy from "lodash/omitBy";
+import { request } from "./api";
 
 export interface HouseParams {
   page_index: number;
@@ -27,7 +28,7 @@ export interface HouseParams {
 
 export function useHouseList(data: HouseParams) {
   return useQuery(["houseList", data], () => {
-    return axios.post<TableData<House>>(
+    return request.post<TableData<House>>(
       "/api/v1/house/list",
       omitBy(data, (value) => value === "")
     );
@@ -38,7 +39,7 @@ export function useDeleteHouse() {
   let queryClient = useQueryClient();
   return useMutation(
     (house_id: string) => {
-      return axios.post(`/api/v1/house/delete`, {
+      return request.post(`/api/v1/house/delete`, {
         house_id,
       });
     },
@@ -68,7 +69,7 @@ export function useHouseById(id?: string) {
 export function useSaveHouse() {
   return useMutation(
     (data: Omit<HouseFrom, "id">) => {
-      return axios.post<{ house_id: string }>("/api/v1/house/save", data);
+      return request.post<{ house_id: string }>("/api/v1/house/save", data);
     },
     {
       onSuccess: () => {},

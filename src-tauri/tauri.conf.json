@@ -11,6 +11,10 @@
   },
   "tauri": {
     "allowlist": {
+      "http": {
+        "all": true,
+        "request": true
+      },
       "all": true,
       "protocol": {
         "asset": true,

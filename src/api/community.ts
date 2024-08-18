@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Community, CommunityFrom } from "../model/community";
-import axios from "axios";
+import { request } from "./api";
 
 export interface QueryCommunityParams {
   community_name?: string;
@@ -19,9 +19,12 @@ export interface QueryCommunityParams {
 
 export function useCommunityList(params: QueryCommunityParams) {
   return useQuery(["CommunityList", params], () => {
-    return axios.get<Community[]>("/api/v1/residential/list", {
-      params,
-    });
+    return request.get<Community[]>(
+      "http://127.0.0.1:8000/api/v1/residential/list",
+      {
+        params,
+      }
+    );
   });
 }
 
@@ -29,7 +32,7 @@ export function useGetCommunityNames() {
   return useQuery(
     ["GetCommunityNames"],
     () => {
-      return axios.get<String[]>("/api/v1/residential/get_community_names");
+      return request.get<String[]>("/api/v1/residential/get_community_names");
     },
     {
       keepPreviousData: true,
@@ -41,7 +44,7 @@ export function useDeleteCommunity() {
   const client = useQueryClient();
   return useMutation(
     (community_name: string) => {
-      return axios.post("/api/v1/residential/delete", {
+      return request.post("/api/v1/residential/delete", {
         community_name,
       });
     },
@@ -57,7 +60,7 @@ export function useCommunityByName(name?: string) {
   return useQuery(
     ["getCommunity", name],
     () => {
-      return axios.get<Community>(
+      return request.get<Community>(
         `/api/v1/residential/get_residential/${name}`
       );
     },
@@ -70,7 +73,7 @@ export function useCommunityByName(name?: string) {
 export function useSaveCommunity() {
   return useMutation(
     (data: Omit<CommunityFrom, "id">) => {
-      return axios.post("/api/v1/residential/save", {
+      return request.post("/api/v1/residential/save", {
         ...data,
         region: data.region?.toString(),
       });
