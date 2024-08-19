@@ -31,12 +31,8 @@ const Page = () => {
         onFinish={async (values) => {
           let token = await login.mutateAsync(values as any);
           localStorage.setItem("token", token!);
-
-          setTimeout(() => {
-            if (token) {
-              window.location.href = "/#/";
-            }
-          }, 300);
+          window.location.reload();
+          window.location.href = "/#/";
         }}
       >
         <ProFormText

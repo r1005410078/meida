@@ -1,4 +1,4 @@
-import { MediumOutlined, ShopOutlined } from "@ant-design/icons";
+import { MediumOutlined, UserOutlined, ShopOutlined } from "@ant-design/icons";
 import { ProLayout } from "@ant-design/pro-components";
 import { Button, Result } from "antd";
 import {
@@ -24,6 +24,7 @@ import { SoldSecondHandHouseList } from "./pages/sold/second_hand_house";
 import { useIsLogin } from "./api/users";
 import LoginPage from "./pages/login";
 import "./App.css";
+import { UserList } from "./pages/users";
 
 export default () => {
   const navigator = useNavigate();
@@ -79,6 +80,17 @@ export default () => {
                       {
                         path: "house",
                         name: "房屋信息",
+                      },
+                    ],
+                  },
+                  {
+                    path: "/users",
+                    name: "用户管理",
+                    icon: <UserOutlined />,
+                    children: [
+                      {
+                        path: "list",
+                        name: "用户列表",
                       },
                     ],
                   },
@@ -158,6 +170,12 @@ export default () => {
           <Route index path="house" element={<HouseList />} />
           <Route path="house/edit/:houseId" element={<HouseEdit />} />
           <Route path="house/new" element={<HouseEdit />} />
+        </Route>
+
+        <Route path="users" element={<SecondHandHousePage />}>
+          <Route index path="list" element={<UserList />} />
+          <Route path="list/edit/:houseId" element={<HouseEdit />} />
+          <Route path="list/new" element={<HouseEdit />} />
         </Route>
 
         <Route path="login" element={<LoginPage />} />
