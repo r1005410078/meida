@@ -1,6 +1,11 @@
-import { MediumOutlined, UserOutlined, ShopOutlined } from "@ant-design/icons";
+import {
+  MediumOutlined,
+  UserOutlined,
+  ShopOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import { ProLayout } from "@ant-design/pro-components";
-import { Button, Result } from "antd";
+import { Button, Dropdown, Result } from "antd";
 import {
   Outlet,
   Route,
@@ -21,15 +26,16 @@ import { Edit as HouseEdit } from "./pages/house/edit";
 import { SoldPage } from "./pages/sold";
 import { SoldRentalHouseList } from "./pages/sold/rental_house";
 import { SoldSecondHandHouseList } from "./pages/sold/second_hand_house";
-import { useIsLogin } from "./api/users";
+import { useGetUser, useIsLogin } from "./api/users";
 import LoginPage from "./pages/login";
-import "./App.css";
 import { UserList } from "./pages/users";
+import "./App.css";
 
 export default () => {
   const navigator = useNavigate();
   const location = useLocation();
   const isLogin = useIsLogin();
+  const user = useGetUser();
 
   return (
     <Routes>
@@ -41,6 +47,32 @@ export default () => {
               menu={{
                 autoClose: false,
                 defaultOpenAll: true,
+              }}
+              avatarProps={{
+                src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
+                size: "small",
+                title: user.data?.username,
+                render: (_, dom) => {
+                  return (
+                    <Dropdown
+                      menu={{
+                        items: [
+                          {
+                            key: "logout",
+                            icon: <LogoutOutlined />,
+                            label: "退出登录",
+                            onClick: () => {
+                              localStorage.removeItem("token");
+                              window.location.reload();
+                            },
+                          },
+                        ],
+                      }}
+                    >
+                      {dom}
+                    </Dropdown>
+                  );
+                },
               }}
               title=""
               logo="/meida.png"

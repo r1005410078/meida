@@ -4,6 +4,9 @@
 
 - [ ] 标签检索
 - [ ] 建立年份
+- [ ] 服务器 systemctl
+- [ ] 用户名称
+- [ ] 服务端错误
 
 ```mermaid
 classDiagram

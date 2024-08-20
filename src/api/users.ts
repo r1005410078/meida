@@ -14,6 +14,13 @@ export function useIsLogin() {
   return localStorage.getItem("token") ? true : false;
 }
 
+export function useGetUser() {
+  return useQuery(["getUser"], async () => {
+    const res = await request.get<User>("/api/v1/auth/get_user");
+    return res.data;
+  });
+}
+
 export function useLogin() {
   return useMutation(
     async (data: { username: string; password: string }) => {

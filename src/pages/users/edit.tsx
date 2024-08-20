@@ -27,7 +27,10 @@ export function useUserEdit() {
       }}
       submitTimeout={2000}
       onFinish={async (values) => {
-        await save.mutateAsync(values);
+        await save.mutateAsync({
+          ...values,
+          id: isEdit ? form.getFieldValue("id") : undefined,
+        });
         setIsEdit(false);
         setOpen(false);
         form.resetFields();
