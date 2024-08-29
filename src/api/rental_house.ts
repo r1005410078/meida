@@ -9,7 +9,6 @@ import {
 import { TableData } from "../value_object/common";
 import { HouseParams } from "./house";
 import { QueryCommunityParams } from "./community";
-import { floor } from "lodash";
 
 export interface GetListListedParams extends HouseParams, QueryCommunityParams {
   listed?: 0 | 1;

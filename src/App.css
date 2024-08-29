@@ -9,3 +9,7 @@ html {
   padding: 0;
   margin: 0;
 }
+
+.save-residential .ant-card .ant-card-body {
+  padding-bottom: 5px !important;
+}

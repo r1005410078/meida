@@ -55,9 +55,9 @@ export function useHouseById(id?: string) {
   return useQuery(
     ["getHouse", id],
     async () => {
-      const result = await axios.get<House>(`/api/v1/house/get_house/${id}`);
-      result.data.house_age = dayjs(result.data.house_age);
+      const result = await request.get<House>(`/api/v1/house/get_house/${id}`);
 
+      result.data = convertToHouse(result.data);
       return result;
     },
     {
@@ -69,7 +69,14 @@ export function useHouseById(id?: string) {
 export function useSaveHouse() {
   return useMutation(
     (data: Omit<HouseFrom, "id">) => {
-      return request.post<{ house_id: string }>("/api/v1/house/save", data);
+      return request.post<{ house_id: string }>("/api/v1/house/save", {
+        ...data,
+        facilities: data.facilities?.join(","),
+        building_year: data.building_year?.format("YYYY-MM-DD"),
+        property_duration: data.property_date?.year(),
+        property_date: data.property_date?.format("YYYY-MM-DD"),
+        delivery_date: data.delivery_date?.format("YYYY-MM-DD"),
+      });
     },
     {
       onSuccess: () => {},
@@ -80,14 +87,11 @@ export function useSaveHouse() {
 // 根据户主名称查询
 export function useHouseListByOwnerName(ownerName?: string) {
   let { run } = useDebounceFn(async () => {
-    const result = await axios.get<House[]>(
+    const result = await request.get<House[]>(
       `/api/v1/house/list_by_owner_name/${ownerName}`
     );
 
-    result.data = result.data.map((item) => {
-      item.house_age = dayjs(item.house_age);
-      return item;
-    });
+    result.data = result.data.map(convertToHouse);
 
     return result;
   }, 300);
@@ -99,4 +103,25 @@ export function useHouseListByOwnerName(ownerName?: string) {
       enabled: !!ownerName,
     }
   );
+}
+
+function convertToHouse(item: any) {
+  if (item.building_year) {
+    item.building_year = dayjs(item.building_year);
+  }
+  if (item.property_duration) {
+    item.property_duration = dayjs(item.property_duration);
+  }
+  if (item.property_date) {
+    item.property_date = dayjs(item.property_date);
+  }
+  if (item.delivery_date) {
+    item.delivery_date = dayjs(item.delivery_date);
+  }
+
+  if (item.facilities) {
+    item.facilities = item.facilities.split(",");
+  }
+
+  return item;
 }

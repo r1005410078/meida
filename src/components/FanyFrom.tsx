@@ -89,13 +89,13 @@ const useFanyFrom = () => {
         <Form
           layout="vertical"
           form={form}
-          onFinish={async (value) => {
+          onFinish={async (value: any) => {
             const image_data = value.image_data;
             if (image_data) {
-              const data = await fangImagesUpload(form, image_data);
+              const data = await fangImagesUpload(form as any, image_data);
               data?.map(
                 (item: any) =>
-                  `sgpubjz98.hd-bkt.clouddn.com/${JSON.parse(item.result).key}`
+                  `sixivlovp.hn-bkt.clouddn.com/${JSON.parse(item.result).key}`
               );
             }
 
@@ -126,30 +126,30 @@ const useFanyFrom = () => {
             <Input placeholder="联系方式" />
           </Form.Item>
           <Form.Item label="报价 (单位 万元)" name="price">
-            <InputNumber placeholder="售价" style={{ width: "100%" }} />
+            <InputNumber min={0} placeholder="售价" style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item label="低价 (单位 万元)" name="low_price">
-            <InputNumber placeholder="低价" style={{ width: "100%" }} />
+            <InputNumber min={0} placeholder="低价" style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item label="房型">
             <Space>
               <Form.Item label="室" name="room" noStyle>
-                <InputNumber placeholder="几室" />
+                <InputNumber min={0} placeholder="几室" />
               </Form.Item>
               <Form.Item label="卫" name="bath" noStyle>
-                <InputNumber placeholder="几卫" />
+                <InputNumber min={0} placeholder="几卫" />
               </Form.Item>
               <Form.Item label="厅" name="hall" noStyle>
-                <InputNumber placeholder="几卫" />
+                <InputNumber min={0} placeholder="几卫" />
               </Form.Item>
             </Space>
           </Form.Item>
           <Form.Item label="面积 (单位 m²)" name="area">
-            <InputNumber placeholder="面积" />
+            <InputNumber min={0} placeholder="面积" />
           </Form.Item>
           <DirectionFormItem />
           <Form.Item label="楼层" name="floor">
-            <InputNumber placeholder="楼层" />
+            <InputNumber min={0} placeholder="楼层" />
           </Form.Item>
           <PropertyFormItem />
           <DecorationFormItem />

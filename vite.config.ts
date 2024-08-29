@@ -13,7 +13,7 @@ export default defineConfig(async () => ({
   server: {
     port: 1420,
     proxy: {
-      "/api": "http://127.0.0.1:8000",
+      "/api": "http://127.0.0.1",
       // "/api": "http://114.55.227.206:8000",
     },
     strictPort: true,

@@ -30,12 +30,13 @@ import { useGetUser, useIsLogin } from "./api/users";
 import LoginPage from "./pages/login";
 import { UserList } from "./pages/users";
 import "./App.css";
+import { SaveResidential } from "./pages/residential/save";
 
 export default () => {
   const navigator = useNavigate();
   const location = useLocation();
   const isLogin = useIsLogin();
-  const user = useGetUser();
+  const user = useGetUser(isLogin);
 
   return (
     <Routes>
@@ -88,15 +89,15 @@ export default () => {
                     children: [
                       {
                         path: "second-hand-house",
-                        name: "二手房",
+                        name: "出售",
                       },
                       {
                         path: "rental-house",
-                        name: "出租房",
+                        name: "出租",
                       },
                       {
                         path: "sold",
-                        name: "已售出",
+                        name: "已租售",
                       },
                     ],
                   },
@@ -165,19 +166,22 @@ export default () => {
           />
           <Route
             path="second-hand-house/edit/:houseId"
-            element={<SecondHandHouseEdit />}
+            element={<SaveResidential pice_type={1} />}
           />
           <Route
             path="second-hand-house/new"
-            element={<SecondHandHouseEdit />}
+            element={<SaveResidential pice_type={1} />}
           />
 
           <Route index path="rental-house" element={<RentalHouseList />} />
           <Route
             path="rental-house/edit/:houseId"
-            element={<RentalHouseEdit />}
+            element={<SaveResidential pice_type={2} />}
           />
-          <Route path="rental-house/new" element={<RentalHouseEdit />} />
+          <Route
+            path="rental-house/new"
+            element={<SaveResidential pice_type={2} />}
+          />
 
           <Route path="sold" element={<SoldPage />}>
             <Route

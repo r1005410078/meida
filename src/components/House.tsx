@@ -23,9 +23,20 @@ import {
 } from "../api/house";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { decoration, house_property } from "../value_object/house_columns";
-
-const labelCol = { span: 6 };
+import {
+  building_structure_options,
+  current_status_options,
+  decoration,
+  facilities_options,
+  house_property,
+  house_type_options,
+  household_registration_options,
+  orientation_options,
+  property_rights_options,
+  school_qualification_options,
+  source_options,
+} from "../value_object/house_columns";
+import { useDebounceFn } from "@ant-design/pro-components";
 
 export function useHouse() {
   const [houseForm] = Form.useForm<HouseFrom>();
@@ -37,6 +48,10 @@ export function useHouse() {
   const [ownerName, setOwnerName] = useState<string>();
   const { data: houseResult } = useHouseListByOwnerName(ownerName);
   const [house, setHouse] = useState<House>();
+  const ownerNameDebounce = useDebounceFn(
+    async (data) => setOwnerName(data),
+    300
+  );
 
   useEffect(() => {
     if (house) {
@@ -53,16 +68,16 @@ export function useHouse() {
   }, [initFormData]);
 
   const houseNode = (
-    <Form form={houseForm} labelCol={labelCol} layout="horizontal">
-      <Row>
+    <Form form={houseForm} layout="vertical">
+      <Row gutter={16}>
         <Col span={8}>
           <Form.Item
-            label="户主姓名"
+            label="业主姓名"
             name="owner_name"
             rules={[{ required: true }]}
           >
             <AutoComplete
-              onChange={(e) => setOwnerName(e)}
+              onChange={(e) => ownerNameDebounce.run(e)}
               onSelect={(house_id) =>
                 setHouse(
                   houseResult?.data.find((item) => item.house_id === house_id)
@@ -98,16 +113,12 @@ export function useHouse() {
             name="owner_phone"
             rules={[{ required: true }]}
           >
-            <Input />
+            <Input placeholder="联系方式" />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item
-            label="房源名称"
-            name="community_name"
-            rules={[{ required: true }]}
-          >
-            <Input />
+          <Form.Item label="房源名称" name="title" rules={[{ required: true }]}>
+            <Input placeholder="房源名称" />
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -116,25 +127,30 @@ export function useHouse() {
             name="house_address"
             rules={[{ required: true }]}
           >
-            <Input />
+            <Input placeholder="房屋地址" />
           </Form.Item>
         </Col>
-        <Col span={8}>
-          <Form.Item label="楼层" name="floor" rules={[{ required: true }]}>
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-        </Col>
+
         <Col span={8}>
           <Form.Item label="产权" name="property" rules={[{ required: true }]}>
-            <Select options={house_property} />
+            <Select placeholder="产权" options={house_property} />
           </Form.Item>
         </Col>
       </Row>
 
-      <Row>
+      <Row gutter={16}>
         <Col span={8}>
           <Form.Item label="面积 (单位 m²)" name="area">
-            <InputNumber placeholder="面积" style={{ width: "100%" }} />
+            <InputNumber min={0} placeholder="面积" style={{ width: "100%" }} />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="使用面积 (单位 m²)" name="usable_area">
+            <InputNumber
+              min={0}
+              placeholder="使用面积"
+              style={{ width: "100%" }}
+            />
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -144,48 +160,7 @@ export function useHouse() {
               defaultValue={[]}
               onChange={() => {}}
               style={{ minWidth: 200 }}
-              options={[
-                {
-                  value: "东",
-                  label: "东",
-                },
-                {
-                  value: "西",
-                  label: "西",
-                },
-                {
-                  value: "南",
-                  label: "南",
-                },
-                {
-                  value: "北",
-                  label: "北",
-                },
-                {
-                  value: "东南",
-                  label: "东南",
-                },
-                {
-                  value: "东北",
-                  label: "东北",
-                },
-                {
-                  value: "西南",
-                  label: "西南",
-                },
-                {
-                  value: "西北",
-                  label: "西北",
-                },
-                {
-                  value: "东西",
-                  label: "东西",
-                },
-                {
-                  value: "南北",
-                  label: "南北",
-                },
-              ]}
+              options={orientation_options}
             />
           </Form.Item>
         </Col>
@@ -195,49 +170,173 @@ export function useHouse() {
             name="decoration_status"
             rules={[{ required: true }]}
           >
-            <Select options={decoration} />
+            <Select placeholder="房屋装修" options={decoration} />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="房龄" name="house_age" rules={[{ required: true }]}>
-            <DatePicker
-              picker="year"
-              style={{ width: "100%" }}
-              placeholder="建立年份"
+          <Form.Item
+            label="配套"
+            name="facilities"
+            rules={[{ required: true }]}
+          >
+            <Select
+              mode="multiple"
+              placeholder="配套"
+              options={facilities_options}
             />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="房型">
-            <Space>
-              <Form.Item name="bedrooms" noStyle>
-                <InputNumber placeholder="几室" addonAfter="室" />
-              </Form.Item>
-              <Form.Item name="living_rooms" noStyle>
-                <InputNumber placeholder="几厅" addonAfter="厅" />
-              </Form.Item>
-              <Form.Item name="bathrooms" noStyle>
-                <InputNumber placeholder="几卫" addonAfter="卫" />
-              </Form.Item>
-            </Space>
+          <Form.Item
+            label="现状"
+            name="current_status"
+            rules={[{ required: true }]}
+          >
+            <Select placeholder="现状" options={current_status_options} />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item
+            label="房屋类型"
+            name="house_type"
+            rules={[{ required: true }]}
+          >
+            <Select placeholder="房屋类型" options={house_type_options} />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="建筑结构" name="building_structure">
+            <Select
+              placeholder="建筑结构"
+              options={building_structure_options}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="产权性质" name="property_rights">
+            <Select placeholder="产权性质" options={property_rights_options} />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row>
+        <Form.Item label="楼层">
+          <Space>
+            <Form.Item name="floor_range" rules={[{ required: true }]} noStyle>
+              <Space.Compact>
+                <InputNumber placeholder="最底层" />
+                <InputNumber
+                  placeholder="总楼层"
+                  addonBefore="到"
+                  addonAfter="层"
+                />
+              </Space.Compact>
+            </Form.Item>
+            <Form.Item name="floor" rules={[{ required: true }]} noStyle>
+              <InputNumber min={0} placeholder="住宅楼层" addonAfter="楼层" />
+            </Form.Item>
+            <Form.Item name="elevator" noStyle>
+              <InputNumber min={0} placeholder="梯" addonAfter="梯" />
+            </Form.Item>
+            <Form.Item name="household" noStyle>
+              <InputNumber min={0} placeholder="户" addonAfter="户" />
+            </Form.Item>
+          </Space>
+        </Form.Item>
+      </Row>
+      <Row>
+        <Form.Item label="房型">
+          <Space>
+            <Form.Item name="bedrooms" rules={[{ required: true }]}>
+              <InputNumber min={0} placeholder="室" addonAfter="室" />
+            </Form.Item>
+            <Form.Item name="living_rooms" rules={[{ required: true }]}>
+              <InputNumber min={0} placeholder="厅" addonAfter="厅" />
+            </Form.Item>
+            <Form.Item name="bathrooms" rules={[{ required: true }]}>
+              <InputNumber min={0} placeholder="卫" addonAfter="卫" />
+            </Form.Item>
+            <Form.Item name="balcony" rules={[{ required: true }]}>
+              <InputNumber min={0} placeholder="阳台" addonAfter="阳台" />
+            </Form.Item>
+            <Form.Item name="kitchen" rules={[{ required: true }]}>
+              <InputNumber min={0} placeholder="厨房" addonAfter="厨房" />
+            </Form.Item>
+          </Space>
+        </Form.Item>
+      </Row>
+      <Row>
+        <Space size={16}>
+          <Form.Item label="建筑年代" name="building_year">
+            <DatePicker placeholder="建筑年代" picker="year" />
+          </Form.Item>
+          <Form.Item label="产权年限" name="property_duration">
+            <DatePicker placeholder="产权年限" picker="year" />
+          </Form.Item>
+          <Form.Item label="产权日期" name="property_date">
+            <DatePicker placeholder="产权日期" />
+          </Form.Item>
+          <Form.Item label="交房日期" name="delivery_date">
+            <DatePicker placeholder="交房日期" />
+          </Form.Item>
+        </Space>
+      </Row>
+
+      <Row gutter={16}>
+        <Col span={8}>
+          <Form.Item label="学位" name="school_qualification">
+            <Select
+              placeholder="学位"
+              defaultValue={[]}
+              onChange={() => {}}
+              options={school_qualification_options}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="户口" name="household_registration">
+            <Select
+              placeholder="户口"
+              options={household_registration_options}
+            />
+          </Form.Item>
+        </Col>
+        <Col flex="160px">
+          <Form.Item label="唯一住房" name="unique_house">
+            <Select
+              placeholder="是否是唯一住房"
+              options={[
+                {
+                  label: "是",
+                  value: true,
+                },
+                {
+                  label: "否",
+                  value: false,
+                },
+              ]}
+            />
           </Form.Item>
         </Col>
       </Row>
 
       <Row>
         <Col span={8}>
-          <Form.Item label="房源描述" name="house_description">
-            <Input.TextArea rows={3} />
+          <Form.Item label="来源" name="source">
+            <Select placeholder="来源" options={source_options} />
           </Form.Item>
         </Col>
       </Row>
       <Row>
-        <Col span={8}>
-          <Form.Item
-            label="房屋图片"
-            name="house_image"
-            rules={[{ required: true }]}
-          >
+        <Col span={12}>
+          <Form.Item label="房源描述" name="house_description">
+            <Input.TextArea placeholder="房源描述" rows={3} />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={24}>
+          <Form.Item label="房屋图片" name="house_image">
             <UploadHouse />
           </Form.Item>
         </Col>
@@ -274,7 +373,6 @@ export function useHouse() {
     let newValue = {
       house_id: house_id ?? house?.house_id,
       ...value,
-      house_age: value.house_age.format("YYYY-MM-DDTHH:mm:ss"),
     };
 
     const res = await save.mutateAsync(newValue as any);

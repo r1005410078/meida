@@ -53,6 +53,7 @@ export function useSoldModal() {
           ]}
         >
           <InputNumber
+            min={0}
             style={{ width: "100%" }}
             placeholder="输入价格 (单位元)"
           />

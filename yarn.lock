@@ -2166,6 +2166,11 @@ supports-color@^5.3.0:
   dependencies:
     has-flag "^3.0.0"
 
+swiper@^11.1.10:
+  version "11.1.10"
+  resolved "https://registry.npmmirror.com/swiper/-/swiper-11.1.10.tgz#4d3df50ff8afc4960e9644ed6e5828d35ab38853"
+  integrity sha512-pAVM6vCb6bumj2B9aSh67l3wP1j5YR8dPQM1YhQKMpnBc33vs+RpyVz6NZYZl/ZopCBSYbbWK5nvESwbmU0QXQ==
+
 swr@^2.0.0:
   version "2.2.5"
   resolved "https://registry.npmmirror.com/swr/-/swr-2.2.5.tgz#063eea0e9939f947227d5ca760cc53696f46446b"

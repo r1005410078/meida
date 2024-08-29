@@ -113,7 +113,11 @@ export function Edit() {
                     name="pice"
                     rules={[{ required: true }]}
                   >
-                    <InputNumber style={{ width: "100%" }} addonAfter="万元" />
+                    <InputNumber
+                      min={0}
+                      style={{ width: "100%" }}
+                      addonAfter="万元"
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -122,7 +126,11 @@ export function Edit() {
                     name="low_pice"
                     rules={[{ required: true }]}
                   >
-                    <InputNumber style={{ width: "100%" }} addonAfter="万元" />
+                    <InputNumber
+                      min={0}
+                      style={{ width: "100%" }}
+                      addonAfter="万元"
+                    />
                   </Form.Item>
                 </Col>
               </Row>

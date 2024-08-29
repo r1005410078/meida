@@ -97,7 +97,7 @@ export const area = [
 });
 
 // 朝向
-export const orientation = [
+export const orientation_options = [
   {
     value: "东",
     label: "东",
@@ -474,7 +474,7 @@ export const decoration = [
 ];
 
 // 物业管理
-const property_type = [
+export const property_type = [
   {
     value: "普通住宅",
     label: "普通住宅",
@@ -509,6 +509,10 @@ export const house_tags = [
   {
     value: "随时看房",
     label: "随时看房",
+  },
+  {
+    value: "免税",
+    label: "免税",
   },
   {
     value: "学区",
@@ -677,7 +681,7 @@ export function useHouseColumns() {
       dataIndex: "orientation",
       valueType: "select",
       fieldProps: {
-        options: orientation,
+        options: orientation_options,
       },
     },
     {
@@ -767,6 +771,66 @@ export function useSecondHandHouseColumns() {
   return columns.concat(house).concat(community);
 }
 
+// 看房方式
+export const viewing_method = [
+  {
+    value: "提前预约",
+    label: "提前预约",
+  },
+  {
+    value: "直接带看",
+    label: "直接带看",
+  },
+  {
+    value: "借钥匙带看",
+    label: "借钥匙带看",
+  },
+];
+
+// payment_method
+export const payment_method = [
+  {
+    value: "一次性付款",
+    label: "一次性付款",
+  },
+  {
+    value: "分期付款",
+    label: "分期付款",
+  },
+  {
+    value: "先付押金，再付款",
+    label: "先付押金，再付款",
+  },
+  {
+    value: "银行按揭贷款",
+    label: "银行按揭贷款",
+  },
+];
+
+// 标识是否必须全款，0 为否，1 为是
+export const full_payment_required = [
+  {
+    value: true,
+    label: "是",
+  },
+  {
+    value: false,
+    label: "否",
+  },
+];
+
+// 标识是否急切出售，0 为否，1 为是
+export const urgent_sale = [
+  {
+    value: true,
+    label: "是",
+  },
+  {
+    value: false,
+    label: "否",
+  },
+];
+
 export function useRentalHouseColumns() {
   const community = useCommunityColumns();
   const house = useHouseColumns();
@@ -808,3 +872,387 @@ export function useRentalHouseColumns() {
 
   return columns.concat(house).concat(community);
 }
+
+export const usage_options = [
+  {
+    value: 1,
+    label: "住宅",
+  },
+  {
+    value: 2,
+    label: "别墅",
+    disabled: true,
+  },
+  {
+    value: 3,
+    label: "公寓",
+    disabled: true,
+  },
+  {
+    value: 4,
+    label: "车位",
+    disabled: true,
+  },
+  {
+    value: 5,
+    label: "写字楼",
+    disabled: true,
+  },
+  {
+    value: 6,
+    label: "商品",
+    disabled: true,
+  },
+  {
+    value: 7,
+    label: "厂房",
+    disabled: true,
+  },
+  {
+    value: 8,
+    label: "仓库",
+    disabled: true,
+  },
+  {
+    value: 9,
+    label: "土地",
+    disabled: true,
+  },
+  {
+    value: 10,
+    label: "垂直楼",
+    disabled: true,
+  },
+];
+
+export const pice_type_options = [
+  {
+    value: 1,
+    label: "出售",
+  },
+  {
+    value: 2,
+    label: "出租",
+  },
+  {
+    value: 3,
+    label: "租售",
+  },
+];
+
+export const rental_status_options = [
+  {
+    value: 1,
+    label: "有效",
+  },
+  {
+    value: 2,
+    label: "暂缓",
+  },
+  {
+    value: 3,
+    label: "未知",
+  },
+  {
+    value: 4,
+    label: "他租",
+  },
+];
+
+// 建筑结构
+export const building_structure_options = [
+  {
+    value: "砖木结构",
+    label: "砖木结构",
+  },
+  {
+    value: "砖混结构",
+    label: "砖混结构",
+  },
+  {
+    value: "钢筋混凝土",
+    label: "钢筋混凝土",
+  },
+  {
+    value: "钢结构",
+    label: "钢结构",
+  },
+  {
+    value: "塔楼",
+    label: "塔楼",
+  },
+  {
+    value: "板楼",
+    label: "板楼",
+  },
+  {
+    value: "塔板结合",
+    label: "塔板结合",
+  },
+];
+
+// 产权性质
+export const property_rights_options = [
+  {
+    value: "商品房",
+    label: "商品房",
+  },
+  {
+    value: "公产房",
+    label: "公产房",
+  },
+  {
+    value: "私产房",
+    label: "私产房",
+  },
+  {
+    value: "房改房",
+    label: "房改房",
+  },
+  {
+    value: "企业房",
+    label: "企业房",
+  },
+  {
+    value: "军业房",
+    label: "军业房",
+  },
+  {
+    value: "安置房",
+    label: "安置房",
+  },
+  {
+    value: "小产房",
+    label: "小产房",
+  },
+];
+
+// 学位
+export const school_qualification_options = new Array(50)
+  .fill(0)
+  .map((_, index) => {
+    return {
+      value: `${2018 + index}`,
+      label: `${2018 + index}`,
+    };
+  });
+
+// 户口
+export const household_registration_options = [
+  {
+    value: "集体户口可买",
+    label: "集体户口可买",
+  },
+  {
+    value: "业主可协助过户",
+    label: "业主可协助过户",
+  },
+];
+
+// 配套
+export const facilities_options = [
+  {
+    value: "床",
+    label: "床",
+  },
+  {
+    value: "衣柜",
+    label: "衣柜",
+  },
+  {
+    value: "书桌",
+    label: "书桌",
+  },
+  {
+    value: "空调",
+    label: "空调",
+  },
+  {
+    value: "冰箱",
+    label: "冰箱",
+  },
+  {
+    value: "电视",
+    label: "电视",
+  },
+  {
+    value: "洗衣机",
+    label: "洗衣机",
+  },
+  {
+    value: "宽带",
+    label: "宽带",
+  },
+  {
+    value: "WIFI",
+    label: "WIFI",
+  },
+  {
+    value: "油烟机",
+    label: "油烟机",
+  },
+  {
+    value: "灶具",
+    label: "灶具",
+  },
+  {
+    value: "热水器",
+    label: "热水器",
+  },
+  {
+    value: "电脑",
+    label: "电脑",
+  },
+];
+
+// 现状
+export const current_status_options = [
+  {
+    value: "空置",
+    label: "空置",
+  },
+  {
+    value: "在用",
+    label: "在用",
+  },
+  {
+    value: "全新",
+    label: "全新",
+  },
+];
+
+// 房屋类型
+export const house_type_options = [
+  {
+    value: "底层",
+    label: "底层",
+  },
+  {
+    value: "多层",
+    label: "多层",
+  },
+  {
+    value: "小高层",
+    label: "小高层",
+  },
+  {
+    value: "高层",
+    label: "高层",
+  },
+  {
+    value: "洋房",
+    label: "洋房",
+  },
+  {
+    value: "跃层式住宅",
+    label: "跃层式住宅",
+  },
+  {
+    value: "复式住宅",
+    label: "复式住宅",
+  },
+  {
+    value: "公寓式住宅",
+    label: "公寓式住宅",
+  },
+  {
+    value: "普通住宅",
+    label: "普通住宅",
+  },
+  {
+    value: "高端住宅",
+    label: "高端住宅",
+  },
+  {
+    value: "LOFT",
+    label: "LOFT",
+  },
+  {
+    value: "别墅",
+    label: "别墅",
+  },
+  {
+    value: "老式里弄",
+    label: "老式里弄",
+  },
+  {
+    value: "老式公寓",
+    label: "老式公寓",
+  },
+];
+
+// 来源
+export const source_options = [
+  {
+    value: "上门",
+    label: "上门",
+  },
+  {
+    value: "电话",
+    label: "电话",
+  },
+  {
+    value: "陌拜",
+    label: "陌拜",
+  },
+  {
+    value: "驻守",
+    label: "驻守",
+  },
+  {
+    value: "窗体公告",
+    label: "窗体公告",
+  },
+  {
+    value: "驻守",
+    label: "驻守",
+  },
+  {
+    value: "搜房",
+    label: "搜房",
+  },
+  {
+    value: "新浪乐居",
+    label: "新浪乐居",
+  },
+  {
+    value: "58",
+    label: "58",
+  },
+  {
+    value: "赶集",
+    label: "赶集",
+  },
+  {
+    value: "已成交客户推荐",
+    label: "已成交客户推荐",
+  },
+  {
+    value: "未成交客户推荐",
+    label: "未成交客户推荐",
+  },
+  {
+    value: "公司网站",
+    label: "公司网站",
+  },
+  {
+    value: "朋友介绍",
+    label: "朋友介绍",
+  },
+  {
+    value: "老客户",
+    label: "老客户",
+  },
+  {
+    value: "派单",
+    label: "派单",
+  },
+  {
+    value: "微信公众账号",
+    label: "微信公众账号",
+  },
+  {
+    value: "拍卖交易网站",
+    label: "拍卖交易网站",
+  },
+];

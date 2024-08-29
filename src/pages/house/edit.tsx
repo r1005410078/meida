@@ -4,6 +4,7 @@ import { PageContainer } from "@ant-design/pro-components";
 import { useCommunity } from "../../components/Community";
 import { useHouse } from "../../components/House";
 import { message } from "antd/lib";
+import { useGuShi } from "../../api/gushi";
 
 export function Edit() {
   const navigate = useNavigate();
@@ -22,10 +23,12 @@ export function Edit() {
     loading: communityLoading,
   } = useCommunity(house?.community_name);
 
+  const { data: guShi } = useGuShi();
+
   return (
     <PageContainer
       title={paramsHouseId ? "编辑房源信息" : "新增房源信息"}
-      content="庭院深深深几许，杨柳堆烟，帘幕无重数。"
+      content={guShi}
       footer={[
         <Button
           key="rest"
@@ -39,7 +42,14 @@ export function Edit() {
         <Button
           key="submit"
           type="primary"
+          loading={houseLoading || communityLoading}
           onClick={async () => {
+            // 验证表单
+            await Promise.all([
+              communityForm.validateFields(),
+              houseForm.validateFields(),
+            ]);
+
             const { community_name } = await communitySubmit();
             await houseSubmit(community_name, paramsHouseId);
             message.success("保存成功");
@@ -55,11 +65,9 @@ export function Edit() {
       <Flex vertical gap={8}>
         <Card title="房源信息" loading={houseLoading}>
           {houseNode}
-          <Divider plain />
         </Card>
         <Card title="小区信息" loading={communityLoading}>
           {communityNode}
-          <Divider plain />
         </Card>
       </Flex>
     </PageContainer>

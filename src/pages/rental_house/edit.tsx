@@ -93,14 +93,8 @@ export function Edit() {
       ]}
     >
       <Flex vertical gap={8}>
-        <Card title="房源信息">
-          {houseNode}
-          <Divider plain />
-        </Card>
-        <Card title="小区信息">
-          {communityNode}
-          <Divider plain />
-        </Card>
+        <Card title="房源信息">{houseNode}</Card>
+        <Card title="小区信息">{communityNode}</Card>
         <Card title="出租房信息" key="3">
           <Form form={rentalHouseFrom} labelCol={labelCol} layout="horizontal">
             <Row>
@@ -110,7 +104,11 @@ export function Edit() {
                   name="rent_pice"
                   rules={[{ required: true }]}
                 >
-                  <InputNumber style={{ width: "100%" }} addonAfter="元" />
+                  <InputNumber
+                    min={0}
+                    style={{ width: "100%" }}
+                    addonAfter="元"
+                  />
                 </Form.Item>
               </Col>
               <Col span={8}>
@@ -119,7 +117,11 @@ export function Edit() {
                   name="rent_low_pice"
                   rules={[{ required: true }]}
                 >
-                  <InputNumber style={{ width: "100%" }} addonAfter="元" />
+                  <InputNumber
+                    min={0}
+                    style={{ width: "100%" }}
+                    addonAfter="元"
+                  />
                 </Form.Item>
               </Col>
             </Row>

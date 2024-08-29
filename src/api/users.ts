@@ -14,11 +14,17 @@ export function useIsLogin() {
   return localStorage.getItem("token") ? true : false;
 }
 
-export function useGetUser() {
-  return useQuery(["getUser"], async () => {
-    const res = await request.get<User>("/api/v1/auth/get_user");
-    return res.data;
-  });
+export function useGetUser(isLogin: boolean) {
+  return useQuery(
+    ["getUser"],
+    async () => {
+      const res = await request.get<User>("/api/v1/auth/get_user");
+      return res.data;
+    },
+    {
+      enabled: isLogin,
+    }
+  );
 }
 
 export function useLogin() {

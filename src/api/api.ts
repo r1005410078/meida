@@ -1,6 +1,8 @@
+import { notification } from "antd";
 import axios from "axios";
 
 export const request = axios.create({
+  // baseURL: "http://114.55.227.206:8000",
   baseURL: "",
   timeout: 1000,
   headers: {
@@ -17,14 +19,23 @@ request.interceptors.response.use(
   function (error) {
     switch (error.response.status) {
       case 401:
-        localStorage.removeItem("token");
-        window.location.href = "/#/login";
-        window.location.reload();
+        // localStorage.removeItem("token");
+        // window.location.href = "/#/login";
+        // window.location.reload();
+        break;
+      case 404:
         break;
       default:
-        // Any status codes that falls outside the range of 2xx cause this function to trigger
-        // Do something with response error
-        return Promise.reject(error);
+      // notification.error({
+      //   message: "系统错误，请联系管理员！",
+      //   description: error.message,
+      // });
+
+      // return;
+      // Any status codes that falls outside the range of 2xx cause this function to trigger
+      // Do something with response error
     }
+
+    return Promise.reject(error);
   }
 );

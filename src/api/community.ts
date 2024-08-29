@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Community, CommunityFrom } from "../model/community";
 import { request } from "./api";
+import { message, notification } from "antd";
 
 export interface QueryCommunityParams {
   community_name?: string;
@@ -19,12 +20,9 @@ export interface QueryCommunityParams {
 
 export function useCommunityList(params: QueryCommunityParams) {
   return useQuery(["CommunityList", params], () => {
-    return request.get<Community[]>(
-      "http://127.0.0.1:8000/api/v1/residential/list",
-      {
-        params,
-      }
-    );
+    return request.get<Community[]>("/api/v1/residential/list", {
+      params,
+    });
   });
 }
 
@@ -80,6 +78,12 @@ export function useSaveCommunity() {
     },
     {
       onSuccess: () => {},
+      onError: (err: any) => {
+        notification.error({
+          message: "系统错误，请联系管理员！",
+          description: err.message,
+        });
+      },
     }
   );
 }

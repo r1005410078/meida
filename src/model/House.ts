@@ -20,6 +20,28 @@ export interface House {
   owner_phone: string;
   created_by: string;
   updated_by: string;
+
+  // -- 新增
+  title: string;
+  recommended_tags: string;
+  elevator?: number;
+  household?: number;
+  balcony?: number;
+  kitchen?: number;
+  building_structure?: string;
+  property_rights?: string;
+  building_year?: string;
+  property_duration?: string;
+  property_date?: string;
+  delivery_date?: string;
+  school_qualification?: string;
+  household_registration?: string;
+  unique_house?: boolean;
+  facilities?: string[];
+  usable_area: number;
+  current_status?: string;
+  house_type?: string;
+  source?: string;
 }
 
 export interface HouseFrom {
@@ -39,4 +61,25 @@ export interface HouseFrom {
   owner_name: string;
   owner_phone: string;
   house_description?: string;
+  // -- 新增
+  title: string;
+  recommended_tags: string;
+  elevator?: number;
+  household?: number;
+  balcony?: number;
+  kitchen?: number;
+  building_structure?: string;
+  property_rights?: string;
+  building_year?: dayjs.Dayjs;
+  property_duration?: dayjs.Dayjs;
+  property_date?: dayjs.Dayjs;
+  delivery_date?: dayjs.Dayjs;
+  school_qualification?: string;
+  household_registration?: string;
+  unique_house?: boolean;
+  facilities?: string[];
+  usable_area: number;
+  current_status?: string;
+  house_type?: string;
+  source?: string;
 }
