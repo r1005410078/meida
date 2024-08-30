@@ -15,7 +15,7 @@ import {
 import { AimOutlined, RollbackOutlined } from "@ant-design/icons";
 import UploadHouse, { fangImagesUpload } from "./UploadHouse";
 import axios from "axios";
-import { House, HouseFrom } from "../model/house";
+import { House, HouseFrom } from "../model/House";
 import {
   useHouseById,
   useHouseListByOwnerName,

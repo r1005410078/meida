@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useHouseColumns } from "../../value_object/house_columns";
 import { HouseParams, useHouseList } from "../../api/house";
 import { useNavigate } from "react-router";
-import { House } from "../../model/house";
+import { House } from "../../model/House";
 import { useProDescriptionsModal } from "../../components/ProDescriptionsModal";
 
 export type TableListItem = House;

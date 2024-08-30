@@ -60,8 +60,11 @@ export function useGetListListed(data: GetListListedParams) {
     );
 
     return {
-      data: res.data.data.map(convertToSecondHandHousing),
+      data: res.data.data.map((item) => item.house_second_hand),
       total: res.data.total,
+      getItemByHouseId(houseId: string) {
+        return res.data.data.find((item) => item.house.house_id === houseId);
+      },
     };
   });
 }

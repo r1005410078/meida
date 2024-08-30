@@ -1,6 +1,6 @@
 import { ProColumns } from "@ant-design/pro-components";
-import { Community } from "../model/community";
-import { House } from "../model/house";
+import { Community } from "../model/Community";
+import { House } from "../model/House";
 import { useGetCommunityNames } from "../api/community";
 import dayjs from "dayjs";
 import { Tag } from "antd";
@@ -629,7 +629,7 @@ export function useCommunityColumns(): ProColumns<Community>[] {
       },
     },
     {
-      title: "物业类型",
+      title: "住宅区类型",
       dataIndex: "community_type",
       valueType: "select",
       fieldProps: {
@@ -641,83 +641,218 @@ export function useCommunityColumns(): ProColumns<Community>[] {
       dataIndex: "description",
       hideInSearch: true,
     },
+    {
+      title: "城市",
+      dataIndex: "city",
+      hideInSearch: true,
+    },
+    {
+      title: "省份",
+      dataIndex: "state",
+      hideInSearch: true,
+    },
+    {
+      title: "邮政编码",
+      dataIndex: "postal_code",
+      hideInSearch: true,
+    },
+    {
+      title: "物业管理公司",
+      dataIndex: "property_management_company",
+      hideInSearch: true,
+    },
+    {
+      title: "描述",
+      dataIndex: "description",
+      hideInSearch: true,
+    },
+    {
+      title: "创建时间",
+      dataIndex: "created_at",
+      hideInSearch: true,
+    },
+    {
+      title: "更新时间",
+      dataIndex: "updated_at",
+      hideInSearch: true,
+    },
   ];
 }
 
 export function useHouseColumns() {
   const columns: ProColumns<House>[] = [
     {
-      title: "姓名",
-      dataIndex: "owner_name",
-    },
-    {
-      title: "联系方式",
-      dataIndex: "owner_phone",
-      hideInSearch: true,
-      valueType: "select",
+      title: "小区名称",
+      dataIndex: "community_name",
     },
     {
       title: "房屋地址",
       dataIndex: "house_address",
     },
     {
-      title: "装修",
-      dataIndex: "decoration_status",
-      valueType: "select",
-      fieldProps: {
-        options: decoration,
-      },
+      title: "产权",
+      dataIndex: "property",
     },
     {
-      title: "面积 m²",
+      title: "房屋装修情况",
+      dataIndex: "decoration_status",
+    },
+    {
+      title: "建筑面积",
       dataIndex: "area",
-      valueType: "select",
-      fieldProps: {
-        options: area,
-      },
+    },
+    {
+      title: "卧室数量",
+      dataIndex: "bedrooms",
+    },
+    {
+      title: "客厅数量",
+      dataIndex: "living_rooms",
+    },
+    {
+      title: "卫生间数量",
+      dataIndex: "bathrooms",
     },
     {
       title: "房屋朝向",
       dataIndex: "orientation",
-      valueType: "select",
-      fieldProps: {
-        options: orientation_options,
-      },
     },
     {
-      title: "房间数",
-      dataIndex: "bedrooms",
-      valueType: "select",
-      fieldProps: {
-        options: bedrooms,
-      },
+      title: "房屋描述",
+      dataIndex: "house_description",
+    },
+    {
+      title: "房屋图片",
+      dataIndex: "house_image",
+    },
+    {
+      title: "业主姓名",
+      dataIndex: "owner_name",
+    },
+    {
+      title: "业主联系方式",
+      dataIndex: "owner_phone",
+    },
+    {
+      title: "创建人",
+      dataIndex: "created_by",
+    },
+    {
+      title: "更新人",
+      dataIndex: "updated_by",
     },
     {
       title: "楼层",
       dataIndex: "floor",
-      valueType: "select",
-      fieldProps: {
-        options: floor,
-      },
     },
     {
-      title: "产权",
-      dataIndex: "property",
-      valueType: "select",
-      fieldProps: {
-        options: house_property,
-      },
+      title: "总楼层",
+      dataIndex: "floor_range",
     },
     {
-      title: "房龄",
-      dataIndex: "house_age",
-      valueType: "select",
-      fieldProps: {
-        options: year_built,
-      },
-      render: (_, record) => {
-        return `${dayjs(record.house_age).year()}年`;
-      },
+      title: "房源标题",
+      dataIndex: "title",
+      hideInSearch: true,
+    },
+    {
+      title: "推荐标签",
+      dataIndex: "recommended_tags",
+      hideInSearch: true,
+    },
+    {
+      title: "梯",
+      dataIndex: "elevator",
+      hideInSearch: true,
+    },
+    {
+      title: "阳台",
+      dataIndex: "balcony",
+      hideInSearch: true,
+    },
+    {
+      title: "kitchen",
+      dataIndex: "厨房",
+      hideInSearch: true,
+    },
+    {
+      title: "建筑结构",
+      dataIndex: "building_structure",
+      hideInSearch: true,
+    },
+    {
+      title: "建筑年代",
+      dataIndex: "building_year",
+      hideInSearch: true,
+    },
+    {
+      title: "产权性质",
+      dataIndex: "property_rights",
+      hideInSearch: true,
+    },
+    {
+      title: "产权年限",
+      dataIndex: "property_duration",
+      hideInSearch: true,
+    },
+    {
+      title: "产权日期",
+      dataIndex: "property_date",
+      hideInSearch: true,
+    },
+    {
+      title: "学位",
+      dataIndex: "school_qualification",
+      hideInSearch: true,
+    },
+    {
+      title: "户口",
+      dataIndex: "household_registration",
+      hideInSearch: true,
+    },
+    {
+      title: "唯一住房",
+      dataIndex: "unique_house",
+      hideInSearch: true,
+    },
+    {
+      title: "配套",
+      dataIndex: "facilities",
+      hideInSearch: true,
+    },
+    {
+      title: "使用面积",
+      dataIndex: "facilities",
+      hideInSearch: true,
+    },
+    {
+      title: "配套",
+      dataIndex: "usable_area",
+      hideInSearch: true,
+    },
+    {
+      title: "现状",
+      dataIndex: "current_status",
+      hideInSearch: true,
+    },
+    {
+      title: "房屋类型",
+      dataIndex: "house_type",
+      hideInSearch: true,
+    },
+    {
+      title: "来源",
+      dataIndex: "source",
+      hideInSearch: true,
+    },
+    {
+      title: "创建时间",
+      dataIndex: "created_at",
+      hideInSearch: true,
+    },
+    {
+      title: "更新时间",
+      dataIndex: "updated_at",
+      hideInSearch: true,
     },
   ];
 
@@ -725,22 +860,23 @@ export function useHouseColumns() {
 }
 
 export function useSecondHandHouseColumns() {
-  const community = useCommunityColumns();
-  const house = useHouseColumns();
   const columns: ProColumns<any>[] = [
     {
-      title: "价格",
+      title: "售价",
       dataIndex: "pice",
       valueType: "select",
       fieldProps: {
         options: price,
       },
       render: (_, item) => {
-        return `${item.pice} 万元`;
+        if (item.pice) {
+          return `${item.pice} 万元`;
+        }
+        return "--";
       },
     },
     {
-      title: "最低价格",
+      title: "出售低价",
       dataIndex: "low_pice",
       hideInSearch: true,
       hideInTable: true,
@@ -766,9 +902,141 @@ export function useSecondHandHouseColumns() {
         );
       },
     },
+    {
+      title: "小区名称",
+      dataIndex: "community_name",
+    },
+    {
+      title: "是否上架",
+      dataIndex: "listed",
+    },
+    {
+      title: "上架时间",
+      dataIndex: "listed_time",
+    },
+    {
+      title: "下架时间",
+      dataIndex: "unlisted_time",
+    },
+    {
+      title: "评论",
+      dataIndex: "comment",
+    },
+    {
+      title: "首付",
+      dataIndex: "down_payment",
+    },
+    {
+      title: "看房方式",
+      dataIndex: "viewing_method",
+    },
+    {
+      title: "付款方式",
+      dataIndex: "payment_method",
+    },
+    {
+      title: "房源税费",
+      dataIndex: "taxes_and_fees",
+    },
+    {
+      title: "是否全款",
+      dataIndex: "full_payment_required",
+    },
+    {
+      title: "是否急切",
+      dataIndex: "urgent_sale",
+    },
+    {
+      title: "创建时间",
+      dataIndex: "created_at",
+    },
+    {
+      title: "更新时间",
+      dataIndex: "updated_at",
+    },
   ];
 
-  return columns.concat(house).concat(community);
+  return columns;
+}
+
+export function useRentalHouseColumns() {
+  const columns: ProColumns<any>[] = [
+    {
+      title: "租金",
+      dataIndex: "rent_pice",
+      valueType: "select",
+      fieldProps: {
+        options: rent_pice,
+      },
+    },
+    {
+      title: "出租低价",
+      dataIndex: "rent_low_pice",
+      hideInSearch: true,
+    },
+    {
+      title: "标签",
+      dataIndex: "tags",
+      valueType: "select",
+      hideInSearch: true,
+      fieldProps: {
+        options: house_tags,
+      },
+      render: (_, item) => {
+        return (
+          <div>
+            {item.tags?.map((tag: string) => (
+              <Tag color="green" key={tag}>
+                {tag}
+              </Tag>
+            ))}
+          </div>
+        );
+      },
+    },
+    {
+      title: "是否上架",
+      dataIndex: "listed",
+    },
+    {
+      title: "上架时间",
+      dataIndex: "listed_time",
+    },
+    {
+      title: "下架时间",
+      dataIndex: "unlisted_time",
+    },
+    {
+      title: "评论",
+      dataIndex: "comment",
+    },
+    {
+      title: "看房方式",
+      dataIndex: "viewing_method",
+    },
+    {
+      title: "付款方式",
+      dataIndex: "payment_method",
+    },
+    {
+      title: "是否全款",
+      dataIndex: "full_payment_required",
+    },
+    {
+      title: "是否急切",
+      dataIndex: "urgent_sale",
+    },
+    {
+      title: "创建时间",
+      dataIndex: "created_at",
+    },
+    {
+      title: "更新时间",
+      dataIndex: "updated_at",
+    },
+  ];
+
+  return columns;
 }
 
 // 看房方式
@@ -830,48 +1098,6 @@ export const urgent_sale = [
     label: "否",
   },
 ];
-
-export function useRentalHouseColumns() {
-  const community = useCommunityColumns();
-  const house = useHouseColumns();
-  const columns: ProColumns<any>[] = [
-    {
-      title: "价格",
-      dataIndex: "rent_pice",
-      valueType: "select",
-      fieldProps: {
-        options: rent_pice,
-      },
-    },
-    {
-      title: "最低价格",
-      dataIndex: "rent_low_pice",
-      hideInSearch: true,
-    },
-    {
-      title: "标签",
-      dataIndex: "tags",
-      valueType: "select",
-      hideInSearch: true,
-      fieldProps: {
-        options: house_tags,
-      },
-      render: (_, item) => {
-        return (
-          <div>
-            {item.tags?.map((tag: string) => (
-              <Tag color="green" key={tag}>
-                {tag}
-              </Tag>
-            ))}
-          </div>
-        );
-      },
-    },
-  ];
-
-  return columns.concat(house).concat(community);
-}
 
 export const usage_options = [
   {

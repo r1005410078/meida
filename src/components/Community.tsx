@@ -12,7 +12,7 @@ import {
   Space,
 } from "antd";
 import { AimOutlined, PlusOutlined } from "@ant-design/icons";
-import { CommunityFrom } from "../model/community";
+import { CommunityFrom } from "../model/Community";
 import { property_type, region } from "../value_object/house_columns";
 import {
   useCommunityByName,

@@ -57,7 +57,7 @@ export function List() {
 
   const { openProDescriptionsModal, proDescriptionsModalNode } =
     useProDescriptionsModal({
-      title: "出售详情",
+      title: "出售",
       columns: columns as any,
     });
 
@@ -119,7 +119,12 @@ export function List() {
                 target="_blank"
                 rel="noopener noreferrer"
                 key="view"
-                onClick={() => openProDescriptionsModal(record)}
+                onClick={() => {
+                  openProDescriptionsModal({
+                    ...data?.getItemByHouseId(record.house_id),
+                    columns_data: data?.data,
+                  });
+                }}
               >
                 查看
               </a>,

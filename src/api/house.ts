@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { House, HouseFrom } from "../model/house";
+import { House, HouseFrom } from "../model/House";
 import { useDebounceFn } from "@ant-design/pro-components";
 import { TableData } from "../value_object/common";
 import dayjs from "dayjs";

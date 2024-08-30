@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Community, CommunityFrom } from "../model/community";
+import { Community, CommunityFrom } from "../model/Community";
 import { request } from "./api";
-import { message, notification } from "antd";
+import { notification } from "antd";
 
 export interface QueryCommunityParams {
   community_name?: string;

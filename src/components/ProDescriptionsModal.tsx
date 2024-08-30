@@ -2,8 +2,13 @@ import {
   ProDescriptions,
   ProDescriptionsItemProps,
 } from "@ant-design/pro-components";
-import { Drawer } from "antd";
+import { Divider, Drawer } from "antd";
 import { useState } from "react";
+import {
+  useCommunityColumns,
+  useHouseColumns,
+} from "../value_object/house_columns";
+import { HouseUnion } from "../model/House";
 
 interface ProDescriptionsModalProps {
   title: string;
@@ -11,18 +16,25 @@ interface ProDescriptionsModalProps {
   width?: number;
 }
 
+interface HouseSoldDescription extends HouseUnion {
+  columns_data?: Record<string, any>;
+}
+
 export function useProDescriptionsModal({
   title,
   columns,
   width,
 }: ProDescriptionsModalProps) {
-  const [open, setOpen] = useState(false);
-  const [dataSource, setDataSource] = useState<Record<string, any>>();
+  const [open, setOpen] = useState(true);
+  const [record, setRecord] = useState<HouseSoldDescription>();
+
+  const communityColumns = useCommunityColumns();
+  const houseColumns = useHouseColumns();
 
   const proDescriptionsModalNode = (
     <Drawer
       open={open}
-      title={title}
+      title="详情"
       width={width ?? 1000}
       footer={null}
       destroyOnClose
@@ -32,18 +44,37 @@ export function useProDescriptionsModal({
       }}
     >
       <ProDescriptions
-        dataSource={dataSource}
+        dataSource={record?.columns_data}
         emptyText={"--"}
+        title={title}
         columns={columns}
+      ></ProDescriptions>
+
+      <Divider />
+
+      <ProDescriptions
+        dataSource={record?.house}
+        emptyText={"--"}
+        title="住宅"
+        columns={houseColumns as any}
+      ></ProDescriptions>
+
+      <Divider />
+
+      <ProDescriptions
+        dataSource={record?.community}
+        emptyText={"--"}
+        title="小区"
+        columns={communityColumns as any}
       ></ProDescriptions>
     </Drawer>
   );
 
   return {
     proDescriptionsModalNode,
-    openProDescriptionsModal(data: Record<string, any>) {
+    openProDescriptionsModal(data: HouseSoldDescription) {
       setOpen(true);
-      setDataSource(data);
+      setRecord(data);
     },
   };
 }

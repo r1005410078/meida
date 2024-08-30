@@ -15,7 +15,7 @@ import { useState } from "react";
 import { useCommunityColumns } from "../../value_object/house_columns";
 import { QueryCommunityParams, useCommunityList } from "../../api/community";
 import { useNavigate } from "react-router";
-import { Community } from "../../model/community";
+import { Community } from "../../model/Community";
 import { useProDescriptionsModal } from "../../components/ProDescriptionsModal";
 
 export type TableListItem = Community;

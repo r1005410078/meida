@@ -4,7 +4,7 @@ import { createMultipartUploadV2Task, FileData } from "qiniu-js";
 import { v4 } from "uuid";
 import axios from "axios";
 import type { FormInstance, UploadFile, UploadProps } from "antd";
-import { HouseFrom } from "../model/house";
+import { HouseFrom } from "../model/House";
 
 interface UploadHouseProps {
   onChange?: (value: UploadFile<any>[]) => void;

@@ -1,126 +1,50 @@
 import { Dayjs } from "dayjs";
+import { House } from "./House";
+import { Community } from "./Community";
 
 export interface SecondRentalHouse {
   // 租房信息
   house_id: string;
-  rent_pice: string;
-  rent_low_price?: string;
-  listed?: number;
-  listed_time?: number;
-  unlisted_time?: number;
-  comment: string;
-  tags: string;
-  // 房源信息
-  house_address: string;
-  house_type: string;
-  area: string;
-  bedrooms: number;
-  living_rooms: number;
-  bathrooms: number;
-  orientation: string;
-  decoration_status: string;
-  status: string;
-  house_description: string;
-  house_image: string;
-  owner_name: string;
-  owner_phone: string;
-  created_by: string;
-  updated_by: string;
-  // 小区信息
+  // 小区名称
   community_name: string;
-  region: string;
-  city: string;
-  state: string;
-  postal_code: string;
-  year_built: number;
-  community_type: string;
-  property_management_company: string;
-  description: string;
+  // 租金
+  rent_pice: string;
+  // 出租低价
+  rent_low_price?: string;
+  // 是否上架 0 为下架 1 为上架
+  listed?: number;
+  // 出租房上架时间
+  listed_time?: number;
+  // 出租房下架时间
+  unlisted_time?: number;
+  // 评论
+  comment: string;
+  // 标签
+  tags: string;
+  // 记录看房的方式（如预约、随时可看等）
+  viewing_method: string;
+  // 记录付款方式（如一次性付款、按揭贷款等）
+  payment_method: string;
+  // 标识是否必须全款，0 为否，1 为是
+  full_payment_required: string;
+  // 标识是否急切出售，0 为否，1 为是
+  urgent_sale: string;
+  // 创建时间
+  created_at: string;
+  // 更新时间
+  updated_at: string;
 }
 
 export interface SecondRentalHouseResponse {
-  house: {
-    house_id: string;
-    community_name: string;
-    house_address: string;
-    house_type: string;
-    floor: number;
-    area: string;
-    bedrooms: number;
-    living_rooms: number;
-    bathrooms: number;
-    orientation: string;
-    decoration_status: string;
-    status: string;
-    house_description: string;
-    house_image: string;
-    owner_name: string;
-    owner_phone: string;
-    created_by: string;
-    updated_by: string;
-    created_at: string;
-    updated_at: string;
-  };
-  residential: {
-    community_name: string;
-    region: string;
-    city: string;
-    state: string;
-    postal_code: string;
-    year_built: number;
-    community_type: string;
-    property_management_company: string;
-    description: string;
-    created_at: string;
-    updated_at: string;
-  };
-  rental_house: {
-    house_id: string;
-    rent_pice: string;
-    rent_low_pice?: string;
-    listed?: number;
-    listed_time?: number;
-    unlisted_time?: number;
-    comment: string;
-    tags: string;
-  };
+  house: House;
+  residential: Community;
+  rental_house: SecondRentalHouse;
 }
 
+// 卖出房源
 export interface SoldRentalHouseResponse {
-  house: {
-    house_id: string;
-    community_name: string;
-    house_address: string;
-    house_type: string;
-    area: string;
-    bedrooms: number;
-    living_rooms: number;
-    bathrooms: number;
-    orientation: string;
-    decoration_status: string;
-    status: string;
-    house_description: string;
-    house_image: string;
-    owner_name: string;
-    owner_phone: string;
-    created_by: string;
-    updated_by: string;
-    created_at: string;
-    updated_at: string;
-  };
-  residential: {
-    community_name: string;
-    region: string;
-    city: string;
-    state: string;
-    postal_code: string;
-    year_built: number;
-    community_type: string;
-    property_management_company: string;
-    description: string;
-    created_at: string;
-    updated_at: string;
-  };
+  house: House;
+  residential: Community;
   rental_house: {
     sold_id: number;
     house_id: string;
