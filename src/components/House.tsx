@@ -355,9 +355,9 @@ export function useHouse() {
   async function houseSubmit(community_name: string, house_id?: string) {
     const value = await houseForm.validateFields();
     const house_image = value.house_image;
+
     if (Array.isArray(house_image)) {
       const data = await fangImagesUpload(houseForm, house_image);
-
       let urls = await Promise.all(
         data!.map((item: any) =>
           axios

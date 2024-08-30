@@ -8,7 +8,17 @@ import { HashRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider
+      client={
+        new QueryClient({
+          defaultOptions: {
+            queries: {
+              refetchOnWindowFocus: false,
+            },
+          },
+        })
+      }
+    >
       <ConfigProvider locale={zhCN}>
         <HashRouter>
           <App />

@@ -23,6 +23,7 @@ export interface House {
 
   // -- 新增
   title: string;
+  status: string;
   recommended_tags: string;
   elevator?: number;
   household?: number;

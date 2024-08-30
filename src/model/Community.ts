@@ -5,7 +5,6 @@ export interface CommunityFrom {
   community_type: string;
   property_management_company: string;
   description: string;
-
   city?: string;
   state?: string;
   postal_code?: string;

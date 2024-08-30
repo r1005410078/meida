@@ -15,6 +15,7 @@ import { useHouseColumns } from "../../value_object/house_columns";
 import { HouseParams, useHouseList } from "../../api/house";
 import { useNavigate } from "react-router";
 import { House } from "../../model/house";
+import { useProDescriptionsModal } from "../../components/ProDescriptionsModal";
 
 export type TableListItem = House;
 
@@ -46,6 +47,11 @@ export function List() {
   const columns = useHouseColumns();
   const { data, isLoading } = useHouseList(params);
   const result = data?.data;
+  const { openProDescriptionsModal, proDescriptionsModalNode } =
+    useProDescriptionsModal({
+      title: "房屋详情",
+      columns: columns as any,
+    });
 
   return (
     <PageContainer
@@ -77,6 +83,7 @@ export function List() {
         ],
       }}
     >
+      {proDescriptionsModalNode}
       <ProTable<TableListItem>
         loading={isLoading}
         onSubmit={(value) => {
@@ -112,7 +119,12 @@ export function List() {
               >
                 编辑
               </a>,
-              <a target="_blank" rel="noopener noreferrer" key="view">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                key="view"
+                onClick={() => openProDescriptionsModal(record)}
+              >
                 查看
               </a>,
               <TableDropdown

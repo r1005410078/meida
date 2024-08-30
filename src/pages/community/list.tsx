@@ -16,6 +16,7 @@ import { useCommunityColumns } from "../../value_object/house_columns";
 import { QueryCommunityParams, useCommunityList } from "../../api/community";
 import { useNavigate } from "react-router";
 import { Community } from "../../model/community";
+import { useProDescriptionsModal } from "../../components/ProDescriptionsModal";
 
 export type TableListItem = Community;
 
@@ -39,6 +40,12 @@ export function List() {
 
   const { data, isLoading } = useCommunityList(params);
   const columns = useCommunityColumns();
+  const { openProDescriptionsModal, proDescriptionsModalNode } =
+    useProDescriptionsModal({
+      title: "小区详情",
+      width: 600,
+      columns: columns as any,
+    });
 
   return (
     <PageContainer
@@ -70,6 +77,7 @@ export function List() {
         ],
       }}
     >
+      {proDescriptionsModalNode}
       <ProTable<TableListItem>
         onSubmit={(params) => {
           setParams({
@@ -96,7 +104,12 @@ export function List() {
               >
                 编辑
               </a>,
-              <a target="_blank" rel="noopener noreferrer" key="view">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                key="view"
+                onClick={() => openProDescriptionsModal(record)}
+              >
                 查看
               </a>,
               <TableDropdown

@@ -22,6 +22,7 @@ import {
 import { useNavigate } from "react-router";
 import { useSoldModal } from "./sold_modal";
 import { processHouseSubmitValue } from "../house/list";
+import { useProDescriptionsModal } from "../../components/ProDescriptionsModal";
 
 export function List() {
   const navigator = useNavigate();
@@ -53,6 +54,12 @@ export function List() {
   const listed = useListed();
   const unlisted = useUnListed();
   const { openSoldModal, soldModalNode } = useSoldModal();
+
+  const { openProDescriptionsModal, proDescriptionsModalNode } =
+    useProDescriptionsModal({
+      title: "出售详情",
+      columns: columns as any,
+    });
 
   return (
     <PageContainer
@@ -108,7 +115,12 @@ export function List() {
               >
                 编辑
               </a>,
-              <a target="_blank" rel="noopener noreferrer" key="view">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                key="view"
+                onClick={() => openProDescriptionsModal(record)}
+              >
                 查看
               </a>,
               <TableDropdown
@@ -178,6 +190,7 @@ export function List() {
         }}
       />
       {soldModalNode}
+      {proDescriptionsModalNode}
     </PageContainer>
   );
 }

@@ -124,6 +124,7 @@ export function useSecondHandHouseListSold(
           days_to_sell: item.house_second_hand.days_to_sell,
           sold_price: item.house_second_hand.sold_price,
           sold_time: item.house_second_hand.sold_time,
+
           // 房源信息
           house_address: item.house.house_address,
           house_type: item.house.house_type,
@@ -186,10 +187,16 @@ function convertToSecondHandHousing(item: SecondHandHousingResponse) {
     unlisted_time: item.house_second_hand.unlisted_time,
     comment: item.house_second_hand.comment,
     tags: item.house_second_hand.tags.split(","),
+    // 新增
+    down_payment: item.house_second_hand.down_payment, // '首付' 记录首付金额，精度为两位小数
+    viewing_method: item.house_second_hand.viewing_method, // '看房方式' 记录看房的方式（如预约、随时可看等）
+    payment_method: item.house_second_hand.payment_method, // '付款方式' 记录付款方式（如一次性付款、按揭贷款等）
+    taxes_and_fees: item.house_second_hand.taxes_and_fees, // '房源税费' 记录房源涉及的税费，精度为两位小数
+    full_payment_required: item.house_second_hand.full_payment_required, //  '是否全款'  标识是否必须全款，0 为否，1 为是
+    urgent_sale: item.house_second_hand.urgent_sale, // '是否急切' 标识是否急切出售，0 为否，1 为是
 
     // 房源信息
     house_address: item.house.house_address,
-    house_type: item.house.house_type,
     property: item.house.property,
     area: item.house.area,
     floor: item.house.floor,
@@ -203,8 +210,31 @@ function convertToSecondHandHousing(item: SecondHandHousingResponse) {
     house_image: item.house.house_image,
     owner_name: item.house.owner_name,
     owner_phone: item.house.owner_phone,
+    // -- 新增
+    title: item.house.title,
+    recommended_tags: item.house.recommended_tags,
+    elevator: item.house.elevator,
+    household: item.house.household,
+    balcony: item.house.balcony,
+    kitchen: item.house.kitchen,
+    building_structure: item.house.building_structure,
+    property_rights: item.house.property_rights,
+    building_year: item.house.building_year,
+    property_duration: item.house.property_duration,
+    property_date: item.house.property_date,
+    delivery_date: item.house.delivery_date,
+    school_qualification: item.house.school_qualification,
+    household_registration: item.house.household_registration,
+    unique_house: item.house.unique_house,
+    facilities: item.house.facilities,
+    usable_area: item.house.usable_area,
+    current_status: item.house.current_status,
+    house_type: item.house.house_type,
+    source: item.house.source,
+
     created_by: item.house.created_by,
     updated_by: item.house.updated_by,
+
     // 小区信息
     community_name: item.residential.community_name,
     region: item.residential.region,
