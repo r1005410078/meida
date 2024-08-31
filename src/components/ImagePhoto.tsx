@@ -41,9 +41,11 @@ export default function useImagePhoto() {
 
   return {
     imagePhotoNode,
-    openPhotoView: (images: string[]) => {
-      setVisible(true);
-      setImages(images);
+    openPhotoView: (images?: string[]) => {
+      if (images) {
+        setVisible(true);
+        setImages(images);
+      }
     },
     closePhotoView() {
       setVisible(false);

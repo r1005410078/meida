@@ -28,11 +28,13 @@ import {
   viewing_method,
 } from "../value_object/house_columns";
 
-export function useRentalHouse() {
+export function useRentalHouse(enabled = true) {
   const navigate = useNavigate();
   const [rentalHouseFrom] = useForm<RentalHouseFrom>();
   const { houseId: paramsHouseId } = useParams<{ houseId: string }>();
-  const { data: formData } = useGetRentalHouseByHouseId(paramsHouseId);
+  const { data: formData } = useGetRentalHouseByHouseId(
+    enabled ? paramsHouseId : undefined
+  );
 
   // 更新
   const save = useRentalHouseSave();
@@ -51,11 +53,7 @@ export function useRentalHouse() {
           </Form.Item>
         </Col>
         <Col flex="160px">
-          <Form.Item
-            label="出租低价"
-            name="rent_low_pice"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="出租低价" name="rent_low_pice">
             <InputNumber
               placeholder="出租低价"
               min={0}
@@ -67,52 +65,36 @@ export function useRentalHouse() {
       </Row>
       <Row gutter={16}>
         <Col flex="160px">
-          <Form.Item
-            label="看房方式"
-            name="viewing_method"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="看房方式" name="viewing_method">
             <Select placeholder="看房方式" options={viewing_method} />
           </Form.Item>
         </Col>
         <Col flex="160px">
-          <Form.Item
-            label="付款方式"
-            name="payment_method"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="付款方式" name="payment_method">
             <Select placeholder="付款方式" options={payment_method} />
           </Form.Item>
         </Col>
         <Col flex="160px">
-          <Form.Item
-            label="是否全款"
-            name="full_payment_required"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="是否全款" name="full_payment_required">
             <Select placeholder="是否全款" options={full_payment_required} />
           </Form.Item>
         </Col>
         <Col flex="160px">
-          <Form.Item
-            label="是否急切"
-            name="urgent_sale"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="是否急切" name="urgent_sale">
             <Select placeholder="是否急切" options={urgent_sale} />
           </Form.Item>
         </Col>
       </Row>
       <Row>
         <Col span={8}>
-          <Form.Item label="标签" name="tags" rules={[{ required: true }]}>
+          <Form.Item label="出租标签" name="tags">
             <Select placeholder="标签" mode="multiple" options={house_tags} />
           </Form.Item>
         </Col>
       </Row>
       <Row>
         <Col span={8}>
-          <Form.Item label="备注" name="comment" rules={[{ required: true }]}>
+          <Form.Item label="出租备注" name="comment">
             <Input.TextArea placeholder="备注" rows={5} />
           </Form.Item>
         </Col>
@@ -122,7 +104,7 @@ export function useRentalHouse() {
 
   useEffect(() => {
     if (formData) {
-      rentalHouseFrom.setFieldsValue(formData as any);
+      rentalHouseFrom.setFieldsValue(formData.data?.rental_house as any);
     }
   }, [formData]);
 
@@ -135,15 +117,16 @@ export function useRentalHouse() {
   async function rentalHouseSubmit(house_id: string) {
     const houseValues = rentalHouseFrom.getFieldsValue();
 
-    let newValue = {
+    const newValue: Record<string, any> = {
       ...houseValues,
       house_id,
-      tags: houseValues.tags?.join(",") || "",
     };
 
-    await save.mutateAsync(newValue as any);
+    if (Array.isArray(houseValues.tags)) {
+      newValue.tags = houseValues.tags.join(",");
+    }
 
-    message.success("保存成功");
+    await save.mutateAsync(newValue as any);
     resetFields();
 
     if (paramsHouseId) {

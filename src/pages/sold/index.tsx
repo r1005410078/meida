@@ -13,6 +13,9 @@ export function SoldPage() {
         <Navigate to="/house/sold/second-hand-house" />
       )}
       <PageContainer
+        breadcrumb={{
+          items: [],
+        }}
         fixedHeader
         token={{
           paddingBlockPageContainerContent: 16,

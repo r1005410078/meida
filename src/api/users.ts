@@ -14,9 +14,9 @@ export function useIsLogin() {
   return localStorage.getItem("token") ? true : false;
 }
 
-export function useGetUser(isLogin: boolean) {
+export function useGetUser(isLogin = true) {
   return useQuery(
-    ["getUser"],
+    ["getUser", isLogin],
     async () => {
       const res = await request.get<User>("/api/v1/auth/get_user");
       return res.data;

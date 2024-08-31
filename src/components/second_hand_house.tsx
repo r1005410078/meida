@@ -14,10 +14,12 @@ import {
 } from "../value_object/house_columns";
 import { useEffect } from "react";
 
-export function useSecondHandHouseList() {
+export function useSecondHandHouseList(enabled = true) {
   const [secondHandHouseForm] = Form.useForm<SecondHandHousingFrom>();
   const { houseId: paramsHouseId } = useParams<{ houseId: string }>();
-  const { data: formData } = useGetSecondHandByHouseId(paramsHouseId);
+  const { data: formData } = useGetSecondHandByHouseId(
+    enabled ? paramsHouseId : undefined
+  );
   const save = useSecondHandHouseSave();
 
   const secondHandHouseListNode = (
@@ -34,11 +36,7 @@ export function useSecondHandHouseList() {
           </Form.Item>
         </Col>
         <Col flex="160px">
-          <Form.Item
-            label="出售底价"
-            name="low_pice"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="出售底价" name="low_pice">
             <InputNumber
               placeholder="出售底价"
               min={0}
@@ -48,11 +46,7 @@ export function useSecondHandHouseList() {
           </Form.Item>
         </Col>
         <Col flex="160px">
-          <Form.Item
-            label="首付"
-            name="down_payment"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="首付" name="down_payment">
             <InputNumber
               placeholder="首付"
               min={0}
@@ -62,11 +56,7 @@ export function useSecondHandHouseList() {
           </Form.Item>
         </Col>
         <Col flex="160px">
-          <Form.Item
-            label="房源税费"
-            name="taxes_and_fees"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="房源税费" name="taxes_and_fees">
             <InputNumber
               placeholder="房源税费"
               min={0}
@@ -78,52 +68,36 @@ export function useSecondHandHouseList() {
       </Row>
       <Row gutter={16}>
         <Col flex="160px">
-          <Form.Item
-            label="看房方式"
-            name="viewing_method"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="看房方式" name="viewing_method">
             <Select placeholder="看房方式" options={viewing_method} />
           </Form.Item>
         </Col>
         <Col flex="160px">
-          <Form.Item
-            label="付款方式"
-            name="payment_method"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="付款方式" name="payment_method">
             <Select placeholder="付款方式" options={payment_method} />
           </Form.Item>
         </Col>
         <Col flex="160px">
-          <Form.Item
-            label="是否全款"
-            name="full_payment_required"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="是否全款" name="full_payment_required">
             <Select placeholder="是否全款" options={full_payment_required} />
           </Form.Item>
         </Col>
         <Col flex="160px">
-          <Form.Item
-            label="是否急切"
-            name="urgent_sale"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="是否急切" name="urgent_sale">
             <Select placeholder="是否急切" options={urgent_sale} />
           </Form.Item>
         </Col>
       </Row>
       <Row>
         <Col span={8}>
-          <Form.Item label="标签" name="tags" rules={[{ required: true }]}>
+          <Form.Item label="出售标签" name="tags">
             <Select placeholder="标签" mode="multiple" options={house_tags} />
           </Form.Item>
         </Col>
       </Row>
       <Row>
         <Col span={8}>
-          <Form.Item label="备注" name="comment" rules={[{ required: true }]}>
+          <Form.Item label="出售备注" name="comment">
             <Input.TextArea placeholder="备注" rows={3} />
           </Form.Item>
         </Col>

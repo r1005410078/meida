@@ -11,6 +11,9 @@ export function Edit() {
 
   return (
     <PageContainer
+      breadcrumb={{
+        items: [],
+      }}
       title={community_name ? "编辑小区" : "新增小区"}
       content="庭院深深深几许，杨柳堆烟，帘幕无重数。"
       footer={[
@@ -23,7 +26,7 @@ export function Edit() {
             }
           }}
         >
-          重置
+          返回
         </Button>,
         <Button
           key="submit"

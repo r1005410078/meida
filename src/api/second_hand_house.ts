@@ -10,19 +10,20 @@ import {
 import { TableData } from "../value_object/common";
 import { HouseParams } from "./house";
 import { QueryCommunityParams } from "./community";
-
-// 创建二手房
-export function useSecondHandHouseCreate() {
-  return useMutation((data: SecondHandHousingFrom) => {
-    return request.post("/api/v1/second_hand_house/create", data);
-  });
-}
+import { message } from "antd";
 
 // 保存二手房
 export function useSecondHandHouseSave() {
-  return useMutation((data: SecondHandHousingFrom) => {
-    return request.post("/api/v1/second_hand_house/save", data);
-  });
+  return useMutation(
+    (data: SecondHandHousingFrom) => {
+      return request.post("/api/v1/second_hand_house/save", data);
+    },
+    {
+      onSuccess() {
+        message.success("出售住宅保存成功");
+      },
+    }
+  );
 }
 
 // 上架
@@ -36,7 +37,7 @@ export function useListed() {
     },
     {
       onSuccess: () => {
-        client.refetchQueries(["listListed"]);
+        client.removeQueries(["listListed"]);
       },
     }
   );
@@ -60,7 +61,7 @@ export function useGetListListed(data: GetListListedParams) {
     );
 
     return {
-      data: res.data.data.map((item) => item.house_second_hand),
+      data: res.data?.data,
       total: res.data.total,
       getItemByHouseId(houseId: string) {
         return res.data.data.find((item) => item.house.house_id === houseId);
@@ -80,7 +81,7 @@ export function useUnListed() {
     },
     {
       onSuccess: () => {
-        client.refetchQueries(["listListed"]);
+        client.removeQueries(["listListed"]);
       },
     }
   );
@@ -95,7 +96,22 @@ export function useSold() {
     },
     {
       onSuccess: () => {
-        client.refetchQueries(["listListed"]);
+        client.removeQueries(["listListed"]);
+      },
+    }
+  );
+}
+
+// 删除
+export function useDeleteSecondHandHouse() {
+  const client = useQueryClient();
+  return useMutation(
+    (house_id: string) => {
+      return request.post("/api/v1/second_hand_house/delete", { house_id });
+    },
+    {
+      onSuccess: () => {
+        client.removeQueries(["listListed"]);
       },
     }
   );
@@ -110,7 +126,7 @@ export interface GetSecondHandHouseSoldParams {
 export function useSecondHandHouseListSold(
   params: GetSecondHandHouseSoldParams
 ) {
-  return useQuery(["list_sold"], async () => {
+  return useQuery(["list_sold", params], async () => {
     const res = await request.get<TableData<SoldSecondHandHousingResponse>>(
       "/api/v1/second_hand_house/list_sold",
       {
@@ -213,6 +229,7 @@ function convertToSecondHandHousing(item: SecondHandHousingResponse) {
     house_image: item.house.house_image,
     owner_name: item.house.owner_name,
     owner_phone: item.house.owner_phone,
+
     // -- 新增
     title: item.house.title,
     recommended_tags: item.house.recommended_tags,

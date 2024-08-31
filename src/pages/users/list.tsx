@@ -27,6 +27,9 @@ export function UserList() {
 
   return (
     <PageContainer
+      breadcrumb={{
+        items: [],
+      }}
       token={{
         paddingBlockPageContainerContent: 24,
         paddingInlinePageContainerContent: 60,

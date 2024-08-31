@@ -1,4 +1,4 @@
-import { Button, Segmented } from "antd";
+import { Button, Modal, Segmented, Select } from "antd";
 import {
   PlusOutlined,
   BarsOutlined,
@@ -10,11 +10,17 @@ import {
   ProTable,
   TableDropdown,
 } from "@ant-design/pro-components";
-import { SecondHandHousing } from "../../model/second_hand_housing";
 import { useState } from "react";
-import { useSecondHandHouseColumns } from "../../value_object/house_columns";
+import {
+  bedrooms_options,
+  price,
+  region,
+  usage_options,
+  useSecondHandHouseColumns,
+} from "../../value_object/house_columns";
 import {
   GetListListedParams,
+  useDeleteSecondHandHouse,
   useGetListListed,
   useListed,
   useUnListed,
@@ -23,6 +29,12 @@ import { useNavigate } from "react-router";
 import { useSoldModal } from "./sold_modal";
 import { processHouseSubmitValue } from "../house/list";
 import { useProDescriptionsModal } from "../../components/ProDescriptionsModal";
+import {
+  houseAddressColumn,
+  houseAreaColumn,
+  houseImageColumn,
+  houseTypeColumn,
+} from "../../value_object/columns";
 
 export function List() {
   const navigator = useNavigate();
@@ -35,18 +47,9 @@ export function List() {
   const [columnsStateMap, setColumnsStateMap] = useState<
     Record<string, ColumnsState>
   >({
-    owner_phone: {
-      show: false,
-    },
-    year_built: {
-      show: false,
-    },
-    low_pice: {
-      show: false,
-    },
-    community_type: {
-      show: false,
-    },
+    // owner_phone: {
+    //   show: false,
+    // },
   });
 
   const columns = useSecondHandHouseColumns();
@@ -54,7 +57,7 @@ export function List() {
   const listed = useListed();
   const unlisted = useUnListed();
   const { openSoldModal, soldModalNode } = useSoldModal();
-
+  const deleteSecondHand = useDeleteSecondHandHouse();
   const { openProDescriptionsModal, proDescriptionsModalNode } =
     useProDescriptionsModal({
       title: "出售",
@@ -63,20 +66,29 @@ export function List() {
 
   return (
     <PageContainer
+      breadcrumb={{
+        items: [],
+      }}
       token={{
         paddingBlockPageContainerContent: 16,
         paddingInlinePageContainerContent: 24,
       }}
       header={{
-        title: "二手房",
         ghost: true,
         extra: [
+          <Select
+            defaultValue={1}
+            popupMatchSelectWidth={80}
+            labelRender={({ label }) => <strong>{label}</strong>}
+            variant="borderless"
+            options={usage_options}
+          />,
           <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => navigator("new")}
           >
-            登记二手房
+            登记房源
           </Button>,
           <Segmented
             options={[
@@ -91,7 +103,7 @@ export function List() {
         ],
       }}
     >
-      <ProTable<SecondHandHousing>
+      <ProTable
         loading={isFetching}
         onSubmit={(value) => {
           setParams({
@@ -101,58 +113,122 @@ export function List() {
             community_type: value.community_type,
           });
         }}
-        columns={columns.concat([
+        columns={[
+          houseAddressColumn(),
+          houseTypeColumn(),
+          houseAreaColumn(),
+          houseImageColumn(),
+        ].concat([
+          {
+            title: "卧室数量",
+            dataIndex: "bedrooms",
+            hideInTable: true,
+            valueType: "select",
+            fieldProps: {
+              options: bedrooms_options,
+            },
+          },
+          {
+            title: "区域",
+            dataIndex: "region",
+            hideInTable: true,
+            valueType: "select",
+            fieldProps: {
+              options: region,
+            },
+          },
+          {
+            title: "售价",
+            dataIndex: "pice",
+            valueType: "select",
+            fieldProps: {
+              options: price,
+            },
+            render: (_1, record) => {
+              const pice = record.house_second_hand?.pice;
+              if (pice) {
+                return `${pice} 万元`;
+              }
+              return "--";
+            },
+          },
+          {
+            title: "看房方式",
+            dataIndex: "house_second_hand.viewing_method",
+            hideInSearch: true,
+            render: (_1, record) => {
+              return record.house_second_hand?.viewing_method ?? "--";
+            },
+          },
           {
             title: "操作",
             valueType: "option",
             key: "option",
-            render: (_, record, _1, action) => [
-              <a
-                key="editable"
-                onClick={() => {
-                  navigator(`/house/second-hand-house/edit/${record.house_id}`);
-                }}
-              >
-                编辑
-              </a>,
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                key="view"
-                onClick={() => {
-                  openProDescriptionsModal({
-                    ...data?.getItemByHouseId(record.house_id),
-                    columns_data: data?.data,
-                  });
-                }}
-              >
-                查看
-              </a>,
-              <TableDropdown
-                key="actionGroup"
-                onSelect={() => action?.reload()}
-                menus={[
-                  {
-                    key: "listed",
-                    name: record.listed ? "下架" : "上架",
-                    onClick: () => {
-                      if (record.listed) {
-                        unlisted.mutate(record.house_id);
-                      } else {
-                        listed.mutate(record.house_id);
-                      }
+            render: (_, record, _1, action) => {
+              const house_id = record.house.house_id;
+
+              return [
+                <a
+                  key="editable"
+                  onClick={() => {
+                    houseImageColumn(),
+                      navigator(`/house/second-hand-house/edit/${house_id}`);
+                  }}
+                >
+                  编辑
+                </a>,
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  key="view"
+                  onClick={() => {
+                    openProDescriptionsModal({
+                      ...record,
+                      columns_data: record.house_second_hand,
+                    });
+                  }}
+                >
+                  查看
+                </a>,
+                <TableDropdown
+                  key="actionGroup"
+                  onSelect={() => action?.reload()}
+                  menus={[
+                    {
+                      key: "listed",
+                      name: record.house_second_hand?.listed ? "下架" : "上架",
+                      onClick: () => {
+                        if (record.house_second_hand?.listed) {
+                          unlisted.mutate(house_id);
+                        } else {
+                          listed.mutate(house_id);
+                        }
+                      },
                     },
-                  },
-                  {
-                    key: "sold",
-                    name: "卖出",
-                    onClick: () => {
-                      openSoldModal(record.house_id);
+                    {
+                      key: "sold",
+                      name: "卖出",
+                      onClick: () => {
+                        openSoldModal(house_id);
+                      },
                     },
-                  },
-                ]}
-              />,
-            ],
+                    {
+                      key: "delete",
+                      name: "删除",
+                      onClick: () => {
+                        Modal.confirm({
+                          title: "删除",
+                          content: `是否确认删除房源`,
+                          onOk: () => {
+                            deleteSecondHand.mutateAsync(house_id);
+                          },
+                        });
+                      },
+                    },
+                  ]}
+                />,
+              ];
+            },
           },
         ])}
         dataSource={data?.data}
@@ -160,7 +236,7 @@ export function List() {
           value: columnsStateMap,
           onChange: setColumnsStateMap,
         }}
-        rowKey="house_id"
+        rowKey="record.house.house_id"
         pagination={{
           total: data?.total,
           showTotal: (total) => `共 ${total} 条`,

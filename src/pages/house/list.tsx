@@ -55,6 +55,9 @@ export function List() {
 
   return (
     <PageContainer
+      breadcrumb={{
+        items: [],
+      }}
       token={{
         paddingBlockPageContainerContent: 16,
         paddingInlinePageContainerContent: 24,
@@ -68,7 +71,7 @@ export function List() {
             icon={<PlusOutlined />}
             onClick={() => navigator("new")}
           >
-            登记房屋信息
+            登记住宅信息
           </Button>,
           <Segmented
             options={[
@@ -105,7 +108,7 @@ export function List() {
             });
           },
         }}
-        columns={columns.concat([
+        columns={columns.slice(0, 8).concat([
           {
             title: "操作",
             valueType: "option",
@@ -123,7 +126,11 @@ export function List() {
                 target="_blank"
                 rel="noopener noreferrer"
                 key="view"
-                onClick={() => openProDescriptionsModal(record)}
+                onClick={() =>
+                  openProDescriptionsModal({
+                    house: record,
+                  })
+                }
               >
                 查看
               </a>,
@@ -177,5 +184,6 @@ export function processHouseSubmitValue(value: any) {
     house_description: value.house_description,
     owner_name: value.owner_name,
     owner_phone: value.owner_phone,
+    region: value.region,
   };
 }

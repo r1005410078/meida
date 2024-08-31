@@ -10,7 +10,7 @@ export interface SecondRentalHouse {
   // 租金
   rent_pice: string;
   // 出租低价
-  rent_low_price?: string;
+  rent_low_pice?: string;
   // 是否上架 0 为下架 1 为上架
   listed?: number;
   // 出租房上架时间

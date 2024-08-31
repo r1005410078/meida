@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Community, CommunityFrom } from "../model/Community";
 import { request } from "./api";
-import { notification } from "antd";
+import { message, notification } from "antd";
 
 export interface QueryCommunityParams {
   community_name?: string;
@@ -48,7 +48,7 @@ export function useDeleteCommunity() {
     },
     {
       onSuccess: () => {
-        client.refetchQueries(["CommunityList"]);
+        client.removeQueries(["CommunityList"]);
       },
     }
   );
@@ -77,7 +77,9 @@ export function useSaveCommunity() {
       });
     },
     {
-      onSuccess: () => {},
+      onSuccess: () => {
+        message.success("小区信息保存成功");
+      },
       onError: (err: any) => {
         notification.error({
           message: "系统错误，请联系管理员！",

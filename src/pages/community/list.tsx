@@ -43,12 +43,15 @@ export function List() {
   const { openProDescriptionsModal, proDescriptionsModalNode } =
     useProDescriptionsModal({
       title: "小区详情",
-      width: 600,
+      width: 1000,
       columns: columns as any,
     });
 
   return (
     <PageContainer
+      breadcrumb={{
+        items: [],
+      }}
       token={{
         paddingBlockPageContainerContent: 16,
         paddingInlinePageContainerContent: 24,
@@ -108,7 +111,11 @@ export function List() {
                 target="_blank"
                 rel="noopener noreferrer"
                 key="view"
-                onClick={() => openProDescriptionsModal(record)}
+                onClick={() =>
+                  openProDescriptionsModal({
+                    residential: record,
+                  })
+                }
               >
                 查看
               </a>,

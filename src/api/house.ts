@@ -6,6 +6,8 @@ import { TableData } from "../value_object/common";
 import dayjs from "dayjs";
 import omitBy from "lodash/omitBy";
 import { request } from "./api";
+import { message } from "antd";
+import { useGetUser } from "./users";
 
 export interface HouseParams {
   page_index: number;
@@ -67,6 +69,8 @@ export function useHouseById(id?: string) {
 }
 
 export function useSaveHouse() {
+  const user = useGetUser();
+
   return useMutation(
     (data: Omit<HouseFrom, "id">) => {
       return request.post<{ house_id: string }>("/api/v1/house/save", {
@@ -76,10 +80,14 @@ export function useSaveHouse() {
         property_duration: data.property_date?.year(),
         property_date: data.property_date?.format("YYYY-MM-DD"),
         delivery_date: data.delivery_date?.format("YYYY-MM-DD"),
+        created_by: data.house_id ? undefined : user.data?.username,
+        updated_by: user.data?.username,
       });
     },
     {
-      onSuccess: () => {},
+      onSuccess: () => {
+        message.success("住宅保存成功");
+      },
     }
   );
 }

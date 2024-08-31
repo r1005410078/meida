@@ -1,9 +1,11 @@
 import { ProColumns } from "@ant-design/pro-components";
-import { Community } from "../model/Community";
 import { House } from "../model/House";
 import { useGetCommunityNames } from "../api/community";
 import dayjs from "dayjs";
-import { Tag } from "antd";
+import { Button, Tag } from "antd";
+import { FileImageOutlined } from "@ant-design/icons";
+import useImagePhoto from "../components/ImagePhoto";
+import { Community } from "../model/Community";
 
 // 区域
 export const region = [
@@ -20,7 +22,7 @@ export const region = [
 ].map((item) => ({ label: item, value: item }));
 
 // 面积
-export const area = [
+export const area_options = [
   {
     value: {
       end: 70,
@@ -407,7 +409,7 @@ export const rent_pice = [
 });
 
 // 户型
-const bedrooms = [
+export const bedrooms_options = [
   {
     value: {
       start: 1,
@@ -568,6 +570,8 @@ export const house_tags = [
   },
 ];
 
+export const recommended_tags = house_tags;
+
 export const house_property = [
   {
     value: "商品房住宅",
@@ -667,19 +671,34 @@ export function useCommunityColumns(): ProColumns<Community>[] {
       hideInSearch: true,
     },
     {
+      title: "创建人",
+      dataIndex: "created_by",
+      hideInTable: true,
+    },
+    {
+      title: "更新人",
+      dataIndex: "updated_by",
+    },
+    {
       title: "创建时间",
       dataIndex: "created_at",
-      hideInSearch: true,
+      render: (_, item) => {
+        return dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss");
+      },
     },
     {
       title: "更新时间",
       dataIndex: "updated_at",
-      hideInSearch: true,
+      render: (_, item) => {
+        return dayjs(item.updated_at).format("YYYY-MM-DD HH:mm:ss");
+      },
     },
   ];
 }
 
 export function useHouseColumns() {
+  const { openPhotoView, imagePhotoNode } = useImagePhoto();
+
   const columns: ProColumns<House>[] = [
     {
       title: "小区名称",
@@ -724,6 +743,18 @@ export function useHouseColumns() {
     {
       title: "房屋图片",
       dataIndex: "house_image",
+      render: (_, item) => {
+        return (
+          <Button
+            icon={<FileImageOutlined />}
+            type="link"
+            size="small"
+            onClick={() => openPhotoView(item.house_image?.split(","))}
+          >
+            {imagePhotoNode}
+          </Button>
+        );
+      },
     },
     {
       title: "业主姓名",
@@ -733,14 +764,7 @@ export function useHouseColumns() {
       title: "业主联系方式",
       dataIndex: "owner_phone",
     },
-    {
-      title: "创建人",
-      dataIndex: "created_by",
-    },
-    {
-      title: "更新人",
-      dataIndex: "updated_by",
-    },
+
     {
       title: "楼层",
       dataIndex: "floor",
@@ -748,6 +772,9 @@ export function useHouseColumns() {
     {
       title: "总楼层",
       dataIndex: "floor_range",
+      // render() {
+      //   return `${entity.floor} / ${entity.floor_range}`;
+      // },
     },
     {
       title: "房源标题",
@@ -770,8 +797,8 @@ export function useHouseColumns() {
       hideInSearch: true,
     },
     {
-      title: "kitchen",
-      dataIndex: "厨房",
+      title: "厨房",
+      dataIndex: "kitchen",
       hideInSearch: true,
     },
     {
@@ -813,6 +840,9 @@ export function useHouseColumns() {
       title: "唯一住房",
       dataIndex: "unique_house",
       hideInSearch: true,
+      render: (_, item) => {
+        return item.unique_house ? "是" : "否";
+      },
     },
     {
       title: "配套",
@@ -845,14 +875,29 @@ export function useHouseColumns() {
       hideInSearch: true,
     },
     {
+      title: "创建人",
+      dataIndex: "created_by",
+      hideInTable: true,
+    },
+    {
+      title: "更新人",
+      dataIndex: "updated_by",
+    },
+    {
       title: "创建时间",
       dataIndex: "created_at",
       hideInSearch: true,
+      render: (_, item) => {
+        return dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss");
+      },
     },
     {
       title: "更新时间",
       dataIndex: "updated_at",
       hideInSearch: true,
+      render: (_, item) => {
+        return dayjs(item.updated_at).format("YYYY-MM-DD HH:mm:ss");
+      },
     },
   ];
 
@@ -893,7 +938,7 @@ export function useSecondHandHouseColumns() {
       render: (_, item) => {
         return (
           <div>
-            {item.tags?.map((tag: string) => (
+            {item.tags?.split(",").map((tag: string) => (
               <Tag color="green" key={tag}>
                 {tag}
               </Tag>
@@ -941,18 +986,39 @@ export function useSecondHandHouseColumns() {
     {
       title: "是否全款",
       dataIndex: "full_payment_required",
+      render: (_, item) => {
+        return item.full_payment_required ? "是" : "否";
+      },
     },
     {
       title: "是否急切",
       dataIndex: "urgent_sale",
+      render: (_, item) => {
+        return item.full_payment_required ? "是" : "否";
+      },
+    },
+    {
+      title: "创建人",
+      dataIndex: "created_by",
+      hideInTable: true,
+    },
+    {
+      title: "更新人",
+      dataIndex: "updated_by",
     },
     {
       title: "创建时间",
       dataIndex: "created_at",
+      render: (_, item) => {
+        return dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss");
+      },
     },
     {
       title: "更新时间",
       dataIndex: "updated_at",
+      render: (_, item) => {
+        return dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss");
+      },
     },
   ];
 
@@ -985,7 +1051,7 @@ export function useRentalHouseColumns() {
       render: (_, item) => {
         return (
           <div>
-            {item.tags?.map((tag: string) => (
+            {item.tags?.split(",")?.map((tag: string) => (
               <Tag color="green" key={tag}>
                 {tag}
               </Tag>
@@ -1029,10 +1095,16 @@ export function useRentalHouseColumns() {
     {
       title: "创建时间",
       dataIndex: "created_at",
+      render: (_, item) => {
+        return dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss");
+      },
     },
     {
       title: "更新时间",
       dataIndex: "updated_at",
+      render: (_, item) => {
+        return dayjs(item.updated_at).format("YYYY-MM-DD HH:mm:ss");
+      },
     },
   ];
 

@@ -1,4 +1,4 @@
-import { Button, Segmented } from "antd";
+import { Button, Modal, Segmented, Select } from "antd";
 import {
   PlusOutlined,
   BarsOutlined,
@@ -10,11 +10,17 @@ import {
   ProTable,
   TableDropdown,
 } from "@ant-design/pro-components";
-import { SecondRentalHouse } from "../../model/rental_house";
 import { useState } from "react";
-import { useRentalHouseColumns } from "../../value_object/house_columns";
+import {
+  bedrooms_options,
+  region,
+  rent_pice,
+  usage_options,
+  useRentalHouseColumns,
+} from "../../value_object/house_columns";
 import {
   GetListListedParams,
+  useDeleteRentalHouse,
   useGetRentalHouseList,
   useListed,
   useUnListed,
@@ -23,6 +29,12 @@ import { useNavigate } from "react-router";
 import { useSoldModal } from "./sold_modal";
 import { processHouseSubmitValue } from "../house/list";
 import { useProDescriptionsModal } from "../../components/ProDescriptionsModal";
+import {
+  houseAddressColumn,
+  houseAreaColumn,
+  houseImageColumn,
+  houseTypeColumn,
+} from "../../value_object/columns";
 
 export function List() {
   const navigator = useNavigate();
@@ -32,24 +44,14 @@ export function List() {
     page_size: 10,
   });
 
-  const [columnsStateMap, setColumnsStateMap] = useState<
-    Record<string, ColumnsState>
-  >({
-    owner_phone: {
-      show: false,
-    },
-    year_built: {
-      show: false,
-    },
-    rent_low_pice: {
-      show: false,
-    },
-  });
+  const [columnsStateMap, setColumnsStateMap] =
+    useState<Record<string, ColumnsState>>();
 
   const columns = useRentalHouseColumns();
   const { data, isLoading } = useGetRentalHouseList(params);
   const listed = useListed();
   const unlisted = useUnListed();
+  const deleteRental = useDeleteRentalHouse();
   const { openSoldModal, soldModalNode } = useSoldModal();
 
   const { openProDescriptionsModal, proDescriptionsModalNode } =
@@ -60,6 +62,9 @@ export function List() {
 
   return (
     <PageContainer
+      breadcrumb={{
+        items: [],
+      }}
       token={{
         paddingBlockPageContainerContent: 16,
         paddingInlinePageContainerContent: 24,
@@ -68,12 +73,19 @@ export function List() {
         title: "租房",
         ghost: true,
         extra: [
+          <Select
+            defaultValue={1}
+            popupMatchSelectWidth={80}
+            labelRender={({ label }) => <strong>{label}</strong>}
+            variant="borderless"
+            options={usage_options}
+          />,
           <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => navigator("new")}
           >
-            登记租房
+            登记房源
           </Button>,
           <Segmented
             options={[
@@ -88,55 +100,123 @@ export function List() {
         ],
       }}
     >
-      <ProTable<SecondRentalHouse>
+      <ProTable
         loading={isLoading}
-        columns={columns.concat([
+        columns={[
+          houseAddressColumn(),
+          houseTypeColumn(),
+          houseAreaColumn(),
+          houseImageColumn(),
+        ].concat([
+          {
+            title: "卧室数量",
+            dataIndex: "bedrooms",
+            hideInTable: true,
+            valueType: "select",
+            fieldProps: {
+              options: bedrooms_options,
+            },
+          },
+          {
+            title: "区域",
+            dataIndex: "region",
+            hideInTable: true,
+            valueType: "select",
+            fieldProps: {
+              options: region,
+            },
+          },
+          {
+            title: "售价",
+            dataIndex: "rent_pice",
+            valueType: "select",
+            fieldProps: {
+              options: rent_pice,
+            },
+            render: (_1, record) => {
+              const pice = record.rental_house?.rent_pice;
+              if (pice) {
+                return `${pice} 元/月`;
+              }
+              return "--";
+            },
+          },
+          {
+            title: "看房方式",
+            dataIndex: "house_second_hand.viewing_method",
+            hideInSearch: true,
+            render: (_1, record) => {
+              return record.rental_house?.viewing_method ?? "--";
+            },
+          },
           {
             title: "操作",
             valueType: "option",
             key: "option",
-            render: (_, record, _1, action) => [
-              <a
-                key="editable"
-                onClick={() => {
-                  navigator(`edit/${record.house_id}`);
-                }}
-              >
-                编辑
-              </a>,
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                key="view"
-                onClick={() => openProDescriptionsModal(record)}
-              >
-                查看
-              </a>,
-              <TableDropdown
-                key="actionGroup"
-                onSelect={() => action?.reload()}
-                menus={[
-                  {
-                    key: "listed",
-                    name: record.listed ? "下架" : "上架",
-                    onClick: () => {
-                      if (record.listed) {
-                        unlisted.mutate(record.house_id);
-                      } else {
-                        listed.mutate(record.house_id);
-                      }
+            render: (_, record, _1, action) => {
+              const house_id = record.house.house_id;
+
+              return [
+                <a
+                  key="editable"
+                  onClick={() => {
+                    navigator(`edit/${house_id}`);
+                  }}
+                >
+                  编辑
+                </a>,
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  key="view"
+                  onClick={() =>
+                    openProDescriptionsModal({
+                      ...record,
+                      columns_data: record.rental_house,
+                    })
+                  }
+                >
+                  查看
+                </a>,
+                <TableDropdown
+                  key="actionGroup"
+                  onSelect={() => action?.reload()}
+                  menus={[
+                    {
+                      key: "listed",
+                      name: record.house_second_hand?.listed ? "下架" : "上架",
+                      onClick: () => {
+                        if (record.house_second_hand?.listed) {
+                          unlisted.mutate(house_id);
+                        } else {
+                          listed.mutate(house_id);
+                        }
+                      },
                     },
-                  },
-                  {
-                    key: "sold",
-                    name: "租出",
-                    onClick: () => {
-                      openSoldModal(record.house_id);
+                    {
+                      key: "sold",
+                      name: "租出",
+                      onClick: () => {
+                        openSoldModal(house_id);
+                      },
                     },
-                  },
-                ]}
-              />,
-            ],
+                    {
+                      key: "delete",
+                      name: "删除",
+                      onClick: () => {
+                        Modal.confirm({
+                          title: "删除",
+                          content: `是否确认删除房源`,
+                          onOk: () => {
+                            deleteRental.mutateAsync(house_id);
+                          },
+                        });
+                      },
+                    },
+                  ]}
+                />,
+              ];
+            },
           },
         ])}
         onSubmit={(value) => {
@@ -154,7 +234,7 @@ export function List() {
           value: columnsStateMap,
           onChange: setColumnsStateMap,
         }}
-        rowKey="house_id"
+        rowKey="record.house.house_id"
         pagination={{
           total: data?.total,
           showTotal: (total) => `共 ${total} 条`,

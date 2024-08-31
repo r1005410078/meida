@@ -83,6 +83,10 @@ export interface House {
   source?: string;
   // 推荐标签
   status: string;
+  // 创建时间
+  created_at: string;
+  // 更新时间
+  updated_at: string;
 }
 
 export interface HouseFrom {
@@ -102,6 +106,11 @@ export interface HouseFrom {
   owner_name: string;
   owner_phone: string;
   house_description?: string;
+  // 创建人
+  created_by: string;
+  // 更新人
+  updated_by: string;
+
   // -- 新增
   title: string;
   recommended_tags: string;
@@ -128,5 +137,5 @@ export interface HouseFrom {
 // 组合
 export interface HouseUnion {
   house?: House;
-  community?: Community;
+  residential?: Community;
 }

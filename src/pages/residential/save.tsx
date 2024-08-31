@@ -1,10 +1,6 @@
-import { Button, Card, Flex, Form, Select, Spin } from "antd";
-
+import { Button, Card, Flex, Form, message, Select, Spin } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-
-import { useGetSecondHandByHouseId } from "../../api/second_hand_house";
-
 import { PageContainer } from "@ant-design/pro-components";
 import { useCommunity } from "../../components/Community";
 import { useHouse } from "../../components/House";
@@ -20,33 +16,38 @@ import { useRentalHouse } from "../../components/rental_house";
 export function SaveResidential({ pice_type = 1 }) {
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  const watch_pice_type = Form.useWatch("pice_type", form);
+
   const { houseId: paramsHouseId } = useParams<{ houseId: string }>();
-  const { data: formData } = useGetSecondHandByHouseId(paramsHouseId);
+
+  // 住宅组件
   const { houseNode, houseForm, houseSubmit, house } = useHouse();
+
+  // 小区
   const { communityNode, communitySubmit, communityForm } = useCommunity(
-    paramsHouseId ? formData?.community_name : house?.community_name
+    house?.community_name
   );
+
+  // 租房
+  const { rentalHouseNode, rentalHouseFrom, rentalHouseSubmit } =
+    useRentalHouse(watch_pice_type === 2);
 
   const {
     secondHandHouseListNode,
     secondHandHouseForm,
     secondHandHouseFormSubmit,
-  } = useSecondHandHouseList();
-
-  const { rentalHouseNode, rentalHouseFrom, rentalHouseSubmit } =
-    useRentalHouse();
+  } = useSecondHandHouseList(watch_pice_type === 1);
 
   const { data: guShi } = useGuShi();
   const [isLoading, setIsLoading] = useState(false);
-
-  // 更新
-
-  const watch_pice_type = Form.useWatch("pice_type", form);
 
   return (
     <PageContainer
       title={paramsHouseId ? "编辑房源" : "新增房源"}
       content={guShi}
+      breadcrumb={{
+        items: [],
+      }}
       extra={[
         <Form
           layout="inline"
@@ -89,36 +90,49 @@ export function SaveResidential({ pice_type = 1 }) {
           type="primary"
           loading={isLoading}
           onClick={async () => {
-            const validations: Promise<any>[] = [
-              houseForm.validateFields(),
-              communityForm.validateFields(),
-            ];
+            setIsLoading(true);
+            try {
+              const validations: Promise<any>[] = [
+                houseForm.validateFields(),
+                communityForm.validateFields(),
+              ];
 
-            if (watch_pice_type === 1 || watch_pice_type === 3) {
-              validations.push(secondHandHouseForm.validateFields());
-            }
+              if (watch_pice_type === 1 || watch_pice_type === 3) {
+                validations.push(secondHandHouseForm.validateFields());
+              }
 
-            if (watch_pice_type === 2 || watch_pice_type === 3) {
-              validations.push(rentalHouseFrom.validateFields());
-            }
-            // 验证表单
-            await Promise.all(validations);
-            // 保存小区
-            const { community_name } = await communitySubmit();
-            // 保证住宅
-            const { house_id } = await houseSubmit(
-              community_name,
-              paramsHouseId
-            );
+              if (watch_pice_type === 2 || watch_pice_type === 3) {
+                validations.push(rentalHouseFrom.validateFields());
+              }
 
-            if (watch_pice_type === 1 || watch_pice_type === 3) {
-              // 保存二手房
-              await secondHandHouseFormSubmit(house_id);
-            }
+              // 验证表单
+              await Promise.all(validations);
+              // 保存小区
+              const { community_name } = await communitySubmit();
+              // 保证住宅
+              const { house_id } = await houseSubmit(
+                community_name,
+                paramsHouseId
+              );
 
-            if (watch_pice_type === 2 || watch_pice_type === 3) {
-              // 保存租房
-              await rentalHouseSubmit(house_id);
+              if (watch_pice_type === 1 || watch_pice_type === 3) {
+                // 保存二手房
+                await secondHandHouseFormSubmit(house_id);
+              }
+
+              if (watch_pice_type === 2 || watch_pice_type === 3) {
+                // 保存租房
+                await rentalHouseSubmit(house_id);
+              }
+
+              resetFields();
+              if (paramsHouseId) {
+                navigate(-1);
+              }
+            } catch (error: any) {
+              message.error("出售住宅保存失败，请检查是否有必填项未填写！");
+            } finally {
+              setIsLoading(false);
             }
           }}
         >
@@ -140,4 +154,10 @@ export function SaveResidential({ pice_type = 1 }) {
       </Spin>
     </PageContainer>
   );
+
+  function resetFields() {
+    secondHandHouseForm.resetFields();
+    houseForm.resetFields();
+    communityForm.resetFields();
+  }
 }

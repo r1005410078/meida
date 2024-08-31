@@ -27,17 +27,19 @@ export function Edit() {
 
   return (
     <PageContainer
+      breadcrumb={{
+        items: [],
+      }}
       title={paramsHouseId ? "编辑房源信息" : "新增房源信息"}
       content={guShi}
       footer={[
         <Button
           key="rest"
           onClick={() => {
-            communityForm.resetFields();
-            houseForm.resetFields();
+            navigate(`/base-info/house`);
           }}
         >
-          重置
+          返回
         </Button>,
         <Button
           key="submit"

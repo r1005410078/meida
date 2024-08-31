@@ -12,7 +12,7 @@ import { HouseUnion } from "../model/House";
 
 interface ProDescriptionsModalProps {
   title: string;
-  columns: ProDescriptionsItemProps<any, any>[];
+  columns?: ProDescriptionsItemProps<any, any>[];
   width?: number;
 }
 
@@ -25,7 +25,7 @@ export function useProDescriptionsModal({
   columns,
   width,
 }: ProDescriptionsModalProps) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [record, setRecord] = useState<HouseSoldDescription>();
 
   const communityColumns = useCommunityColumns();
@@ -38,35 +38,42 @@ export function useProDescriptionsModal({
       width={width ?? 1000}
       footer={null}
       destroyOnClose
-      closable={false}
       onClose={() => {
         setOpen(false);
       }}
     >
-      <ProDescriptions
-        dataSource={record?.columns_data}
-        emptyText={"--"}
-        title={title}
-        columns={columns}
-      ></ProDescriptions>
+      {record?.columns_data ? (
+        <>
+          <ProDescriptions
+            dataSource={record?.columns_data}
+            emptyText={"--"}
+            title={title}
+            columns={columns}
+          />
+          <Divider />
+        </>
+      ) : null}
 
-      <Divider />
+      {record?.house ? (
+        <>
+          <ProDescriptions
+            dataSource={record?.house}
+            emptyText={"--"}
+            title="住宅"
+            columns={houseColumns as any}
+          />
+          <Divider />
+        </>
+      ) : null}
 
-      <ProDescriptions
-        dataSource={record?.house}
-        emptyText={"--"}
-        title="住宅"
-        columns={houseColumns as any}
-      ></ProDescriptions>
-
-      <Divider />
-
-      <ProDescriptions
-        dataSource={record?.community}
-        emptyText={"--"}
-        title="小区"
-        columns={communityColumns as any}
-      ></ProDescriptions>
+      {record?.residential ? (
+        <ProDescriptions
+          dataSource={record?.residential}
+          emptyText={"--"}
+          title="小区"
+          columns={communityColumns as any}
+        ></ProDescriptions>
+      ) : null}
     </Drawer>
   );
 

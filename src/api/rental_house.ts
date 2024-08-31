@@ -9,6 +9,7 @@ import {
 import { TableData } from "../value_object/common";
 import { HouseParams } from "./house";
 import { QueryCommunityParams } from "./community";
+import { message } from "antd";
 
 export interface GetListListedParams extends HouseParams, QueryCommunityParams {
   listed?: 0 | 1;
@@ -25,9 +26,13 @@ export function useGetRentalHouseList(data: GetListListedParams) {
         "/api/v1/rental_house/list",
         data
       );
+
       return {
-        data: res.data.data.map(convertToSecondRentalHouse),
+        data: res.data.data,
         total: res.data.total,
+        getItemByHouseId(houseId: string) {
+          return res.data.data.find((item) => item.house.house_id === houseId);
+        },
       };
     },
     {
@@ -40,12 +45,11 @@ export function useGetRentalHouseList(data: GetListListedParams) {
 
 export function useGetRentalHouseByHouseId(house_id?: string) {
   return useQuery(
-    ["RentalHouseByHouseId"],
+    ["RentalHouseByHouseId", house_id],
     async () => {
-      let res = await request.get<SecondRentalHouseResponse>(
+      return request.get<SecondRentalHouseResponse>(
         `/api/v1/rental_house/detail/${house_id}`
       );
-      return convertToSecondRentalHouse(res.data);
     },
     {
       enabled: !!house_id,
@@ -63,7 +67,21 @@ export function useListed() {
     },
     {
       onSuccess: () => {
-        client.refetchQueries(["RentalHouseList"]);
+        client.removeQueries(["RentalHouseList"]);
+      },
+    }
+  );
+}
+
+export function useDeleteRentalHouse() {
+  const client = useQueryClient();
+  return useMutation(
+    (house_id: string) => {
+      return request.post("/api/v1/rental_house/delete", { house_id });
+    },
+    {
+      onSuccess: () => {
+        client.removeQueries(["RentalHouseList"]);
       },
     }
   );
@@ -79,7 +97,7 @@ export function useUnListed() {
     },
     {
       onSuccess: () => {
-        client.refetchQueries(["RentalHouseList"]);
+        client.removeQueries(["RentalHouseList"]);
       },
     }
   );
@@ -93,7 +111,7 @@ export interface GetRentalHouseSoldParams {
 // 已经租出的房源
 export function useGetRentalHouseListSold(params: GetRentalHouseSoldParams) {
   return useQuery(
-    ["GetRentalHouseSoldList"],
+    ["GetRentalHouseSoldList", params],
     async () => {
       let res = await request.get<TableData<SoldRentalHouseResponse>>(
         "/api/v1/rental_house/list_sold",
@@ -122,7 +140,8 @@ export function useRentalHouseSave() {
     },
     {
       onSuccess: () => {
-        client.refetchQueries(["RentalHouseList"]);
+        client.removeQueries(["RentalHouseList"]);
+        message.success("出租住宅保存成功");
       },
     }
   );
@@ -138,53 +157,11 @@ export function useSold() {
     {
       onSuccess: () => {
         setTimeout(() => {
-          client.refetchQueries(["RentalHouseList"]);
+          client.removeQueries(["RentalHouseList"]);
         }, 300);
       },
     }
   );
-}
-
-function convertToSecondRentalHouse(item: SecondRentalHouseResponse) {
-  return {
-    // 租房信息
-    house_id: item.rental_house.house_id,
-    rent_pice: item.rental_house.rent_pice,
-    rent_low_pice: item.rental_house.rent_low_pice,
-    listed: item.rental_house.listed,
-    listed_time: item.rental_house.listed_time,
-    unlisted_time: item.rental_house.unlisted_time,
-    comment: item.rental_house.comment,
-    tags: item.rental_house.tags.split(","),
-
-    // 房源信息
-    house_address: item.house.house_address,
-    house_type: item.house.house_type,
-    floor: item.house.floor,
-    area: item.house.area,
-    bedrooms: item.house.bedrooms,
-    living_rooms: item.house.living_rooms,
-    bathrooms: item.house.bathrooms,
-    orientation: item.house.orientation,
-    decoration_status: item.house.decoration_status,
-    status: item.house.status,
-    house_description: item.house.house_description,
-    house_image: item.house.house_image,
-    owner_name: item.house.owner_name,
-    owner_phone: item.house.owner_phone,
-    created_by: item.house.created_by,
-    updated_by: item.house.updated_by,
-    // 小区信息
-    community_name: item.residential.community_name,
-    region: item.residential.region,
-    city: item.residential.city,
-    state: item.residential.state,
-    postal_code: item.residential.postal_code,
-    year_built: item.residential.year_built,
-    community_type: item.residential.community_type,
-    property_management_company: item.residential.property_management_company,
-    description: item.residential.description,
-  };
 }
 
 function convertToSoldSecondRentalHouse(item: SoldRentalHouseResponse) {
@@ -194,9 +171,9 @@ function convertToSoldSecondRentalHouse(item: SoldRentalHouseResponse) {
     rent_pice: item.rental_house.rent_pice,
     rent_start_time: item.rental_house.rent_start_time,
     rent_end_time: item.rental_house.rent_end_time,
+
     // 房源信息
     house_address: item.house.house_address,
-    house_type: item.house.house_type,
     area: item.house.area,
     bedrooms: item.house.bedrooms,
     living_rooms: item.house.living_rooms,
@@ -208,47 +185,32 @@ function convertToSoldSecondRentalHouse(item: SoldRentalHouseResponse) {
     house_image: item.house.house_image,
     owner_name: item.house.owner_name,
     owner_phone: item.house.owner_phone,
-    created_by: item.house.created_by,
-    updated_by: item.house.updated_by,
-    // 小区信息
-    community_name: item.residential.community_name,
-    region: item.residential.region,
-    city: item.residential.city,
-    state: item.residential.state,
-    postal_code: item.residential.postal_code,
-    year_built: item.residential.year_built,
-    community_type: item.residential.community_type,
-    property_management_company: item.residential.property_management_company,
-    description: item.residential.description,
-  };
-}
 
-function convertToSoldRentalHouse(item: SoldRentalHouseResponse) {
-  return {
-    // 出租房信息
-    sold_id: item.rental_house.sold_id,
-    house_id: item.rental_house.house_id,
-    rent_pice: item.rental_house.rent_pice,
-    rent_low_pice: item.rental_house.rent_low_pice,
-    rent_start_time: item.rental_house.rent_start_time,
-    rent_end_time: item.rental_house.rent_end_time,
-
-    // 房源信息
-    house_address: item.house.house_address,
+    // -- 新增
+    title: item.house.title,
+    recommended_tags: item.house.recommended_tags,
+    elevator: item.house.elevator,
+    household: item.house.household,
+    balcony: item.house.balcony,
+    kitchen: item.house.kitchen,
+    building_structure: item.house.building_structure,
+    property_rights: item.house.property_rights,
+    building_year: item.house.building_year,
+    property_duration: item.house.property_duration,
+    property_date: item.house.property_date,
+    delivery_date: item.house.delivery_date,
+    school_qualification: item.house.school_qualification,
+    household_registration: item.house.household_registration,
+    unique_house: item.house.unique_house,
+    facilities: item.house.facilities,
+    usable_area: item.house.usable_area,
+    current_status: item.house.current_status,
     house_type: item.house.house_type,
-    area: item.house.area,
-    bedrooms: item.house.bedrooms,
-    living_rooms: item.house.living_rooms,
-    bathrooms: item.house.bathrooms,
-    orientation: item.house.orientation,
-    decoration_status: item.house.decoration_status,
-    status: item.house.status,
-    house_description: item.house.house_description,
-    house_image: item.house.house_image,
-    owner_name: item.house.owner_name,
-    owner_phone: item.house.owner_phone,
+    source: item.house.source,
+
     created_by: item.house.created_by,
     updated_by: item.house.updated_by,
+
     // 小区信息
     community_name: item.residential.community_name,
     region: item.residential.region,
