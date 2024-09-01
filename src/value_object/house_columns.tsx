@@ -1,6 +1,6 @@
 import { ProColumns } from "@ant-design/pro-components";
 import { House } from "../model/House";
-import { useGetCommunityNames } from "../api/community";
+import { useGetCommunityNames } from "../api/Community";
 import dayjs from "dayjs";
 import { Button, Tag } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";

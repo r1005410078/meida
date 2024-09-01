@@ -1,5 +1,5 @@
 import { ProColumnType } from "@ant-design/pro-components";
-import { Button, Space } from "antd";
+import { Button, Flex, Space } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import useImagePhoto from "../components/ImagePhoto";
 import { House } from "../model/House";
@@ -7,6 +7,7 @@ import { Community } from "../model/Community";
 import { SecondHandHousing } from "../model/second_hand_housing";
 import { area_options } from "./house_columns";
 import { SecondRentalHouse } from "../model/rental_house";
+import { useGetCommunityNames } from "../api/Community";
 
 interface IHouse {
   house: House;
@@ -43,6 +44,25 @@ export function houseTypeColumn<T extends IHouse>(): ProColumnType<T> {
           <span>{item.house.living_rooms}卫</span>
         </Space>
       );
+    },
+  };
+}
+
+export function CommunityColumn<T extends IHouse>(): ProColumnType<T> {
+  const { data } = useGetCommunityNames();
+
+  return {
+    title: "小区",
+    dataIndex: "community_name",
+    hideInTable: true,
+    valueType: "select",
+    fieldProps: {
+      options: (data?.data ?? []).map((community_name) => {
+        return {
+          value: community_name,
+          label: community_name,
+        };
+      }),
     },
   };
 }

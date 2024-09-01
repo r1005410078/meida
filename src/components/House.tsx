@@ -227,7 +227,7 @@ export function useHouse() {
         </Form.Item>
       </Row>
       <Row>
-        <Form.Item label="房型">
+        <Form.Item label="房型" required>
           <Space>
             <Form.Item
               name="bedrooms"

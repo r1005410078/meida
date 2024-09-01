@@ -32,6 +32,10 @@ export interface SecondHandHousing {
   full_payment_required: boolean;
   // '是否急切' 标识是否急切出售，0 为否，1 为是
   urgent_sale: boolean;
+  // 更新时间
+  created_at: string;
+  // 更新时间
+  updated_at: string;
 }
 
 export interface SecondHandHousingResponse {

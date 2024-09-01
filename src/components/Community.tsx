@@ -18,7 +18,7 @@ import {
   useCommunityByName,
   useGetCommunityNames,
   useSaveCommunity,
-} from "../api/community";
+} from "../api/Community";
 import { useEffect, useRef, useState } from "react";
 
 export function useCommunity(propCommunityName?: string) {

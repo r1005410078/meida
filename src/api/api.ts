@@ -19,9 +19,9 @@ request.interceptors.response.use(
   function (error) {
     switch (error.response.status) {
       case 401:
-        // localStorage.removeItem("token");
-        // window.location.href = "/#/login";
-        // window.location.reload();
+        localStorage.removeItem("token");
+        window.location.href = "/#/login";
+        window.location.reload();
         break;
       case 404:
         break;

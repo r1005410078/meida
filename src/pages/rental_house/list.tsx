@@ -4,6 +4,7 @@ import {
   BarsOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons";
+import dayjs from "dayjs";
 import {
   ColumnsState,
   PageContainer,
@@ -30,6 +31,7 @@ import { useSoldModal } from "./sold_modal";
 import { processHouseSubmitValue } from "../house/list";
 import { useProDescriptionsModal } from "../../components/ProDescriptionsModal";
 import {
+  CommunityColumn,
   houseAddressColumn,
   houseAreaColumn,
   houseImageColumn,
@@ -126,6 +128,7 @@ export function List() {
               options: region,
             },
           },
+          CommunityColumn(),
           {
             title: "售价",
             dataIndex: "rent_pice",
@@ -147,6 +150,16 @@ export function List() {
             hideInSearch: true,
             render: (_1, record) => {
               return record.rental_house?.viewing_method ?? "--";
+            },
+          },
+          {
+            title: "更新时间",
+            dataIndex: "update_time",
+            hideInSearch: true,
+            render: (_1, record) => {
+              return dayjs(record.house_second_hand?.created_at).format(
+                "YYYY-MM-DD HH:mm:ss"
+              );
             },
           },
           {

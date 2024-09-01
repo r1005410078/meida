@@ -30,11 +30,13 @@ import { useSoldModal } from "./sold_modal";
 import { processHouseSubmitValue } from "../house/list";
 import { useProDescriptionsModal } from "../../components/ProDescriptionsModal";
 import {
+  CommunityColumn,
   houseAddressColumn,
   houseAreaColumn,
   houseImageColumn,
   houseTypeColumn,
 } from "../../value_object/columns";
+import dayjs from "dayjs";
 
 export function List() {
   const navigator = useNavigate();
@@ -137,6 +139,7 @@ export function List() {
               options: region,
             },
           },
+          CommunityColumn(),
           {
             title: "售价",
             dataIndex: "pice",
@@ -158,6 +161,16 @@ export function List() {
             hideInSearch: true,
             render: (_1, record) => {
               return record.house_second_hand?.viewing_method ?? "--";
+            },
+          },
+          {
+            title: "更新时间",
+            dataIndex: "update_time",
+            hideInSearch: true,
+            render: (_1, record) => {
+              return dayjs(record.house_second_hand?.created_at).format(
+                "YYYY-MM-DD HH:mm:ss"
+              );
             },
           },
           {
