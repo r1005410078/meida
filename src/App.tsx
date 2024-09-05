@@ -31,6 +31,7 @@ import LoginPage from "./pages/login";
 import { UserList } from "./pages/users";
 import "./App.css";
 import { SaveResidential } from "./pages/residential/save";
+import { ExportProperties } from "./pages/exports/ExportProperties";
 
 export default () => {
   const navigator = useNavigate();
@@ -94,6 +95,10 @@ export default () => {
                       {
                         path: "rental-house",
                         name: "出租",
+                      },
+                      {
+                        path: "export-properties",
+                        name: "导入房源",
                       },
                       {
                         path: "sold",
@@ -191,6 +196,7 @@ export default () => {
             />
             <Route path="rental-house" element={<SoldRentalHouseList />} />
           </Route>
+          <Route path="export-properties" element={<ExportProperties />} />
         </Route>
 
         <Route path="base-info" element={<SecondHandHousePage />}>

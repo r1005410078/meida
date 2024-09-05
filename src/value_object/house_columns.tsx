@@ -683,14 +683,14 @@ export function useCommunityColumns(): ProColumns<Community>[] {
       title: "创建时间",
       dataIndex: "created_at",
       render: (_, item) => {
-        return dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss");
+        return dayjs(item.created_at + "Z").format("YYYY-MM-DD HH:mm:ss");
       },
     },
     {
       title: "更新时间",
       dataIndex: "updated_at",
       render: (_, item) => {
-        return dayjs(item.updated_at).format("YYYY-MM-DD HH:mm:ss");
+        return dayjs(item.updated_at + "Z").format("YYYY-MM-DD HH:mm:ss");
       },
     },
   ];
@@ -888,7 +888,7 @@ export function useHouseColumns() {
       dataIndex: "created_at",
       hideInSearch: true,
       render: (_, item) => {
-        return dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss");
+        return dayjs(item.created_at + "Z").format("YYYY-MM-DD HH:mm:ss");
       },
     },
     {
@@ -896,7 +896,7 @@ export function useHouseColumns() {
       dataIndex: "updated_at",
       hideInSearch: true,
       render: (_, item) => {
-        return dayjs(item.updated_at).format("YYYY-MM-DD HH:mm:ss");
+        return dayjs(item.updated_at + "Z").format("YYYY-MM-DD HH:mm:ss");
       },
     },
   ];
@@ -1010,14 +1010,14 @@ export function useSecondHandHouseColumns() {
       title: "创建时间",
       dataIndex: "created_at",
       render: (_, item) => {
-        return dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss");
+        return dayjs(item.created_at + "Z").format("YYYY-MM-DD HH:mm:ss");
       },
     },
     {
       title: "更新时间",
       dataIndex: "updated_at",
       render: (_, item) => {
-        return dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss");
+        return dayjs(item.created_at + "Z").format("YYYY-MM-DD HH:mm:ss");
       },
     },
   ];
@@ -1096,14 +1096,14 @@ export function useRentalHouseColumns() {
       title: "创建时间",
       dataIndex: "created_at",
       render: (_, item) => {
-        return dayjs(item.created_at).format("YYYY-MM-DD HH:mm:ss");
+        return dayjs(item.created_at + "Z").format("YYYY-MM-DD HH:mm:ss");
       },
     },
     {
       title: "更新时间",
       dataIndex: "updated_at",
       render: (_, item) => {
-        return dayjs(item.updated_at).format("YYYY-MM-DD HH:mm:ss");
+        return dayjs(item.updated_at + "Z").format("YYYY-MM-DD HH:mm:ss");
       },
     },
   ];

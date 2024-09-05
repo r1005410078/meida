@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "scp": "scp -r dist root@114.55.227.206:/opt/www/meida"
   },
   "dependencies": {
     "@ant-design/pro-components": "^2.7.15",
