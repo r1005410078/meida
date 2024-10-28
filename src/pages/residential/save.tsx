@@ -62,6 +62,7 @@ export function SaveResidential({ pice_type = 1 }) {
             <Select
               labelRender={({ label }) => <strong>{label}</strong>}
               variant="borderless"
+              popupMatchSelectWidth={120}
               options={usage_options}
             />
           </Form.Item>

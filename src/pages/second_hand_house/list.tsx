@@ -80,7 +80,7 @@ export function List() {
         extra: [
           <Select
             defaultValue={1}
-            popupMatchSelectWidth={80}
+            popupMatchSelectWidth={120}
             labelRender={({ label }) => <strong>{label}</strong>}
             variant="borderless"
             options={usage_options}

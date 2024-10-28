@@ -23,7 +23,6 @@ export function houseAddressColumn<T extends IHouse>(): ProColumnType<T> {
     render(_, item) {
       return (
         <Space>
-          <span>{item.residential.region}</span>
           <span>{item.house.community_name}</span>
           <span>{item.house.house_address}</span>
         </Space>
@@ -57,6 +56,7 @@ export function CommunityColumn<T extends IHouse>(): ProColumnType<T> {
     hideInTable: true,
     valueType: "select",
     fieldProps: {
+      showSearch: true,
       options: (data?.data ?? []).map((community_name) => {
         return {
           value: community_name,

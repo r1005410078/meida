@@ -574,8 +574,8 @@ export const recommended_tags = house_tags;
 
 export const house_property = [
   {
-    value: "商品房住宅",
-    label: "商品房住宅",
+    value: "商铺房住宅",
+    label: "商铺房住宅",
   },
   {
     value: "商住两用",
@@ -1125,6 +1125,10 @@ export const viewing_method = [
     value: "借钥匙带看",
     label: "借钥匙带看",
   },
+  {
+    value: "有钥匙",
+    label: "有钥匙",
+  },
 ];
 
 // payment_method
@@ -1198,7 +1202,7 @@ export const usage_options = [
   },
   {
     value: 6,
-    label: "商品",
+    label: "商铺",
     disabled: true,
   },
   {
@@ -1292,8 +1296,8 @@ export const building_structure_options = [
 // 产权性质
 export const property_rights_options = [
   {
-    value: "商品房",
-    label: "商品房",
+    value: "商铺房",
+    label: "商铺房",
   },
   {
     value: "公产房",
@@ -1484,6 +1488,10 @@ export const source_options = [
   {
     value: "上门",
     label: "上门",
+  },
+  {
+    value: "58",
+    label: "58",
   },
   {
     value: "电话",

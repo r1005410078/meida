@@ -319,7 +319,7 @@ export function useHouse() {
 
       <Row gutter={16}>
         <Col span={8}>
-          <Form.Item label="来源" name="source">
+          <Form.Item label="来源" name="source" required>
             <Select placeholder="来源" options={source_options} />
           </Form.Item>
         </Col>
